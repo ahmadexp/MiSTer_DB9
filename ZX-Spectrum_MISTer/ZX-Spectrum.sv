@@ -50,6 +50,8 @@ module emu
 	output        VGA_F1,
 	output  [1:0] VGA_SL,
 
+	
+	input   [5:0] joy1_o_db9, // CB UDLR
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -841,7 +843,8 @@ end
 wire [2:0] jsel = status[19:17];
 
 //kempston port 1F
-wire [5:0] joyk   = !jsel ? (joystick_0[5:0] | joystick_1[5:0]) : 6'd0;
+//wire [5:0] joyk   = !jsel ? (joystick_0[5:0] | joystick_1[5:0]) : 6'd0;
+wire [5:0] joyk   = !jsel ? (joystick_0[5:0] | joystick_1[5:0] | joy1_o_db9[5:0] ) : 6'd0;
 
 //sinclair 1 67890
 wire [4:0] joys1 = ({5{jsel[0]}} & {joystick_0[1:0], joystick_0[2], joystick_0[3], joystick_0[4]}) | ({5{jsel[1:0]==1}} & {joystick_1[1:0], joystick_1[2], joystick_1[3], joystick_1[4]});

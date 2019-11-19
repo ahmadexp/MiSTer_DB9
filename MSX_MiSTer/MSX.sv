@@ -51,6 +51,9 @@ module emu
 	output        VGA_F1,
 	output  [1:0] VGA_SL,
 
+	// DB9 Joystick
+  	input   [5:0] joy1_o_db9, // CB UDLR
+
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -215,8 +218,10 @@ wire        img_readonly;
 wire [63:0] img_size;
 wire        sd_ack_conf;
 
-wire [15:0] joy_0 = status[13] ? joy_B : joy_A;
-wire [15:0] joy_1 = status[13] ? joy_A : joy_B;
+// wire [15:0] joy_0 = status[13] ? joy_B : joy_A;
+// wire [15:0] joy_1 = status[13] ? joy_A : joy_B;
+wire [15:0] joy_0 = status[13] ? joy_B : (joy_A | joy1_o_db9);
+wire [15:0] joy_1 = status[13] ? (joy_A | joy1_o_db9) : joy_B;
 
 
 hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io

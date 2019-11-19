@@ -49,6 +49,9 @@ module emu
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
 
+	// DB9 Joystick
+  	input   [5:0] joy1_o_db9, // CB UDLR
+	
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -658,8 +661,10 @@ Amstrad_motherboard motherboard
 	.crtc_type(~status[2]),
 	.resync(1),
 
-	.joy1(status[18] ? joy2 : joy1),
-	.joy2(status[18] ? joy1 : joy2),
+	// .joy1(status[18] ? joy2 : joy1),
+	// .joy2(status[18] ? joy1 : joy2),
+	.joy1(status[18] ? joy2 : (joy1| joy1_o_db9) ),
+	.joy2(status[18] ? (joy1| joy1_o_db9 ) : joy2),
 
 	.tape_in(tape_play),
 	.tape_out(tape_rec),
