@@ -101,7 +101,7 @@ module sys_top
 	output        SD_SPI_CLK,
 	output        SD_SPI_MOSI,
 
-	inout         SDCD_SPDIF,
+	//inout         SDCD_SPDIF,
 	output        IO_SCL,
 	inout         IO_SDA,
 
@@ -120,6 +120,8 @@ module sys_top
 	////////// MB LED ///////////
 	output  [7:0] LED,
 
+    // Salida para Altavoz
+	output	   BUZZER,
 	///////// USER IO ///////////
 	inout   [5:0] USER_IO
 );
@@ -952,7 +954,7 @@ csync csync_vga(clk_vid, vga_hs_osd, vga_vs_osd, vga_cs_osd);
 
 /////////////////////////  Audio output  ////////////////////////////////
 
-assign SDCD_SPDIF =(SW[3] & ~spdif) ? 1'b0 : 1'bZ;
+//assign SDCD_SPDIF =(SW[3] & ~spdif) ? 1'b0 : 1'bZ;
 
 `ifndef DUAL_SDRAM
 	wire anl,anr;
@@ -1109,7 +1111,8 @@ emu emu
 	.LED_DISK(led_disk),
 	.BUTTONS(btn),
 	.JOYAV({10'h3FF,USER_IO}),
-
+	.BUZZER(BUZZER),
+	
 	.VIDEO_ARX(ARX),
 	.VIDEO_ARY(ARY),
 
