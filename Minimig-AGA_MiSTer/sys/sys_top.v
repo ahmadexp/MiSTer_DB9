@@ -1165,7 +1165,7 @@ emu emu
 `ifdef DUAL_SDRAM
 	.SD_CD(mcp_sdcd),
 `else
-	.SD_CD(mcp_sdcd & (SW[0] ? VGA_HS : (SW[3] | SDCD_SPDIF))),
+	.SD_CD(mcp_sdcd & (SW[0] ? VGA_HS : SW[3])), //(SW[3] | SDCD_SPDIF))),
 `endif
 
 	.UART_CTS(uart_rts),
