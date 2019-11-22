@@ -51,6 +51,9 @@ module emu
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
 
+	// DB9 Joystick
+  	input   [5:0] joy1_o_db9, // CB UDLR
+
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -318,11 +321,11 @@ A2601top A2601top
 	.O_VIDEO_G(G),
 	.O_VIDEO_B(B),
 
-	.p1_r(~joy_0[0]),
-	.p1_l(~joy_0[1]),
-	.p1_d(~joy_0[2]),
-	.p1_u(~joy_0[3]),
-	.p1_f(~joy_0[4]),
+	.p1_r( ~(joy_0[0] | joy1_o_db9[0] ) ),
+	.p1_l( ~(joy_0[1] | joy1_o_db9[1] ) ),
+	.p1_d( ~(joy_0[2] | joy1_o_db9[2] ) ),
+	.p1_u( ~(joy_0[3] | joy1_o_db9[3] ) ),
+	.p1_f( ~(joy_0[4] | joy1_o_db9[4] ) ),
 
 	.p2_r(~joy_1[0]),
 	.p2_l(~joy_1[1]),
