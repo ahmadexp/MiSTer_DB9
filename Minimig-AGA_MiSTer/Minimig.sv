@@ -52,6 +52,8 @@ module emu
 	
 		// I/O Joystick added  
 	input [11:0] JOYAV,
+		// BUZZER
+	output		BUZZER,		  // Salida para Altavoz
 	
 	output [15:0] AUDIO_L,
 	output [15:0] AUDIO_R,
@@ -464,6 +466,7 @@ minimig minimig
 	.cd           (UART_DSR         ), // RS232 Carrier Detect
 	.ri           (1                ), // RS232 Ring Indicator
 
+	.drv_snd      (BUZZER),            //PIN DEL BUZZER
 	//I/O
 	._joy1        (~JOY0&JOYAV      ), // joystick 1 [fire4,fire3,fire2,fire,up,down,left,right] (default mouse port)
 	._joy2        (~JOY1            ), // joystick 2 [fire4,fire3,fire2,fire,up,down,left,right] (default joystick port)
