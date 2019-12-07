@@ -159,10 +159,49 @@ localparam CONF_STR = {
 	"OBC,Control,Joystick,Paddle,Auto(Single);",
 	"ODE,Paddle map,X1+X2 X3+X4,X1+X3 X2+X4,X1+Y1 X2+Y2,X1-Y1 X2-Y2;",
 	"OF,Paddle swap,No,Yes;",
+	"OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
 	"R0,Reset;",
 	"J1,Fire,Paddle1(x),Paddle2(y),Game Reset,Game Select;",
 	"V,v",`BUILD_DATE
 };
+
+reg  [5:0] JOYAV; // CB UDLR
+assign JOYAV  = joy1_o_db9;
+
+//////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
+wire [5:0] JOYAV_1;      // CB UDLR
+wire [5:0] JOYAV_2;      // CB UDLR
+reg  [5:0] joy1, joy2;   // CB UDLR
+
+always @(posedge clk_sys) begin //2joysplit
+    if (~VGA_HS)
+        joy1 <= JOYAV;
+    else 
+        joy2 <= JOYAV;  
+end  
+   
+
+always @(posedge clk_sys)
+  begin
+    case (status[17:16])
+      3'b000  : begin
+						JOYAV_1 <= JOYAV;
+						JOYAV_2 <=  6'b0;
+					 end
+      3'b001  : begin
+						JOYAV_1 <=  6'b0;
+						JOYAV_2 <= JOYAV;
+					 end
+      3'b010  : begin
+						JOYAV_1 <=  joy1;
+						JOYAV_2 <=  joy2;
+					 end
+   // default : r_RESULT <= 9; 
+    endcase
+  end
+
+////////////////////////////////////////////////////
+	 
 
 ////////////////////   CLOCKS   ///////////////////
 
@@ -321,18 +360,18 @@ A2601top A2601top
 	.O_VIDEO_G(G),
 	.O_VIDEO_B(B),
 
-	.p1_r( ~(joy_0[0] | joy1_o_db9[0] ) ),
-	.p1_l( ~(joy_0[1] | joy1_o_db9[1] ) ),
-	.p1_d( ~(joy_0[2] | joy1_o_db9[2] ) ),
-	.p1_u( ~(joy_0[3] | joy1_o_db9[3] ) ),
-	.p1_f( ~(joy_0[4] | joy1_o_db9[4] ) ),
+	.p1_r( ~(joy_0[0] | JOYAV_1[0] ) ),
+	.p1_l( ~(joy_0[1] | JOYAV_1[1] ) ),
+	.p1_d( ~(joy_0[2] | JOYAV_1[2] ) ),
+	.p1_u( ~(joy_0[3] | JOYAV_1[3] ) ),
+	.p1_f( ~(joy_0[4] | JOYAV_1[4] ) ),
 
-	.p2_r(~joy_1[0]),
-	.p2_l(~joy_1[1]),
-	.p2_d(~joy_1[2]),
-	.p2_u(~joy_1[3]),
-	.p2_f(~joy_1[4]),
-
+	.p2_r( ~(joy_1[0] | JOYAV_2[0] ) ),
+	.p2_l( ~(joy_1[1] | JOYAV_2[1] ) ),
+	.p2_d( ~(joy_1[2] | JOYAV_2[2] ) ),
+	.p2_u( ~(joy_1[3] | JOYAV_2[3] ) ),
+	.p2_f( ~(joy_1[4] | JOYAV_2[4] ) ),
+	
 	.p_1(status[15] ? p_2 : p_1),
 	.p_2(status[15] ? p_1 : p_2),
 	.p_3(status[15] ? p_4 : p_3),

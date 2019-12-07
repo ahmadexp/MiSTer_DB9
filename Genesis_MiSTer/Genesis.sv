@@ -67,9 +67,13 @@ module emu
 
 	
 		// I/O Joystick added  
-	input [11:0] joy1_o,  // -- MXYZ SACB RLDU
-	input [11:0] joy2_o,  // -- MXYZ SACB RLDU
-	
+//	input [11:0] joy1_o,  // -- MXYZ SACB RLDU
+//	input [11:0] joy2_o,  // -- MXYZ SACB RLDU
+
+   // DB9 Joystick
+	input [5:0] joy_o_db9,    // CB UDLR
+	output      db9_Select ,
+	output      joy_splitter_select,
 	
 	output [15:0] AUDIO_L,
 	output [15:0] AUDIO_R,
@@ -212,6 +216,7 @@ localparam CONF_STR = {
 	"OB,FM Chip,YM2612,YM3438;",
 	"ON,HiFi PCM,No,Yes;",
 	"-;",
+	"o45,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
 	"O4,Swap Joysticks,No,Yes;",
 	"O5,6 Buttons Mode,No,Yes;",
 	"OLM,Multitap,Disabled,4-Way,TeamPlayer,J-Cart;",
@@ -230,6 +235,99 @@ localparam CONF_STR = {
 	"jp,B,A,R,Start,Select,Y,X,L;", // positional map to SNES layout.
 	"V,v",`BUILD_DATE
 };
+
+////////////////////   JOYSTICKS   ///////////////////
+
+// First we applied the Splitter , later 6 buttons Megadrive 
+// I/O 2 Joystick splititer option added from joy_o_db9 ////////////////
+
+// create a binary counter
+reg [31:0] cnt; // 32-bit counter
+
+initial begin
+     cnt <= 32'h00000000; // start at zero
+end
+always @(posedge clk_sys) begin
+     cnt <= cnt + 1; // count up
+end
+
+
+assign joy_splitter_select = cnt[6];    // 53 Mhz /64  = 800 Khz 
+
+reg  [5:0] joy1, joy2;   // CB UDLR  in negative logic
+
+always @(posedge clk_sys) begin //2joysplit
+    if (~joy_splitter_select)
+        joy1 <= joy_o_db9;
+    else 
+        joy1 <= joy_o_db9;  
+end  
+
+
+// Now we applu the menu options
+
+wire [5:0] JOYAV_T1;      // CB UDLR  in negative logic
+wire [5:0] JOYAV_T2;      // CB UDLR  in negative logic
+
+
+always @(posedge clk_sys)
+  begin
+    case (status[37:36])
+      3'b000  : begin
+						JOYAV_T1 <= joy_o_db9;
+						JOYAV_T2 <=  6'b1;
+					 end
+      3'b001  : begin
+						JOYAV_T1 <=  6'b1;
+						JOYAV_T2 <= joy_o_db9;
+					 end
+      3'b010  : begin
+						JOYAV_T1 <=  joy1;
+						JOYAV_T2 <=  joy1;
+					 end
+   // default : r_RESULT <= 9; 
+    endcase
+  end
+
+
+
+// Now we apply the megadrive desmultiplexor conversor
+
+wire [11:0] joy1_o;   // MXYZ SACB RLDU  in negative logic
+wire [11:0] joy2_o;   // MXYZ SACB RLDU  in negative logic
+
+// Llamamos a la maquina de estados para leer los 6 botones del mando de Megadrive
+// Formato joy1_o [11:0] =  MXYZ SACB RLDU
+sega_joystick joy (
+	.joy1_up_i		(JOYAV_T1[3]),   // joy1 // CB UDLR
+	.joy1_down_i	(JOYAV_T1[2]),
+	.joy1_left_i	(JOYAV_T1[1]),
+	.joy1_right_i	(JOYAV_T1[0]),
+	.joy1_p6_i		(JOYAV_T1[4]),
+	.joy1_p9_i		(JOYAV_T1[5]),
+	.joy2_up_i		(JOYAV_T2[3]),
+	.joy2_down_i	(JOYAV_T2[2]),
+	.joy2_left_i	(JOYAV_T2[1]),
+	.joy2_right_i	(JOYAV_T2[0]),
+	.joy2_p6_i		(JOYAV_T2[4]),
+	.joy2_p9_i		(JOYAV_T2[5]),
+	.vga_hsync_n_s (VGA_HS),
+	.joyX_p7_o		(db9_Select), // select signal
+	.joy1_o			(joy1_o),    // MXYZ SACB RLDU
+	.joy2_o			(joy2_o)     // MXYZ SACB RLDU 
+);
+
+
+wire [11:0] JOYAV_1;   // ZYXM SCBA UDLR   in positive logic
+wire [11:0] JOYAV_2;   // ZYXM SCBA UDLR   in positive logic
+
+assign JOYAV_1 = ~{joy1_o[8],joy1_o[9],joy1_o[10],joy1_o[11],joy1_o[7],joy1_o[5],joy1_o[4],joy1_o[6],joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+assign JOYAV_2 = ~{joy2_o[8],joy2_o[9],joy2_o[10],joy2_o[11],joy2_o[7],joy2_o[5],joy2_o[4],joy2_o[6],joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
+
+
+
+////////////////////////////////////////////////////
+
 
 wire [63:0] status;
 wire  [1:0] buttons;
@@ -370,12 +468,12 @@ wire [7:0] color_lut[16] = '{
 };
 
 
-wire [11:0] joy1_o_db9;   // ZYXM SCBA UDLR   in positive logic
-wire [11:0] joy2_o_db9;   // ZYXM SCBA UDLR   in positive logic
-assign joy1_o_db9 = ~{joy1_o[8],joy1_o[9],joy1_o[10],joy1_o[11],joy1_o[7],joy1_o[5],joy1_o[4],joy1_o[6],joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
-                    //  joy1_o  --> MXYZ SACB RLDU  in negative logic
-assign joy2_o_db9 = ~{joy2_o[8],joy2_o[9],joy2_o[10],joy2_o[11],joy2_o[7],joy2_o[5],joy2_o[4],joy2_o[6],joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};      
-						  //  joy2_o  --> MXYZ SACB RLDU  in negative logic
+//wire [11:0] joy1_o_db9;   // ZYXM SCBA UDLR   in positive logic
+//wire [11:0] joy2_o_db9;   // ZYXM SCBA UDLR   in positive logic
+//assign joy1_o_db9 = ~{joy1_o[8],joy1_o[9],joy1_o[10],joy1_o[11],joy1_o[7],joy1_o[5],joy1_o[4],joy1_o[6],joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+//                    //  joy1_o  --> MXYZ SACB RLDU  in negative logic
+//assign joy2_o_db9 = ~{joy2_o[8],joy2_o[9],joy2_o[10],joy2_o[11],joy2_o[7],joy2_o[5],joy2_o[4],joy2_o[6],joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};      
+//						  //  joy2_o  --> MXYZ SACB RLDU  in negative logic
 						  
 system system
 (
@@ -418,8 +516,8 @@ system system
 	.GG_AVAILABLE(gg_available),
 
 	.J3BUT(~status[5]),
-	.JOY_1(status[4] ? joystick_1 : (joystick_0 | joy1_o_db9 ) ),  // ZYXM SCBA UDLR
-	.JOY_2(status[4] ? (joystick_0 | joy1_o_db9 ) : joystick_1 ),  // ZYXM SCBA UDLR
+	.JOY_1(status[4] ? (joystick_1 | JOYAV_2 ) : (joystick_0 | JOYAV_1 ) ),  // ZYXM SCBA UDLR
+	.JOY_2(status[4] ? (joystick_0 | JOYAV_1 ) : (joystick_1 | JOYAV_2 ) ),  // ZYXM SCBA UDLR
 
 	.JOY_3(joystick_2),
 	.JOY_4(joystick_3),
@@ -770,8 +868,10 @@ always @(posedge clk_sys) begin
 	else if (bk_state) sav_pending <= 0;
 end
 
-wire bk_load    = status[16];
-wire bk_save    = status[17] | (sav_pending & OSD_STATUS);
+//wire bk_load    = status[16];
+//wire bk_save    = status[17] | (sav_pending & OSD_STATUS);
+wire bk_load    = 1'b1;
+wire bk_save    = 1'b1 | (sav_pending & OSD_STATUS);
 reg  bk_loading = 0;
 reg  bk_state   = 0;
 

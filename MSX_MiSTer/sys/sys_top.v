@@ -28,6 +28,7 @@ module sys_top
 	input     joy1_right_i,
 	input     joy1_p6_i,
 	input     joy1_p9_i,
+	output    splitter_select,
 
 	/////////// CLOCK //////////
 	input         FPGA_CLK1_50,
@@ -135,9 +136,10 @@ module sys_top
 
 // asignacion de Joy Db9  ///////
 
-wire  [5:0] joy1_o_db9;  // CB UDLR
-assign joy1_o_db9 = ~{joy1_p9_i, joy1_p6_i,  joy1_up_i, joy1_down_i,joy1_left_i, joy1_right_i};
+wire  [6:0] joy1_o_db9;  // CBA UDLR
+assign joy1_o_db9 = ~{1'b1, joy1_p9_i, joy1_p6_i,joy1_up_i, joy1_down_i,joy1_left_i, joy1_right_i};
 
+assign splitter_select = VGA_HS;
 
 
 //////////////////////  Secondary SD  ///////////////////////////////////

@@ -102,10 +102,10 @@ module sys_top
 `endif
 
 	////////// I/O ALT /////////
-	output        SD_SPI_CS,
-	input         SD_SPI_MISO,
-	output        SD_SPI_CLK,
-	output        SD_SPI_MOSI,
+//	output        SD_SPI_CS,
+//	input         SD_SPI_MISO,
+//	output        SD_SPI_CLK,
+//	output        SD_SPI_MOSI,
 
 	inout         SDCD_SPDIF,
 	output        IO_SCL,
@@ -113,20 +113,15 @@ module sys_top
 
 	
 	// Joysticks i/o 
-	input 		joy1_up_i,
-	input 		joy1_down_i,
-	input 		joy1_left_i,
-	input 		joy1_right_i,
-	input 		joy1_p6_i,
-	input 		joy1_p9_i,
-//	input 		joy2_up_i,
-//	input 		joy2_down_i,
-//	input 		joy2_left_i,
-//	input 		joy2_right_i,
-//	input 		joy2_p6_i,
-//	input 		joy2_p9_i,
-	output 		joyX_p7_o			= 1'b1,
-	
+	// Joysticks i/o 
+	input     joy_up_i,
+	input     joy_down_i,
+	input     joy_left_i,
+	input     joy_right_i,
+	input     joy_p6_i,
+	input     joy_p9_i,
+	output 	 db9_Select = 1'b1,
+	output    splitter_select,
 	
 	////////// ADC //////////////
 	output        ADC_SCK,
@@ -145,36 +140,33 @@ module sys_top
 
 );
 
+// asignacion de Joy Db9  ///////
 
+wire  [5:0] joy_o_db9;  // CB UDLR
+assign joy_o_db9 = {joy_p9_i, joy_p6_i,  joy_up_i, joy_down_i,joy_left_i, joy_right_i};
 
-wire 		joy2_up_i;
-wire 		joy2_down_i;
-wire 		joy2_left_i;
-wire 		joy2_right_i;
-wire 		joy2_p6_i;
-wire 		joy2_p9_i;
-wire 		joy2_p7_o;
+//assign splitter_select = VGA_HS;
 
 //////////////////////  Secondary SD  ///////////////////////////////////
 
 wire sd_miso;
 wire SD_CS, SD_CLK, SD_MOSI, SD_MISO;
 
-`ifndef DUAL_SDRAM
-	assign SDIO_DAT[2:1]= 2'bZZ;
-	assign SDIO_DAT[3]  = SW[3] ? 1'bZ  : SD_CS;
-	assign SDIO_CLK     = SW[3] ? 1'bZ  : SD_CLK;
-	assign SDIO_CMD     = SW[3] ? 1'bZ  : SD_MOSI;
-	assign sd_miso      = SW[3] ? 1'b1  : SDIO_DAT[0];
-	assign SD_SPI_CS    = mcp_sdcd ? ((~VGA_EN & sog & ~cs1) ? 1'b1 : 1'bZ) : SD_CS;
-`else
-	assign sd_miso      = 1'b1;
-	assign SD_SPI_CS    = mcp_sdcd ? 1'bZ : SD_CS;
-`endif
-
-assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ    : SD_CLK;
-assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ    : SD_MOSI;
-assign SD_MISO     = mcp_sdcd ? sd_miso : SD_SPI_MISO;
+//`ifndef DUAL_SDRAM
+//	assign SDIO_DAT[2:1]= 2'bZZ;
+//	assign SDIO_DAT[3]  = SW[3] ? 1'bZ  : SD_CS;
+//	assign SDIO_CLK     = SW[3] ? 1'bZ  : SD_CLK;
+//	assign SDIO_CMD     = SW[3] ? 1'bZ  : SD_MOSI;
+//	assign sd_miso      = SW[3] ? 1'b1  : SDIO_DAT[0];
+//	assign SD_SPI_CS    = mcp_sdcd ? ((~VGA_EN & sog & ~cs1) ? 1'b1 : 1'bZ) : SD_CS;
+//`else
+//	assign sd_miso      = 1'b1;
+//	assign SD_SPI_CS    = mcp_sdcd ? 1'bZ : SD_CS;
+//`endif
+//
+//assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ    : SD_CLK;
+//assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ    : SD_MOSI;
+//assign SD_MISO     = mcp_sdcd ? sd_miso : SD_SPI_MISO;
 
 //////////////////////  LEDs/Buttons  ///////////////////////////////////
 
@@ -1117,45 +1109,23 @@ wire        osd_status;
 wire  [6:0] user_out, user_in;
 
 // Joystick 6 buttons megadrive 
-wire [11:0] joy1_o;   // -- MXYZ SACB RLDU
-wire [11:0] joy2_o;   // -- MXYZ SACB RLDU
+//wire [11:0] joy1_o;   // -- MXYZ SACB RLDU
+//wire [11:0] joy2_o;   // -- MXYZ SACB RLDU
 
-// create a binary counter
-reg [31:0] cnt; // 32-bit counter
-
-initial begin
-
-     cnt <= 32'h00000000; // start at zero
-
-end
-
-always @(posedge FPGA_CLK1_50) begin
-
-     cnt <= cnt + 1; // count up
-
-end
-
-
-// Llamamos a la maquina de estados para leer los 6 botones del mando de Megadrive
-// Formato joy1_o [11:0] =  MXYZ SACB RLDU
-sega_joystick joy (
-	.joy1_up_i		(joy1_up_i),
-	.joy1_down_i	(joy1_down_i),
-	.joy1_left_i	(joy1_left_i),
-	.joy1_right_i	(joy1_right_i),
-	.joy1_p6_i		(joy1_p6_i),
-	.joy1_p9_i		(joy1_p9_i),
-	.joy2_up_i		(joy2_up_i),
-	.joy2_down_i	(joy2_down_i),
-	.joy2_left_i	(joy2_left_i),
-	.joy2_right_i	(joy2_right_i),
-	.joy2_p6_i		(joy2_p6_i),
-	.joy2_p9_i		(joy2_p9_i),
-	.vga_hsync_n_s(cnt[10]),
-	.joyX_p7_o		(joyX_p7_o), // select signal
-	.joy1_o			(joy1_o),    // MXYZ SACB RLDU
-	.joy2_o			(joy2_o)     // MXYZ SACB RLDU 
-);
+//// create a binary counter
+//reg [31:0] cnt; // 32-bit counter
+//
+//initial begin
+//
+//     cnt <= 32'h00000000; // start at zero
+//
+//end
+//
+//always @(posedge FPGA_CLK1_50) begin
+//
+//     cnt <= cnt + 1; // count up
+//
+//end
 
 
 emu emu
@@ -1185,8 +1155,11 @@ emu emu
 	.VIDEO_ARY(ARY),
 
 	// I/O Joystick added  
-	.joy1_o			(joy1_o),   // -- MXYZ SACB RLDU
-	.joy2_o			(joy2_o),   // -- MXYZ SACB RLDU
+//	.joy1_o			(joy1_o),   // -- MXYZ SACB RLDU
+//	.joy2_o			(joy2_o),   // -- MXYZ SACB RLDU
+   .joy_o_db9 (joy_o_db9),  
+	.db9_Select (db9_Select),
+	.joy_splitter_select(splitter_select),
 	
 	
 	.AUDIO_L(audio_ls),

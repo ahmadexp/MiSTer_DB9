@@ -52,7 +52,7 @@ module emu
 	output  [1:0] VGA_SL,
 
 	// DB9 Joystick
-  	input   [5:0] joy1_o_db9, // CB UDLR
+  	input   [6:0] joy1_o_db9, // CBA UDLR
 
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
@@ -157,6 +157,7 @@ localparam CONF_STR = {
 	"-;",
 	"O7,Internal Mapper,2048KB RAM,4096KB RAM;",
 	"-;",
+        "OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
 	"OD,Joysticks Swap,No,Yes;",
 	"OC,Mouse,Port 1,Port 2;",
 	"-;",
@@ -164,6 +165,42 @@ localparam CONF_STR = {
 	"J,Fire 1,Fire 2;",
 	"V,v",`BUILD_DATE
 };
+
+////////////////////   JOYSTICKS   ///////////////////
+
+reg  [6:0] JOYAV; // BA UDLR
+assign JOYAV  = joy1_o_db9;
+
+//////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
+wire [6:0] JOYAV_1;      // BA UDLR
+wire [6:0] JOYAV_2;      // BA UDLR
+reg  [6:0] joy1, joy2;   // BA UDLR
+
+always @(posedge clk_sys) begin //2joysplit
+    if (~VGA_HS)
+        joy1 <= JOYAV;
+    else 
+        joy2 <= JOYAV;  
+end  
+
+always @(posedge clk_sys)
+  begin
+    case (status[17:16])
+      3'b000  : begin
+						JOYAV_1 <= JOYAV;
+						JOYAV_2 <=  6'b0;
+					 end
+      3'b001  : begin
+						JOYAV_1 <=  6'b0;
+						JOYAV_2 <= JOYAV;
+					 end
+      3'b010  : begin
+						JOYAV_1 <=  joy1;
+						JOYAV_2 <=  joy2;
+					 end
+   // default : r_RESULT <= 9; 
+    endcase
+  end
 
 
 ////////////////////   CLOCKS   ///////////////////
@@ -218,10 +255,8 @@ wire        img_readonly;
 wire [63:0] img_size;
 wire        sd_ack_conf;
 
-// wire [15:0] joy_0 = status[13] ? joy_B : joy_A;
-// wire [15:0] joy_1 = status[13] ? joy_A : joy_B;
-wire [15:0] joy_0 = status[13] ? joy_B : (joy_A | joy1_o_db9);
-wire [15:0] joy_1 = status[13] ? (joy_A | joy1_o_db9) : joy_B;
+wire [15:0] joy_0 = status[13] ? (joy_B | JOYAV_2) : (joy_A | JOYAV_1);
+wire [15:0] joy_1 = status[13] ? (joy_A | JOYAV_1) : (joy_B | JOYAV_2);
 
 
 hps_io #(.STRLEN($size(CONF_STR)>>3)) hps_io
