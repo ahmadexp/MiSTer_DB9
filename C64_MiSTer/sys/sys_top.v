@@ -26,6 +26,16 @@ module sys_top
 	input         FPGA_CLK2_50,
 	input         FPGA_CLK3_50,
 
+	// Joysticks i/o 
+	input     joy_up_i,
+	input     joy_down_i,
+	input     joy_left_i,
+	input     joy_right_i,
+	input     joy_p6_i,
+	input     joy_p9_i,
+	output 	 joy_select,
+	output    joy_splitter_select,
+	
 	//////////// HDMI //////////
 	output        HDMI_I2C_SCL,
 	inout         HDMI_I2C_SDA,
@@ -96,10 +106,10 @@ module sys_top
 `endif
 
 	////////// I/O ALT /////////
-	output        SD_SPI_CS,
-	input         SD_SPI_MISO,
-	output        SD_SPI_CLK,
-	output        SD_SPI_MOSI,
+//	output        SD_SPI_CS,
+//	input         SD_SPI_MISO,
+//	output        SD_SPI_CLK,
+//	output        SD_SPI_MOSI,
 
 	inout         SDCD_SPDIF,
 	output        IO_SCL,
@@ -118,15 +128,22 @@ module sys_top
 	input   [3:0] SW,
 
 	////////// MB LED ///////////
-	output  [7:0] LED,
+	output  [7:0] LED
 
 	///////// USER IO ///////////
-	inout   [5:0] USER_IO
+	//inout   [5:0] USER_IO
 );
+
+// assign DB9 Joystick ///////
+
+wire  [5:0] joy_o_db9;  // CB UDLR  (in positive logic)
+assign joy_o_db9 = ~{joy_p9_i, joy_p6_i,  joy_up_i, joy_down_i,joy_left_i, joy_right_i};
+
+//assign splitter_select = VGA_HS;
 
 //////////////////////  Secondary SD  ///////////////////////////////////
 
-wire sd_miso;
+//wire sd_miso;
 wire SD_CS, SD_CLK, SD_MOSI, SD_MISO;
 
 `ifndef DUAL_SDRAM
@@ -135,15 +152,15 @@ wire SD_CS, SD_CLK, SD_MOSI, SD_MISO;
 	assign SDIO_CLK     = SW[3] ? 1'bZ  : SD_CLK;
 	assign SDIO_CMD     = SW[3] ? 1'bZ  : SD_MOSI;
 	assign sd_miso      = SW[3] ? 1'b1  : SDIO_DAT[0];
-	assign SD_SPI_CS    = mcp_sdcd ? ((~VGA_EN & sog & ~cs1) ? 1'b1 : 1'bZ) : SD_CS;
+//	assign SD_SPI_CS    = mcp_sdcd ? ((~VGA_EN & sog & ~cs1) ? 1'b1 : 1'bZ) : SD_CS;
 `else
-	assign sd_miso      = 1'b1;
-	assign SD_SPI_CS    = mcp_sdcd ? 1'bZ : SD_CS;
+//	assign sd_miso      = 1'b1;
+//	assign SD_SPI_CS    = mcp_sdcd ? 1'bZ : SD_CS;
 `endif
 
-assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ    : SD_CLK;
-assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ    : SD_MOSI;
-assign SD_MISO     = mcp_sdcd ? sd_miso : SD_SPI_MISO;
+//assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ    : SD_CLK;
+//assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ    : SD_MOSI;
+//assign SD_MISO     = mcp_sdcd ? sd_miso : SD_SPI_MISO;
 
 //////////////////////  LEDs/Buttons  ///////////////////////////////////
 
@@ -1103,12 +1120,15 @@ emu emu
 	.VGA_F1(f1),
 	.VGA_SL(scanlines),
 
+	.joy_o_db9 (joy_o_db9),
+	.joy_select (joy_select),
+	.joy_splitter_select(joy_splitter_select),
+	
 	.LED_USER(led_user),
 	.LED_POWER(led_power),
 	.LED_DISK(led_disk),
 	.BUTTONS(btn),
-	.JOYAV(USER_IO),
-
+	
 	.VIDEO_ARX(ARX),
 	.VIDEO_ARY(ARY),
 

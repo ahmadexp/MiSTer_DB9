@@ -844,13 +844,13 @@ wire [2:0] jsel = status[19:17];
 
 //kempston port 1F
 //wire [5:0] joyk   = !jsel ? (joystick_0[5:0] | joystick_1[5:0]) : 6'd0;
-wire [5:0] joyk   = !jsel ? (joystick_0[5:0] | joystick_1[5:0] | joy1_o_db9[5:0] ) : 6'd0;
+wire [5:0] joyk   = !jsel ? ( (joystick_0[5:0] | | joy1_o_db9[5:0] ) | joystick_1[5:0] ) : 6'd0;
 
 //sinclair 1 67890
-wire [4:0] joys1 = ({5{jsel[0]}} & {joystick_0[1:0], joystick_0[2], joystick_0[3], joystick_0[4]}) | ({5{jsel[1:0]==1}} & {joystick_1[1:0], joystick_1[2], joystick_1[3], joystick_1[4]});
+wire [4:0] joys1 = ({5{jsel[0]}} & { (joystick_0[1:0] | joy1_o_db9[1:0]) , (joystick_0[2] | joy1_o_db9[2]), (joystick_0[3] | joy1_o_db9[3]), (joystick_0[4] | joy1_o_db9[4]) }) | ({5{jsel[1:0]==1}} & {joystick_1[1:0], joystick_1[2], joystick_1[3], joystick_1[4]});
 
 //sinclair 2 12345
-wire [4:0] joys2 = ({5{jsel[1]}} & {joystick_1[4:2], joystick_1[0], joystick_1[1]})                | ({5{jsel[1:0]==2}} & {joystick_0[4:2],joystick_0[0],joystick_0[1]});
+wire [4:0] joys2 = ({5{jsel[1]}} & {joystick_1[4:2], joystick_1[0], joystick_1[1]})  | ({5{jsel[1:0]==2}} & {joystick_0[4:2],joystick_0[0],joystick_0[1]});
 
 //cursor 56780
 wire [4:0] joyc1 = {5{jsel[2]}} & ({joystick_0[2], joystick_0[3], joystick_0[0],1'b0, joystick_0[4]} | {joystick_1[2], joystick_1[3], joystick_1[0], 1'b0, joystick_1[4]});

@@ -55,6 +55,11 @@ module emu
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
 
+	// DB9 Joystick by Benitoss
+  	input [5:0] joy_o_db9,    // CB UDLR (in positive logic)
+	output      joy_select ,
+	output      joy_splitter_select,
+	
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -67,9 +72,6 @@ module emu
 	// b[1]: user button
 	// b[0]: osd button
 	output  [1:0] BUTTONS,
-
-		// I/O Joystick added  
-	input   [5:0] JOYAV,
 
 	output [15:0] AUDIO_L,
 	output [15:0] AUDIO_R,
@@ -170,6 +172,7 @@ localparam CONF_STR = {
 	"OC,Sound expander,No,OPL2;",
 	"OIJ,Stereo mix,none,25%,50%,100%;",
 	"-;",
+	"o45,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
 	"O3,Swap joysticks,No,Yes;",
 	"O1,User port,Joysticks,UART;",
 	"OO,Mouse,Port 1,Port 2;",
@@ -182,7 +185,50 @@ localparam CONF_STR = {
 	"V,v",`BUILD_DATE
 };
    
+////////////////////  JOYSTICKS added by Benitoss ///////////////////
 
+// I/O 2 Joystick splitter option added from joy_o_db9 ////////////////
+
+
+assign joy_splitter_select = VGA_HS;    
+
+reg  [5:0] joy1, joy2;   // CB UDLR  (in positive logic)
+
+always @(posedge clk_sys) begin //2joysplit
+    if (~joy_splitter_select)    
+        joy1 <= joy_o_db9;
+    else 
+        joy2 <= joy_o_db9;  
+end  
+
+
+// Now we apply the menu options
+
+wire [6:0] JOYAV_1;      // CB UDLR  (in positive logic)
+wire [6:0] JOYAV_2;      // CB UDLR  (in positive logic)
+
+
+always @(posedge clk_sys)
+  begin
+    case (status[37:36])
+      3'b000  : begin
+						JOYAV_1 <= {1'b0,joy_o_db9};
+						JOYAV_2 <=  7'b0; // because is positive logic
+					 end
+      3'b001  : begin
+						JOYAV_1 <=  7'b0; // because is positive logic
+						JOYAV_2 <= {1'b0,joy_o_db9};
+					 end
+      3'b010  : begin
+						JOYAV_1 <=  {1'b0,joy1};
+						JOYAV_2 <=  {1'b0,joy2};
+					 end
+   // default : r_RESULT <= 9; 
+    endcase
+  end
+	
+////////////////////////////////////////////////////////////////////////////	
+	
 wire pll_locked;
 wire clk_sys;
 wire clk64;
@@ -287,7 +333,7 @@ end
 
 wire [15:0] joyA,joyB,joyC,joyD;
 
-wire [31:0] status;
+wire [63:0] status;
 wire        forced_scandoubler;
 
 wire        ioctl_wr;
@@ -408,8 +454,12 @@ cartridge cartridge
 );
 
 // rearrange joystick contacts for c64
-wire [6:0] joyA_int = {1'b0,~JOYAV} | {joyA[6:4], joyA[0], joyA[1], joyA[2], joyA[3]};
-wire [6:0] joyB_int = {joyB[6:4], joyB[0], joyB[1], joyB[2], joyB[3]};
+//wire [6:0] joyA_int = {joyA[6:4], joyA[0], joyA[1], joyA[2], joyA[3]};
+//wire [6:0] joyB_int = {joyB[6:4], joyB[0], joyB[1], joyB[2], joyB[3]};
+
+wire [6:0] joyA_int = {joyA[6:4] | JOYAV_1[6:4] , joyA[0] | JOYAV_1[0] , joyA[1] | JOYAV_1[1] , joyA[2] | JOYAV_1[2], joyA[3] | JOYAV_1[3]};
+wire [6:0] joyB_int = {joyB[6:4] | JOYAV_2[6:4] , joyB[0] | JOYAV_2[0] , joyB[1] | JOYAV_2[1] , joyB[2] | JOYAV_2[2], joyB[3] | JOYAV_2[3]};
+
 wire [6:0] joyC_c64 = {joyC[6:4], joyC[0], joyC[1], joyC[2], joyC[3]};
 wire [6:0] joyD_c64 = {joyD[6:4], joyD[0], joyD[1], joyD[2], joyD[3]};
 
