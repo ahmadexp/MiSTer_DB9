@@ -260,7 +260,7 @@ always @(posedge clk_sys) begin //2joysplit
     if (~joy_splitter_select)
         joy1 <= joy_o_db9;
     else 
-        joy1 <= joy_o_db9;  
+        joy2 <= joy_o_db9;  
 end  
 
 
@@ -283,7 +283,7 @@ always @(posedge clk_sys)
 					 end
       3'b010  : begin
 						JOYAV_T1 <=  joy1;
-						JOYAV_T2 <=  joy1;
+						JOYAV_T2 <=  joy2;
 					 end
    // default : r_RESULT <= 9; 
     endcase
