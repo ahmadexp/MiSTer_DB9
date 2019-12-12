@@ -22,12 +22,14 @@
 module sys_top
 (
 	// Joysticks i/o 
-	input     joy1_up_i,
-	input     joy1_down_i,
-	input     joy1_left_i,
-	input     joy1_right_i,
-	input     joy1_p6_i,
-	input     joy1_p9_i,
+	input     joy_up_i,
+	input     joy_down_i,
+	input     joy_left_i,
+	input     joy_right_i,
+	input     joy_p6_i,
+	input     joy_p9_i,
+   output    db9_Select,
+	output    splitter_select,
 
 
 	/////////// CLOCK //////////
@@ -136,8 +138,8 @@ module sys_top
 
 // asignacion de Joy Db9  ///////
 
-wire  [5:0] joy1_o_db9;  // CB UDLR
-assign joy1_o_db9 = ~{joy1_p9_i, joy1_p6_i,  joy1_up_i, joy1_down_i,joy1_left_i, joy1_right_i};
+wire  [5:0] joy_o_db9;  // CB UDLR  in positive logic
+assign joy_o_db9 = ~{joy_p9_i, joy_p6_i, joy_up_i, joy_down_i, joy_left_i, joy_right_i};
 
 
 
@@ -1140,8 +1142,8 @@ emu emu
 	.VGA_F1(f1),
 	.VGA_SL(scanlines),
 
-	.joy1_o_db9(joy1_o_db9),
-	
+	.joy_o_db9(joy_o_db9),
+	.splitter_select(splitter_select),
 
 	.LED_USER(led_user),
 	.LED_POWER(led_power),
