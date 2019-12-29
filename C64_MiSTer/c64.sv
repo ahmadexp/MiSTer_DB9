@@ -57,8 +57,8 @@ module emu
 
         // DB9 Joystick by Benitoss
   	input [5:0] joy_o_db9,    // CB UDLR (in positive logic)
-	output      joy_select ,
-	output      joy_splitter_select, 
+	output      db9_Select,
+	output      splitter_select, 
 
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
@@ -201,8 +201,9 @@ wire [6:0] JOYAV_1;      // CB UDLR  Positive Logic
 wire [6:0] JOYAV_2;      // CB UDLR  Positive Logic
 reg  [6:0] joy1, joy2;   // CB UDLR  Positive Logic
 
-reg joy_split = 1'b1;
+assign db9_Select = 1'b1;
 
+reg joy_split = 1'b1;
 assign splitter_select = joy_split;   
 
 always @(posedge cnt[8])  // 50/256  = 195 khz 

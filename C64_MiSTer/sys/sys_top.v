@@ -33,8 +33,8 @@ module sys_top
 	input     joy_right_i,
 	input     joy_p6_i,
 	input     joy_p9_i,
-	output 	 joy_select,
-	output    joy_splitter_select,
+	output 	 db9_Select,
+	output    splitter_select,
 
 
 	//////////// HDMI //////////
@@ -140,7 +140,7 @@ module sys_top
 wire  [5:0] joy_o_db9;  // CB UDLR  (in positive logic)
 assign joy_o_db9 = ~{joy_p9_i, joy_p6_i,  joy_up_i, joy_down_i,joy_left_i, joy_right_i};
 
-assign splitter_select = 1'b1;
+
 
 //////////////////////  Secondary SD  ///////////////////////////////////
 
@@ -1193,9 +1193,9 @@ emu emu
 	.VGA_F1(f1),
 	.VGA_SL(scanlines),
 
-        .joy_o_db9 (joy_o_db9),
-	.joy_select (joy_select),
-	.joy_splitter_select(joy_splitter_select),
+   .joy_o_db9 (joy_o_db9),
+	.db9_Select (db9_Select),
+	.splitter_select(splitter_select),
 
 	.LED_USER(led_user),
 	.LED_POWER(led_power),
