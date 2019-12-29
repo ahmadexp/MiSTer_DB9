@@ -17,12 +17,6 @@
 //  with this program; if not, write to the Free Software Foundation, Inc.,
 //  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 //
-//
-//  11/13/2019 : Modified version adding DB9 6 buttons megadrive Joystick based on Fernando Mosquera "Joystick_sega_6_buttons.v" code
-//   
-//  Based in "Joystick read with sega 6 button support" by Victor trucco for Multicore 2
-//  https://gitlab.com/victor.trucco/Multicore/blob/master/_MC2_firmware/synth/multicore2/top.vhd
-//
 //============================================================================
 
 module sys_top
@@ -31,6 +25,16 @@ module sys_top
 	input         FPGA_CLK1_50,
 	input         FPGA_CLK2_50,
 	input         FPGA_CLK3_50,
+
+        // Joysticks i/o 
+	input     joy_up_i,
+	input     joy_down_i,
+	input     joy_left_i,
+	input     joy_right_i,
+	input     joy_p6_i,
+	input     joy_p9_i,
+	output    db9_Select,
+	output    splitter_select, 
 
 	//////////// HDMI //////////
 	output        HDMI_I2C_SCL,
@@ -111,18 +115,6 @@ module sys_top
 	output        IO_SCL,
 	inout         IO_SDA,
 
-	
-	// Joysticks i/o 
-	// Joysticks i/o 
-	input     joy_up_i,
-	input     joy_down_i,
-	input     joy_left_i,
-	input     joy_right_i,
-	input     joy_p6_i,
-	input     joy_p9_i,
-	output 	 db9_Select = 1'b1,
-	output    splitter_select,
-	
 	////////// ADC //////////////
 	output        ADC_SCK,
 	input         ADC_SDO,
@@ -138,20 +130,21 @@ module sys_top
 	////////// MB LED ///////////
 	output  [7:0] LED
 
+	///////// USER IO ///////////
+//	inout   [6:0] USER_IO
 );
 
-// asignacion de Joy Db9  ///////
 
-wire  [5:0] joy_o_db9;  // CB UDLR
-assign joy_o_db9 = {joy_p9_i, joy_p6_i,  joy_up_i, joy_down_i,joy_left_i, joy_right_i};
+// assign DB9 Joystick ///////
 
-//assign splitter_select = VGA_HS;
+wire  [5:0] joy_o_db9;  // CB UDLR  (in negative logic)
+assign joy_o_db9 = {joy_p9_i, joy_p6_i,  joy_up_i, joy_down_i,joy_left_i, joy_right_i}; 
 
 //////////////////////  Secondary SD  ///////////////////////////////////
 
-wire sd_miso;
-wire SD_CS, SD_CLK, SD_MOSI, SD_MISO;
-
+//wire sd_miso;
+//wire SD_CS, SD_CLK, SD_MOSI, SD_MISO;
+//
 //`ifndef DUAL_SDRAM
 //	assign SDIO_DAT[2:1]= 2'bZZ;
 //	assign SDIO_DAT[3]  = SW[3] ? 1'bZ  : SD_CS;
@@ -467,7 +460,7 @@ always @(posedge FPGA_CLK2_50) begin
 end
 
 wire clk_100m;
-wire clk_hdmi  = ~hdmi_clk_out;  // Internal HDMI clock, inverted in relation to external clock
+wire clk_hdmi  = hdmi_clk_out;
 wire clk_audio = FPGA_CLK3_50;
 wire clk_pal   = FPGA_CLK3_50;
 
@@ -899,11 +892,63 @@ always @(posedge clk_vid) begin
 	dv_vs  <= dv_vs2;
 end
 
-assign HDMI_TX_CLK = direct_video ? clk_vid : hdmi_clk_out;
-assign HDMI_TX_HS  = direct_video ? dv_hs   : hdmi_hs_osd;
-assign HDMI_TX_VS  = direct_video ? dv_vs   : hdmi_vs_osd;
-assign HDMI_TX_DE  = direct_video ? dv_de   : hdmi_de_osd;
-assign HDMI_TX_D   = direct_video ? dv_data : hdmi_data_osd;
+wire hdmi_tx_clk;
+cyclonev_clkselect hdmi_clk_sw
+( 
+	.clkselect({1'b1, direct_video}),
+	.inclk({clk_vid, hdmi_clk_out, 2'b00}),
+	.outclk(hdmi_tx_clk)
+);
+
+altddio_out
+#(
+	.extend_oe_disable("OFF"),
+	.intended_device_family("Cyclone V"),
+	.invert_output("OFF"),
+	.lpm_hint("UNUSED"),
+	.lpm_type("altddio_out"),
+	.oe_reg("UNREGISTERED"),
+	.power_up_high("OFF"),
+	.width(1)
+)
+hdmiclk_ddr
+(
+	.datain_h(1'b0),
+	.datain_l(1'b1),
+	.outclock(hdmi_tx_clk),
+	.dataout(HDMI_TX_CLK),
+	.aclr(1'b0),
+	.aset(1'b0),
+	.oe(1'b1),
+	.outclocken(1'b1),
+	.sclr(1'b0),
+	.sset(1'b0)
+);
+
+reg hdmi_out_hs;
+reg hdmi_out_vs;
+reg hdmi_out_de;
+reg [23:0] hdmi_out_d;
+
+always @(posedge hdmi_tx_clk) begin
+	reg hs,vs,de;
+	reg [23:0] d;
+	
+	hs <= direct_video ? dv_hs   : hdmi_hs_osd;
+	vs <= direct_video ? dv_vs   : hdmi_vs_osd;
+	de <= direct_video ? dv_de   : hdmi_de_osd;
+	d  <= direct_video ? dv_data : hdmi_data_osd;
+
+	hdmi_out_hs <= hs;
+	hdmi_out_vs <= vs;
+	hdmi_out_de <= de;
+	hdmi_out_d  <= d;
+end
+
+assign HDMI_TX_HS = hdmi_out_hs;
+assign HDMI_TX_VS = hdmi_out_vs;
+assign HDMI_TX_DE = hdmi_out_de;
+assign HDMI_TX_D  = hdmi_out_d;
 
 /////////////////////////  VGA output  //////////////////////////////////
 
@@ -1068,6 +1113,26 @@ alsa alsa
 	.pcm_r(alsa_r)
 );
 
+
+////////////////  User I/O (USB 3.0 connector) /////////////////////////
+
+//assign USER_IO[0] =                       !user_out[0]  ? 1'b0 : 1'bZ;
+//assign USER_IO[1] =                       !user_out[1]  ? 1'b0 : 1'bZ;
+//assign USER_IO[2] = !(SW[1] ? HDMI_I2S   : user_out[2]) ? 1'b0 : 1'bZ;
+//assign USER_IO[3] =                       !user_out[3]  ? 1'b0 : 1'bZ;
+//assign USER_IO[4] = !(SW[1] ? HDMI_SCLK  : user_out[4]) ? 1'b0 : 1'bZ;
+//assign USER_IO[5] = !(SW[1] ? HDMI_LRCLK : user_out[5]) ? 1'b0 : 1'bZ;
+//assign USER_IO[6] =                       !user_out[6]  ? 1'b0 : 1'bZ;
+//
+//assign user_in[0] =         USER_IO[0];
+//assign user_in[1] =         USER_IO[1];
+//assign user_in[2] = SW[1] | USER_IO[2];
+//assign user_in[3] =         USER_IO[3];
+//assign user_in[4] = SW[1] | USER_IO[4];
+//assign user_in[5] = SW[1] | USER_IO[5];
+//assign user_in[6] =         USER_IO[6];
+
+
 ///////////////////  User module connection ////////////////////////////
 
 wire [15:0] audio_ls, audio_rs;
@@ -1108,26 +1173,6 @@ wire        osd_status;
 
 wire  [6:0] user_out, user_in;
 
-// Joystick 6 buttons megadrive 
-//wire [11:0] joy1_o;   // -- MXYZ SACB RLDU
-//wire [11:0] joy2_o;   // -- MXYZ SACB RLDU
-
-//// create a binary counter
-//reg [31:0] cnt; // 32-bit counter
-//
-//initial begin
-//
-//     cnt <= 32'h00000000; // start at zero
-//
-//end
-//
-//always @(posedge FPGA_CLK1_50) begin
-//
-//     cnt <= cnt + 1; // count up
-//
-//end
-
-
 emu emu
 (
 	.CLK_50M(FPGA_CLK2_50),
@@ -1146,6 +1191,10 @@ emu emu
 	.VGA_F1(f1),
 	.VGA_SL(scanlines),
 
+        .joy_o_db9 (joy_o_db9),
+	.db9_Select (db9_Select),
+	.splitter_select(splitter_select),
+ 
 	.LED_USER(led_user),
 	.LED_POWER(led_power),
 	.LED_DISK(led_disk),
@@ -1154,14 +1203,6 @@ emu emu
 	.VIDEO_ARX(ARX),
 	.VIDEO_ARY(ARY),
 
-	// I/O Joystick added  
-//	.joy1_o			(joy1_o),   // -- MXYZ SACB RLDU
-//	.joy2_o			(joy2_o),   // -- MXYZ SACB RLDU
-   .joy_o_db9 (joy_o_db9),  
-	.db9_Select (db9_Select),
-	.joy_splitter_select(splitter_select),
-	
-	
 	.AUDIO_L(audio_ls),
 	.AUDIO_R(audio_rs),
 	.AUDIO_S(audio_s),

@@ -52,6 +52,11 @@ module emu
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
 
+        // DB9 Joystick
+	input [5:0] joy_o_db9,    // CB UDLR
+	output      db9_Select ,
+	output      splitter_select, 
+
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -65,16 +70,6 @@ module emu
 	// b[0]: osd button
 	output  [1:0] BUTTONS,
 
-	
-		// I/O Joystick added  
-//	input [11:0] joy1_o,  // -- MXYZ SACB RLDU
-//	input [11:0] joy2_o,  // -- MXYZ SACB RLDU
-
-   // DB9 Joystick
-	input [5:0] joy_o_db9,    // CB UDLR
-	output      db9_Select ,
-	output      joy_splitter_select,
-	
 	output [15:0] AUDIO_L,
 	output [15:0] AUDIO_R,
 	output        AUDIO_S, // 1 - signed audio samples, 0 - unsigned
@@ -139,7 +134,6 @@ assign USER_OUT = '1;
 assign {UART_RTS, UART_TXD, UART_DTR} = 0;
 assign BUTTONS   = 0;
 assign {SD_SCK, SD_MOSI, SD_CS} = 'Z;
-assign {SDRAM_DQ, SDRAM_A, SDRAM_BA, SDRAM_CLK, SDRAM_CKE, SDRAM_DQML, SDRAM_DQMH, SDRAM_nWE, SDRAM_nCAS, SDRAM_nRAS, SDRAM_nCS} = 'Z;
 
 always_comb begin
 	if (status[10]) begin
@@ -186,9 +180,9 @@ assign LED_USER  = cart_download | sav_pending;
 // Status Bit Map:
 //             Upper                             Lower              
 // 0         1         2         3          4         5         6   
-// 01234567890123456789012345678901 234567890123456789012345678901234
-// 0123456789ABCDEFGHIJKLMNOPQRSTUV 01234567890abcdefghijklmnopqrstuv
-// XXXXXXXXXXXX XXXXXXXXXXXXXXXXXXX XXX                               
+// 01234567890123456789012345678901 23456789012345678901234567890123
+// 0123456789ABCDEFGHIJKLMNOPQRSTUV 0123456789ABCDEFGHIJKLMNOPQRSTUV
+// XXXXXXXXXXXX XXXXXXXXXXXXXXXXXXX XXXXX                             
 
 `include "build_id.v"
 localparam CONF_STR = {
@@ -216,12 +210,14 @@ localparam CONF_STR = {
 	"OB,FM Chip,YM2612,YM3438;",
 	"ON,HiFi PCM,No,Yes;",
 	"-;",
-	"o45,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
+   "o56,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;", 
 	"O4,Swap Joysticks,No,Yes;",
 	"O5,6 Buttons Mode,No,Yes;",
 	"OLM,Multitap,Disabled,4-Way,TeamPlayer,J-Cart;",
 	"OIJ,Mouse,None,Port1,Port2;",
 	"OK,Mouse Flip Y,No,Yes;",
+	"-;",
+	"o34,ROM Storage,Auto,SDRAM,DDR3;",
 	"-;",
 	"OPQ,CPU Turbo,None,Medium,High;",
 	"OV,Sprite Limit,Normal,High;",
@@ -232,14 +228,9 @@ localparam CONF_STR = {
 	"R0,Reset;",
 	"J1,A,B,C,Start,Mode,X,Y,Z;",
 	"jn,A,B,R,Start,Select,X,Y,L;", // name map to SNES layout.
-	"jp,B,A,R,Start,Select,Y,X,L;", // positional map to SNES layout.
+	"jp,Y,B,A,Start,Select,L,X,R;", // positional map to SNES layout (3 button friendly) 
 	"V,v",`BUILD_DATE
 };
-
-////////////////////   JOYSTICKS   ///////////////////
-
-// First we applied the Splitter , later 6 buttons Megadrive 
-// I/O 2 Joystick splititer option added from joy_o_db9 ////////////////
 
 // create a binary counter
 reg [31:0] cnt; // 32-bit counter
@@ -247,48 +238,58 @@ reg [31:0] cnt; // 32-bit counter
 initial begin
      cnt <= 32'h00000000; // start at zero
 end
-always @(posedge clk_sys) begin
+always @(posedge CLK_50M) begin
      cnt <= cnt + 1; // count up
 end
 
 
-assign joy_splitter_select = cnt[6];    // 53 Mhz /64  = 800 Khz 
+//////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
+wire [6:0] JOYAV_T1;      // CB UDLR  negative Logic
+wire [6:0] JOYAV_T2;      // CB UDLR  negative Logic
+reg  [6:0] joy1, joy2;   // CB UDLR  negative Logic
 
-reg  [5:0] joy1, joy2;   // CB UDLR  in negative logic
+//assign db9_Select = 1'b1;
 
-always @(posedge clk_sys) begin //2joysplit
-    if (~joy_splitter_select)
-        joy1 <= joy_o_db9;
+reg joy_split = 1'b1;
+assign splitter_select = joy_split;   
+
+always @(posedge cnt[8])  // 50/256  = 195 khz 
+  begin
+    if (joy_split)
+	   begin
+	     joy1 <= joy_o_db9;
+		  joy_split <= 1'b0;
+		end
     else 
-        joy2 <= joy_o_db9;  
-end  
-
-
-// Now we applu the menu options
-
-wire [5:0] JOYAV_T1;      // CB UDLR  in negative logic
-wire [5:0] JOYAV_T2;      // CB UDLR  in negative logic
+	   begin
+        joy2 <= joy_o_db9; 
+		  joy_split <= 1'b1;
+		end
+  end
 
 
 always @(posedge clk_sys)
   begin
-    case (status[37:36])
-      3'b000  : begin
-						JOYAV_T1 <= joy_o_db9;
-						JOYAV_T2 <=  6'b1;
+    case (status[38:37])
+        2'b00 : begin						// Player 1
+						JOYAV_T1 <=  joy_o_db9;
+						JOYAV_T2 <=  6'b111111; // because is negative logic
 					 end
-      3'b001  : begin
-						JOYAV_T1 <=  6'b1;
-						JOYAV_T2 <= joy_o_db9;
+        2'b01 : begin						// Player 2
+						JOYAV_T1 <=  6'b111111; // because is negative logic
+						JOYAV_T2 <=  joy_o_db9;
 					 end
-      3'b010  : begin
+        2'b10 : begin						// P1 + P2 (Splitter)
 						JOYAV_T1 <=  joy1;
 						JOYAV_T2 <=  joy2;
+					 end
+		  2'b11 : begin						// DB9 OFF
+						JOYAV_T1 <=  6'b111111; // because is negative logic
+						JOYAV_T2 <=  6'b111111; // because is negative logic
 					 end
    // default : r_RESULT <= 9; 
     endcase
   end
-
 
 
 // Now we apply the megadrive desmultiplexor conversor
@@ -297,9 +298,9 @@ wire [11:0] joy1_o;   // MXYZ SACB RLDU  in negative logic
 wire [11:0] joy2_o;   // MXYZ SACB RLDU  in negative logic
 
 // Llamamos a la maquina de estados para leer los 6 botones del mando de Megadrive
-// Formato joy1_o [11:0] =  MXYZ SACB RLDU
+// Formato joy1_o [11:0] =  MXYZ SACB RLDU negative logic
 sega_joystick joy (
-	.joy1_up_i		(JOYAV_T1[3]),   // joy1 // CB UDLR
+	.joy1_up_i		(JOYAV_T1[3]),   // JOYAV_T1 // CB UDLR (negative logic)
 	.joy1_down_i	(JOYAV_T1[2]),
 	.joy1_left_i	(JOYAV_T1[1]),
 	.joy1_right_i	(JOYAV_T1[0]),
@@ -311,12 +312,11 @@ sega_joystick joy (
 	.joy2_right_i	(JOYAV_T2[0]),
 	.joy2_p6_i		(JOYAV_T2[4]),
 	.joy2_p9_i		(JOYAV_T2[5]),
-	.vga_hsync_n_s (VGA_HS),
+	.vga_hsync_n_s (cnt[11]),
 	.joyX_p7_o		(db9_Select), // select signal
-	.joy1_o			(joy1_o),    // MXYZ SACB RLDU
-	.joy2_o			(joy2_o)     // MXYZ SACB RLDU 
-);
-
+	.joy1_o			(joy1_o),    // MXYZ SACB RLDU in negative logic
+	.joy2_o			(joy2_o)     // MXYZ SACB RLDU in negative logic
+); 
 
 wire [11:0] JOYAV_1;   // ZYXM SCBA UDLR   in positive logic
 wire [11:0] JOYAV_2;   // ZYXM SCBA UDLR   in positive logic
@@ -325,9 +325,7 @@ assign JOYAV_1 = ~{joy1_o[8],joy1_o[9],joy1_o[10],joy1_o[11],joy1_o[7],joy1_o[5]
 assign JOYAV_2 = ~{joy2_o[8],joy2_o[9],joy2_o[10],joy2_o[11],joy2_o[7],joy2_o[5],joy2_o[4],joy2_o[6],joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
 
 
-
-////////////////////////////////////////////////////
-
+///////////////////////////////////////////////////////////////////////////
 
 wire [63:0] status;
 wire  [1:0] buttons;
@@ -356,6 +354,7 @@ wire [10:0] ps2_key;
 wire [24:0] ps2_mouse;
 
 wire [21:0] gamma_bus;
+wire [15:0] sdram_sz;
 
 hps_io #(.STRLEN($size(CONF_STR)>>3), .WIDE(1)) hps_io
 (
@@ -397,6 +396,7 @@ hps_io #(.STRLEN($size(CONF_STR)>>3), .WIDE(1)) hps_io
 	.img_size(img_size),
 
 	.gamma_bus(gamma_bus),
+	.sdram_sz(sdram_sz),
 
 	.ps2_key(ps2_key),
 	.ps2_mouse(ps2_mouse)
@@ -457,7 +457,6 @@ wire hblank, vblank;
 wire interlace;
 wire [1:0] resolution;
 
-assign DDRAM_CLK = clk_ram;
 wire reset = RESET | status[0] | buttons[1] | region_set | bk_loading;
 
 wire [7:0] color_lut[16] = '{
@@ -467,14 +466,6 @@ wire [7:0] color_lut[16] = '{
 	8'd206, 8'd228, 8'd255, 8'd255
 };
 
-
-//wire [11:0] joy1_o_db9;   // ZYXM SCBA UDLR   in positive logic
-//wire [11:0] joy2_o_db9;   // ZYXM SCBA UDLR   in positive logic
-//assign joy1_o_db9 = ~{joy1_o[8],joy1_o[9],joy1_o[10],joy1_o[11],joy1_o[7],joy1_o[5],joy1_o[4],joy1_o[6],joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
-//                    //  joy1_o  --> MXYZ SACB RLDU  in negative logic
-//assign joy2_o_db9 = ~{joy2_o[8],joy2_o[9],joy2_o[10],joy2_o[11],joy2_o[7],joy2_o[5],joy2_o[4],joy2_o[6],joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};      
-//						  //  joy2_o  --> MXYZ SACB RLDU  in negative logic
-						  
 system system
 (
 	.RESET_N(~reset),
@@ -517,8 +508,7 @@ system system
 
 	.J3BUT(~status[5]),
 	.JOY_1(status[4] ? (joystick_1 | JOYAV_2 ) : (joystick_0 | JOYAV_1 ) ),  // ZYXM SCBA UDLR
-	.JOY_2(status[4] ? (joystick_0 | JOYAV_1 ) : (joystick_1 | JOYAV_2 ) ),  // ZYXM SCBA UDLR
-
+	.JOY_2(status[4] ? (joystick_0 | JOYAV_1 ) : (joystick_1 | JOYAV_2 ) ),  // ZYXM SCBA UDLR 
 	.JOY_3(joystick_2),
 	.JOY_4(joystick_3),
 	.MULTITAP(status[22:21]),
@@ -542,13 +532,14 @@ system system
 
 	.ROMSZ(rom_sz[24:1]),
 	.ROM_ADDR(rom_addr),
-	.ROM_DATA(rom_data),
+	.ROM_DATA(use_sdr ? sdrom_data : ddrom_data),
 	.ROM_WDATA(rom_wdata),
+	.ROM_RD(rom_rd),
 	.ROM_WE(rom_we),
 	.ROM_BE(rom_be),
-	.ROM_REQ(rom_rd),
-	.ROM_ACK(rom_rdack),
-	
+	.ROM_REQ(rom_req),
+	.ROM_ACK(use_sdr ? sdrom_rdack : ddrom_rdack),
+
 	.ROM_ADDR2(rom_addr2),
 	.ROM_DATA2(rom_data2),
 	.ROM_REQ2(rom_rd2),
@@ -663,28 +654,61 @@ video_mixer #(.LINE_LENGTH(320), .HALF_DEPTH(0), .GAMMA(1)) video_mixer
 );
 
 ///////////////////////////////////////////////////
+sdram sdram
+(
+	.*,
+	.init(~locked),
+	.clk(clk_ram),
+
+	.addr0(ioctl_addr[24:1]),
+	.din0({ioctl_data[7:0],ioctl_data[15:8]}),
+	.dout0(),
+	.rd0(0),
+	.wrl0(1),
+	.wrh0(1),
+	.req0(rom_wr),
+	.ack0(sdrom_wrack),
+
+	.addr1(rom_addr),
+	.din1(rom_wdata),
+	.dout1(sdrom_data),
+	.rd1(rom_rd),
+	.wrl1(rom_we & rom_be[0]),
+	.wrh1(rom_we & rom_be[1]),
+	.req1(rom_req),
+	.ack1(sdrom_rdack),
+
+	.addr2(0),
+	.din2(0),
+	.dout2(),
+	.rd2(0),
+	.wrl2(0),
+	.wrh2(0),
+	.req2(0),
+	.ack2()
+);
 
 wire [24:1] rom_addr, rom_addr2;
-wire [15:0] rom_data, rom_data2, rom_wdata;
+wire [15:0] sdrom_data, ddrom_data, rom_data2, rom_wdata;
 wire  [1:0] rom_be;
-wire rom_rd, rom_rdack, rom_rd2, rom_rdack2, rom_we;
+wire rom_req, rom_rd, sdrom_rdack, ddrom_rdack, rom_rd2, rom_rdack2, rom_we;
 
+assign DDRAM_CLK = clk_ram;
 ddram ddram
 (
 	.*,
-	
-	.wraddr(cart_download ? ioctl_addr : rom_sz),
+	.wraddr(ioctl_addr),
 	.din({ioctl_data[7:0],ioctl_data[15:8]}),
 	.we_req(rom_wr),
-	.we_ack(rom_wrack),
-	
+	.we_ack(ddrom_wrack),
+
 	.rdaddr(rom_addr),
-	.dout(rom_data),
+	.dout(ddrom_data),
 	.rom_din(rom_wdata),
 	.rom_be(rom_be),
 	.rom_we(rom_we),
-	.rd_req(rom_rd),
-	.rd_ack(rom_rdack),
+	.rom_req(rom_req),
+	.rom_ack(ddrom_rdack),
 
 	.rdaddr2(rom_addr2),
 	.dout2(rom_data2),
@@ -692,8 +716,11 @@ ddram ddram
 	.rd_ack2(rom_rdack2) 
 );
 
+reg use_sdr;
+always @(posedge clk_sys) use_sdr <= (!status[36:35]) ? |sdram_sz[2:0] : status[35];
+
 reg  rom_wr;
-wire rom_wrack;
+wire sdrom_wrack, ddrom_wrack;
 reg [24:0] rom_sz;
 always @(posedge clk_sys) begin
 	reg old_download, old_reset;
@@ -712,7 +739,7 @@ always @(posedge clk_sys) begin
 		if(ioctl_wr) begin
 			ioctl_wait <= 1;
 			rom_wr <= ~rom_wr;
-		end else if(ioctl_wait && (rom_wr == rom_wrack)) begin
+		end else if(ioctl_wait && (rom_wr == sdrom_wrack) && (rom_wr == ddrom_wrack)) begin
 			ioctl_wait <= 0;
 		end
 	end
@@ -868,10 +895,8 @@ always @(posedge clk_sys) begin
 	else if (bk_state) sav_pending <= 0;
 end
 
-//wire bk_load    = status[16];
-//wire bk_save    = status[17] | (sav_pending & OSD_STATUS);
-wire bk_load    = 1'b1;
-wire bk_save    = 1'b1 | (sav_pending & OSD_STATUS);
+wire bk_load    = status[16];
+wire bk_save    = status[17] | (sav_pending & OSD_STATUS);
 reg  bk_loading = 0;
 reg  bk_state   = 0;
 

@@ -35,26 +35,27 @@ set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to IO_S*
 #============================================================
 # USER PORT
 #============================================================
-set_location_assignment PIN_AF17 -to joy1_p9_i
-set_location_assignment PIN_AF15 -to joy1_up_i
-set_location_assignment PIN_AE15 -to joy1_down_i
-set_location_assignment PIN_AH11 -to joy1_p6_i
-set_location_assignment PIN_AH12 -to joy1_right_i
-set_location_assignment PIN_AH9 -to joy1_left_i
-set_location_assignment PIN_AG11 -to joyX_p7_o
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_p9_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_up_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_down_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_p6_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_right_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_left_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_p9_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_up_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_down_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_p6_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_right_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_left_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joyX_p7_o
+set_location_assignment PIN_AF15 -to joy_up_i
+set_location_assignment PIN_AH9  -to joy_left_i
+set_location_assignment PIN_AH11 -to joy_p6_i
+set_location_assignment PIN_AF17 -to joy_p9_i
+set_location_assignment PIN_AH12 -to joy_right_i
+set_location_assignment PIN_AE15 -to joy_down_i
+set_location_assignment PIN_AG11 -to db9_Select
+set_location_assignment PIN_AG16 -to splitter_select
+
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_down_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_left_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_p6_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_p9_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_right_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_up_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to db9_Select
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to splitter_select
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_*
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to db9_Select
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to splitter_select
 
 #============================================================
 # SDIO_CD or SPDIF_OUT
@@ -109,12 +110,9 @@ set_location_assignment PIN_W14 -to SDRAM_nRAS
 
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDRAM_*
 set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to SDRAM_*
-set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to SDRAM_A*
-set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to SDRAM_BA*
-set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to SDRAM_DQ[*]
-set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to SDRAM_DQM*
-set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to SDRAM_n*
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to SDRAM_*
 set_instance_assignment -name FAST_OUTPUT_ENABLE_REGISTER ON -to SDRAM_DQ[*]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to SDRAM_DQ[*]
 set_instance_assignment -name ALLOW_SYNCH_CTRL_USAGE OFF -to *|SDRAM_*
 
 #============================================================
@@ -142,41 +140,17 @@ set_location_assignment PIN_E11 -to FPGA_CLK3_50
 #============================================================
 # HDMI
 #============================================================
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_I2C_SCL
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_I2C_SDA
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_I2C_*
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_I2S
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_LRCLK
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_MCLK
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_SCLK
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_CLK
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_DE
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[0]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[1]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[2]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[3]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[4]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[5]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[6]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[7]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[8]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[9]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[10]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[11]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[12]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[13]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[14]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[15]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[16]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[17]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[18]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[19]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[20]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[21]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[22]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_D[23]
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_HS
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_INT
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_VS
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to HDMI_TX_*
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_D[*]
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_DE
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_HS
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_VS
+set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to HDMI_TX_CLK
 set_location_assignment PIN_U10 -to HDMI_I2C_SCL
 set_location_assignment PIN_AA4 -to HDMI_I2C_SDA
 set_location_assignment PIN_T13 -to HDMI_I2S
