@@ -26,7 +26,7 @@ module sys_top
 	input         FPGA_CLK2_50,
 	input         FPGA_CLK3_50,
 
-	// Joysticks i/o 
+        // Joysticks i/o 
 	input     joy_up_i,
 	input     joy_down_i,
 	input     joy_left_i,
@@ -35,7 +35,8 @@ module sys_top
 	input     joy_p9_i,
 	output 	 joy_select,
 	output    joy_splitter_select,
-	
+
+
 	//////////// HDMI //////////
 	output        HDMI_I2C_SCL,
 	inout         HDMI_I2C_SDA,
@@ -131,7 +132,7 @@ module sys_top
 	output  [7:0] LED
 
 	///////// USER IO ///////////
-	//inout   [5:0] USER_IO
+	//inout   [6:0] USER_IO
 );
 
 // assign DB9 Joystick ///////
@@ -139,25 +140,25 @@ module sys_top
 wire  [5:0] joy_o_db9;  // CB UDLR  (in positive logic)
 assign joy_o_db9 = ~{joy_p9_i, joy_p6_i,  joy_up_i, joy_down_i,joy_left_i, joy_right_i};
 
-//assign splitter_select = VGA_HS;
+assign splitter_select = 1'b1;
 
 //////////////////////  Secondary SD  ///////////////////////////////////
 
 //wire sd_miso;
-wire SD_CS, SD_CLK, SD_MOSI, SD_MISO;
-
-`ifndef DUAL_SDRAM
-	assign SDIO_DAT[2:1]= 2'bZZ;
-	assign SDIO_DAT[3]  = SW[3] ? 1'bZ  : SD_CS;
-	assign SDIO_CLK     = SW[3] ? 1'bZ  : SD_CLK;
-	assign SDIO_CMD     = SW[3] ? 1'bZ  : SD_MOSI;
-	assign sd_miso      = SW[3] ? 1'b1  : SDIO_DAT[0];
+//wire SD_CS, SD_CLK, SD_MOSI, SD_MISO;
+//
+//`ifndef DUAL_SDRAM
+//	assign SDIO_DAT[2:1]= 2'bZZ;
+//	assign SDIO_DAT[3]  = SW[3] ? 1'bZ  : SD_CS;
+//	assign SDIO_CLK     = SW[3] ? 1'bZ  : SD_CLK;
+//	assign SDIO_CMD     = SW[3] ? 1'bZ  : SD_MOSI;
+//	assign sd_miso      = SW[3] ? 1'b1  : SDIO_DAT[0];
 //	assign SD_SPI_CS    = mcp_sdcd ? ((~VGA_EN & sog & ~cs1) ? 1'b1 : 1'bZ) : SD_CS;
-`else
+//`else
 //	assign sd_miso      = 1'b1;
 //	assign SD_SPI_CS    = mcp_sdcd ? 1'bZ : SD_CS;
-`endif
-
+//`endif
+//
 //assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ    : SD_CLK;
 //assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ    : SD_MOSI;
 //assign SD_MISO     = mcp_sdcd ? sd_miso : SD_SPI_MISO;
@@ -461,7 +462,7 @@ always @(posedge FPGA_CLK2_50) begin
 end
 
 wire clk_100m;
-wire clk_hdmi  = ~hdmi_clk_out;  // Internal HDMI clock, inverted in relation to external clock
+wire clk_hdmi  = hdmi_clk_out;
 wire clk_audio = FPGA_CLK3_50;
 wire clk_pal   = FPGA_CLK3_50;
 
@@ -854,7 +855,7 @@ osd hdmi_osd
 
 reg [23:0] dv_data;
 reg        dv_hs, dv_vs, dv_de;
-always @(negedge clk_vid) begin
+always @(posedge clk_vid) begin
 	reg [23:0] dv_d1, dv_d2;
 	reg        dv_de1, dv_de2, dv_hs1, dv_hs2, dv_vs1, dv_vs2;
 	reg [12:0] vsz, vcnt;
@@ -893,11 +894,63 @@ always @(negedge clk_vid) begin
 	dv_vs  <= dv_vs2;
 end
 
-assign HDMI_TX_CLK = direct_video ? clk_vid : hdmi_clk_out;
-assign HDMI_TX_HS  = direct_video ? dv_hs   : hdmi_hs_osd;
-assign HDMI_TX_VS  = direct_video ? dv_vs   : hdmi_vs_osd;
-assign HDMI_TX_DE  = direct_video ? dv_de   : hdmi_de_osd;
-assign HDMI_TX_D   = direct_video ? dv_data : hdmi_data_osd;
+wire hdmi_tx_clk;
+cyclonev_clkselect hdmi_clk_sw
+( 
+	.clkselect({1'b1, direct_video}),
+	.inclk({clk_vid, hdmi_clk_out, 2'b00}),
+	.outclk(hdmi_tx_clk)
+);
+
+altddio_out
+#(
+	.extend_oe_disable("OFF"),
+	.intended_device_family("Cyclone V"),
+	.invert_output("OFF"),
+	.lpm_hint("UNUSED"),
+	.lpm_type("altddio_out"),
+	.oe_reg("UNREGISTERED"),
+	.power_up_high("OFF"),
+	.width(1)
+)
+hdmiclk_ddr
+(
+	.datain_h(1'b0),
+	.datain_l(1'b1),
+	.outclock(hdmi_tx_clk),
+	.dataout(HDMI_TX_CLK),
+	.aclr(1'b0),
+	.aset(1'b0),
+	.oe(1'b1),
+	.outclocken(1'b1),
+	.sclr(1'b0),
+	.sset(1'b0)
+);
+
+reg hdmi_out_hs;
+reg hdmi_out_vs;
+reg hdmi_out_de;
+reg [23:0] hdmi_out_d;
+
+always @(posedge hdmi_tx_clk) begin
+	reg hs,vs,de;
+	reg [23:0] d;
+	
+	hs <= direct_video ? dv_hs   : hdmi_hs_osd;
+	vs <= direct_video ? dv_vs   : hdmi_vs_osd;
+	de <= direct_video ? dv_de   : hdmi_de_osd;
+	d  <= direct_video ? dv_data : hdmi_data_osd;
+
+	hdmi_out_hs <= hs;
+	hdmi_out_vs <= vs;
+	hdmi_out_de <= de;
+	hdmi_out_d  <= d;
+end
+
+assign HDMI_TX_HS = hdmi_out_hs;
+assign HDMI_TX_VS = hdmi_out_vs;
+assign HDMI_TX_DE = hdmi_out_de;
+assign HDMI_TX_D  = hdmi_out_d;
 
 /////////////////////////  VGA output  //////////////////////////////////
 
@@ -1062,6 +1115,26 @@ alsa alsa
 	.pcm_r(alsa_r)
 );
 
+
+////////////////  User I/O (USB 3.0 connector) /////////////////////////
+
+//assign USER_IO[0] =                       !user_out[0]  ? 1'b0 : 1'bZ;
+//assign USER_IO[1] =                       !user_out[1]  ? 1'b0 : 1'bZ;
+//assign USER_IO[2] = !(SW[1] ? HDMI_I2S   : user_out[2]) ? 1'b0 : 1'bZ;
+//assign USER_IO[3] =                       !user_out[3]  ? 1'b0 : 1'bZ;
+//assign USER_IO[4] = !(SW[1] ? HDMI_SCLK  : user_out[4]) ? 1'b0 : 1'bZ;
+//assign USER_IO[5] = !(SW[1] ? HDMI_LRCLK : user_out[5]) ? 1'b0 : 1'bZ;
+//assign USER_IO[6] =                       !user_out[6]  ? 1'b0 : 1'bZ;
+//
+//assign user_in[0] =         USER_IO[0];
+//assign user_in[1] =         USER_IO[1];
+//assign user_in[2] = SW[1] | USER_IO[2];
+//assign user_in[3] =         USER_IO[3];
+//assign user_in[4] = SW[1] | USER_IO[4];
+//assign user_in[5] = SW[1] | USER_IO[5];
+//assign user_in[6] =         USER_IO[6];
+
+
 ///////////////////  User module connection ////////////////////////////
 
 wire [15:0] audio_ls, audio_rs;
@@ -1120,15 +1193,15 @@ emu emu
 	.VGA_F1(f1),
 	.VGA_SL(scanlines),
 
-	.joy_o_db9 (joy_o_db9),
+        .joy_o_db9 (joy_o_db9),
 	.joy_select (joy_select),
 	.joy_splitter_select(joy_splitter_select),
-	
+
 	.LED_USER(led_user),
 	.LED_POWER(led_power),
 	.LED_DISK(led_disk),
 	.BUTTONS(btn),
-	
+
 	.VIDEO_ARX(ARX),
 	.VIDEO_ARY(ARY),
 

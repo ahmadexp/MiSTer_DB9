@@ -53,14 +53,4 @@ set_global_assignment -name SEED 1
 source sys/sys.tcl
 source sys/sys_analog.tcl
 source files.qip
-set_location_assignment PIN_AE15 -to joy_down_i
-set_location_assignment PIN_AH9 -to joy_left_i
-set_location_assignment PIN_AH11 -to joy_p6_i
-set_location_assignment PIN_AF17 -to joy_p9_i
-set_location_assignment PIN_AH12 -to joy_right_i
-set_location_assignment PIN_AF15 -to joy_up_i
-set_location_assignment PIN_AG16 -to joy_splitter_select
-set_location_assignment PIN_AG11 -to joy_select
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_select
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_splitter_select
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

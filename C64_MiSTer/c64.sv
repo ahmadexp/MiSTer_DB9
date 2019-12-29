@@ -55,11 +55,11 @@ module emu
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
 
-	// DB9 Joystick by Benitoss
+        // DB9 Joystick by Benitoss
   	input [5:0] joy_o_db9,    // CB UDLR (in positive logic)
 	output      joy_select ,
-	output      joy_splitter_select,
-	
+	output      joy_splitter_select, 
+
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -172,7 +172,7 @@ localparam CONF_STR = {
 	"OC,Sound expander,No,OPL2;",
 	"OIJ,Stereo mix,none,25%,50%,100%;",
 	"-;",
-	"o45,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
+   "o45,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;",
 	"O3,Swap joysticks,No,Yes;",
 	"O1,User port,Joysticks,UART;",
 	"OO,Mouse,Port 1,Port 2;",
@@ -185,59 +185,77 @@ localparam CONF_STR = {
 	"V,v",`BUILD_DATE
 };
    
-////////////////////  JOYSTICKS added by Benitoss ///////////////////
+// create a binary counter
+reg [31:0] cnt; // 32-bit counter
 
-// I/O 2 Joystick splitter option added from joy_o_db9 ////////////////
+initial begin
+     cnt <= 32'h00000000; // start at zero
+end
+always @(posedge CLK_50M) begin
+     cnt <= cnt + 1; // count up
+end
 
 
-assign joy_splitter_select = VGA_HS;    
+//////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
+wire [6:0] JOYAV_1;      // CB UDLR  Positive Logic
+wire [6:0] JOYAV_2;      // CB UDLR  Positive Logic
+reg  [6:0] joy1, joy2;   // CB UDLR  Positive Logic
 
-reg  [5:0] joy1, joy2;   // CB UDLR  (in positive logic)
+reg joy_split = 1'b1;
 
-always @(posedge clk_sys) begin //2joysplit
-    if (~joy_splitter_select)    
-        joy1 <= joy_o_db9;
+assign splitter_select = joy_split;   
+
+always @(posedge cnt[8])  // 50/256  = 195 khz 
+  begin
+    if (joy_split)
+	   begin
+	     joy1 <= joy_o_db9;
+		  joy_split <= 1'b0;
+		end
     else 
-        joy2 <= joy_o_db9;  
-end  
-
-
-// Now we apply the menu options
-
-wire [6:0] JOYAV_1;      // CB UDLR  (in positive logic)
-wire [6:0] JOYAV_2;      // CB UDLR  (in positive logic)
-
+	   begin
+        joy2 <= joy_o_db9; 
+		  joy_split <= 1'b1;
+		end
+  end
+  
+  
 
 always @(posedge clk_sys)
   begin
     case (status[37:36])
-      3'b000  : begin
-						JOYAV_1 <= {1'b0,joy_o_db9};
-						JOYAV_2 <=  7'b0; // because is positive logic
+      2'b00  :  begin
+						JOYAV_1 <=  joy_o_db9;
+						JOYAV_2 <=  7'b0;  // Positive Logic
 					 end
-      3'b001  : begin
-						JOYAV_1 <=  7'b0; // because is positive logic
-						JOYAV_2 <= {1'b0,joy_o_db9};
+      2'b01  :  begin
+						JOYAV_1 <=  7'b0;  // Positive Logic
+						JOYAV_2 <=  joy_o_db9;
 					 end
-      3'b010  : begin
-						JOYAV_1 <=  {1'b0,joy1};
-						JOYAV_2 <=  {1'b0,joy2};
+      2'b10  :  begin
+						JOYAV_1 <=  joy1;
+						JOYAV_2 <=  joy2;
+					 end
+		2'b11  :  begin
+						JOYAV_1 <=  7'b0;  // Positive Logic
+						JOYAV_2 <=  7'b0;  // Positive Logic
 					 end
    // default : r_RESULT <= 9; 
     endcase
-  end
-	
-////////////////////////////////////////////////////////////////////////////	
-	
+  end 
+
+
+////////////////////   CLOCKS   ///////////////////
+
 wire pll_locked;
 wire clk_sys;
 wire clk64;
-wire clk96;
+wire clk48;
 
 pll pll
 (
 	.refclk(CLK_50M),
-	.outclk_0(clk96),
+	.outclk_0(clk48),
 	.outclk_1(clk64),
 	.outclk_2(clk_sys),
 	.reconfig_to_pll(reconfig_to_pll),
@@ -356,6 +374,8 @@ wire        disk_readonly;
 wire [24:0] ps2_mouse;
 wire [10:0] ps2_key;
 wire  [1:0] buttons;
+wire [21:0] gamma_bus;
+
 
 hps_io #(.STRLEN($size(CONF_STR)>>3), .VDNUM(2)) hps_io
 (
@@ -373,6 +393,7 @@ hps_io #(.STRLEN($size(CONF_STR)>>3), .VDNUM(2)) hps_io
 	.status_menumask(~status[25]),
 	.buttons(buttons),
 	.forced_scandoubler(forced_scandoubler),
+	.gamma_bus(gamma_bus),
 
 	.sd_lba(c1541_1_busy ? sd_lba1 : sd_lba2),
 	.sd_rd(sd_rd),
@@ -638,7 +659,6 @@ always @(posedge clk_sys) begin
 	if(start_strk) act <= 1;
 end
 
-assign SDRAM_CLK  = ~clk64;
 assign SDRAM_CKE  = 1;
 assign SDRAM_DQML = 0;
 assign SDRAM_DQMH = 0;
@@ -653,6 +673,7 @@ sdram sdram
 	.sd_we(SDRAM_nWE),
 	.sd_ras(SDRAM_nRAS),
 	.sd_cas(SDRAM_nCAS),
+	.sd_clk(SDRAM_CLK),
 
 	.clk(clk64),
 	.init(~pll_locked),
@@ -930,13 +951,13 @@ always @(posedge clk_sys) begin
 end
 
 reg ce_pix;
-always @(posedge clk96) begin
-	reg [3:0] div;
+always @(posedge CLK_VIDEO) begin
+	reg [2:0] div;
 	reg       lores;
 
 	div <= div + 1'b1;
 
-	if(div == 11) begin
+	if(div == 5) begin
 		div <= 0;
 		lores <= ~lores;
 	end
@@ -946,21 +967,22 @@ end
 
 wire scandoubler = status[10:8] || forced_scandoubler;
 
-assign CLK_VIDEO = clk96;
+assign CLK_VIDEO = clk48;
 assign VIDEO_ARX = status[5:4] ? 8'd16 : 8'd4;
 assign VIDEO_ARY = status[5:4] ? 8'd9  : 8'd3;
 assign VGA_SL    = (status[10:8] > 2) ? status[9:8] - 2'd2 : 2'd0;
 assign VGA_F1    = 0;
 
-video_mixer video_mixer
+video_mixer #(.GAMMA(1)) video_mixer
 (
-	.clk_sys(clk96),
+	.clk_vid(CLK_VIDEO),
 	.ce_pix(ce_pix),
 	.ce_pix_out(CE_PIXEL),
 
 	.scanlines(0),
 	.hq2x(~status[10] & (status[9] ^ status[8])),
 	.scandoubler(scandoubler),
+	.gamma_bus(gamma_bus),
 
 	.R(r),
 	.G(g),
