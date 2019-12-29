@@ -137,10 +137,10 @@ module sys_top
 
 // asignacion de Joy Db9  ///////
 
-wire  [5:0] joy_o_db9;  // CB UDLR  Positive Logic
+wire  [5:0] joy_o_db9;  // CB UDLR  positive Logic
 assign joy_o_db9 = ~{joy_p9_i, joy_p6_i,  joy_up_i, joy_down_i,joy_left_i, joy_right_i};
 
-assign db9_Select = 1'b1; 
+assign db9_Select = 1'b1;
 
 //////////////////////  Secondary SD  ///////////////////////////////////
 
@@ -1142,6 +1142,7 @@ emu emu
 	.VGA_SL(scanlines),
 
    .joy_o_db9(joy_o_db9),
+	//.db9_Select(db9_Select),
 	.splitter_select(splitter_select),
 
 	.LED_USER(led_user),

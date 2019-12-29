@@ -178,7 +178,7 @@ parameter CONF_STR = {
 	"OC,FM sound,Enable,Disable;",
 	"OA,Region,US/UE,Japan;",
 	"-;",
-        "OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;", 
+   "OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;", 
 	"O1,Swap joysticks,No,Yes;",
 	"OE,Multitap,Disabled,Port1;",
 	"OB,BIOS,Enable,Disable;",
@@ -195,7 +195,7 @@ reg [31:0] cnt; // 32-bit counter
 initial begin
      cnt <= 32'h00000000; // start at zero
 end
-always @(posedge clk_sys) begin
+always @(posedge CLK_50M) begin
      cnt <= cnt + 1; // count up
 end
 
@@ -205,15 +205,26 @@ wire [5:0] JOYAV_1;      // CB UDLR  Positive Logic
 wire [5:0] JOYAV_2;      // CB UDLR  Positive Logic
 reg  [5:0] joy1, joy2;   // CB UDLR  Positive Logic
 
-assign splitter_select = cnt[16];   // 50 Mhz /65535 = 762 Hz 
+reg joy_split = 1'b1;
 
-always @(splitter_select)
+//assign splitter_select = cnt[13];   // 50 Mhz / 8192 =  6.1 Khz
+
+assign splitter_select = joy_split;   
+
+always @(posedge cnt[8])  // 50/256  = 195 khz 
   begin
-    if (splitter_select)
-        joy1 <= joy_o_db9;
+    if (joy_split)
+	   begin
+	     joy1 <= joy_o_db9;
+		  joy_split <= 1'b0;
+		end
     else 
+	   begin
         joy2 <= joy_o_db9; 
+		  joy_split <= 1'b1;
+		end
   end
+  
 
 always @(posedge clk_sys)
   begin
@@ -234,6 +245,7 @@ always @(posedge clk_sys)
 						JOYAV_1 <=  6'b0;  // Positive Logic
 						JOYAV_2 <=  6'b0;  // Positive Logic
 					 end
+   // default : r_RESULT <= 9; 
     endcase
   end 
 
