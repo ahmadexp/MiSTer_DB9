@@ -52,7 +52,9 @@ module emu
 	output [1:0]  VGA_SL,
 
 	// DB9 Joystick
-  	input   [5:0] joy1_o_db9, // CB UDLR
+  	input   [5:0] joy_o_db9, // CB UDLR negative logic
+	output        db9_Select,
+	output        splitter_select,
 
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
@@ -156,50 +158,111 @@ localparam CONF_STR = {
 	"O3,Difficulty P1,B,A;",
 	"O4,Difficulty P2,B,A;",
 	"-;",
+	"OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;",
 	"OBC,Control,Joystick,Paddle,Auto(Single);",
 	"ODE,Paddle map,X1+X2 X3+X4,X1+X3 X2+X4,X1+Y1 X2+Y2,X1-Y1 X2-Y2;",
 	"OF,Paddle swap,No,Yes;",
-	"OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
 	"R0,Reset;",
 	"J1,Fire,Paddle1(x),Paddle2(y),Game Reset,Game Select;",
 	"V,v",`BUILD_DATE
 };
 
-reg  [5:0] JOYAV; // CB UDLR
-assign JOYAV  = joy1_o_db9;
+
+
+// create a binary counter
+reg [31:0] cnt; // 32-bit counter
+
+initial begin
+     cnt <= 32'h00000000; // start at zero
+end
+always @(posedge CLK_50M) begin
+     cnt <= cnt + 1; // count up
+end
+
 
 //////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
-wire [5:0] JOYAV_1;      // CB UDLR
-wire [5:0] JOYAV_2;      // CB UDLR
-reg  [5:0] joy1, joy2;   // CB UDLR
+wire [6:0] JOYAV_T1;      // CB UDLR  negative Logic
+wire [6:0] JOYAV_T2;      // CB UDLR  negative Logic
+reg  [6:0] joy1, joy2;   // CB UDLR  negative Logic
 
-always @(posedge clk_sys) begin //2joysplit
-    if (~VGA_HS)
-        joy1 <= JOYAV;
+//assign db9_Select = 1'b1;
+
+reg joy_split = 1'b1;
+assign splitter_select = joy_split;   
+
+always @(posedge cnt[8])  // 50/256  = 195 khz 
+  begin
+    if (joy_split)
+	   begin
+	     joy1 <= joy_o_db9;
+		  joy_split <= 1'b0;
+		end
     else 
-        joy2 <= JOYAV;  
-end  
-   
+	   begin
+        joy2 <= joy_o_db9; 
+		  joy_split <= 1'b1;
+		end
+  end
+
 
 always @(posedge clk_sys)
   begin
     case (status[17:16])
-      3'b000  : begin
-						JOYAV_1 <= JOYAV;
-						JOYAV_2 <=  6'b0;
+        2'b00 : begin						// Player 1
+						JOYAV_T1 <=  joy_o_db9;
+						JOYAV_T2 <=  6'b111111; // because is negative logic
 					 end
-      3'b001  : begin
-						JOYAV_1 <=  6'b0;
-						JOYAV_2 <= JOYAV;
+        2'b01 : begin						// Player 2
+						JOYAV_T1 <=  6'b111111; // because is negative logic
+						JOYAV_T2 <=  joy_o_db9;
 					 end
-      3'b010  : begin
-						JOYAV_1 <=  joy1;
-						JOYAV_2 <=  joy2;
+        2'b10 : begin						// P1 + P2 (Splitter)
+						JOYAV_T1 <=  joy1;
+						JOYAV_T2 <=  joy2;
+					 end
+		  2'b11 : begin						// DB9 OFF
+						JOYAV_T1 <=  6'b111111; // because is negative logic
+						JOYAV_T2 <=  6'b111111; // because is negative logic
 					 end
    // default : r_RESULT <= 9; 
     endcase
   end
 
+
+// Now we apply the megadrive desmultiplexor conversor
+
+wire [11:0] joy1_o;   // MXYZ SACB RLDU  in negative logic
+wire [11:0] joy2_o;   // MXYZ SACB RLDU  in negative logic
+
+// Llamamos a la maquina de estados para leer los 6 botones del mando de Megadrive
+// Formato joy1_o [11:0] =  MXYZ SACB RLDU negative logic
+sega_joystick joy (
+	.joy1_up_i		(JOYAV_T1[3]),   // JOYAV_T1 // CB UDLR (negative logic)
+	.joy1_down_i	(JOYAV_T1[2]),
+	.joy1_left_i	(JOYAV_T1[1]),
+	.joy1_right_i	(JOYAV_T1[0]),
+	.joy1_p6_i		(JOYAV_T1[4]),
+	.joy1_p9_i		(JOYAV_T1[5]),
+	.joy2_up_i		(JOYAV_T2[3]),
+	.joy2_down_i	(JOYAV_T2[2]),
+	.joy2_left_i	(JOYAV_T2[1]),
+	.joy2_right_i	(JOYAV_T2[0]),
+	.joy2_p6_i		(JOYAV_T2[4]),
+	.joy2_p9_i		(JOYAV_T2[5]),
+	.vga_hsync_n_s (cnt[11]),
+	.joyX_p7_o		(db9_Select), // select signal
+	.joy1_o			(joy1_o),    // MXYZ SACB RLDU in negative logic
+	.joy2_o			(joy2_o)     // MXYZ SACB RLDU in negative logic
+);
+
+wire [11:0] JOYAV_1;   // ---- SeSCB UDLR   in positive logic
+wire [11:0] JOYAV_2;   // ---- SeSCB UDLR   in positive logic
+
+assign JOYAV_1 = ~{4'b1111,  joy1_o[11],joy1_o[7],joy1_o[5],joy1_o[4],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+assign JOYAV_2 = ~{4'b1111,  joy2_o[11],joy2_o[7],joy2_o[5],joy2_o[4],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
+
+
+  
 ////////////////////////////////////////////////////
 	 
 
@@ -382,8 +445,8 @@ A2601top A2601top
 	.paddle_3(status[15] ? paddle_4 : paddle_3),
 	.paddle_4(status[15] ? paddle_3 : paddle_4),
 
-	.p_start (~(j0[7] | joy_1[7] | joy_2[7] | joy_3[7])),
-	.p_select(~(j0[8] | joy_1[8] | joy_2[8] | joy_3[8])),
+	.p_start (~(j0[7] | joy_1[7] | joy_2[7] | joy_3[7] | JOYAV_1[6] | JOYAV_2[6])),
+	.p_select(~(j0[8] | joy_1[8] | joy_2[8] | joy_3[8] | JOYAV_1[7] | JOYAV_2[7])),
 	
 	.p_type(status[12:11]),
 
