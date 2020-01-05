@@ -53,11 +53,11 @@ module emu
 	output [1:0]  VGA_SL,
 
 	// DB9 Joystick
-  	input [5:0] joy_o_db9,    // CB UDLR (in negative logic)
-	output      db9_Select ,
-	output      joy_splitter_select,
-	
-	
+	input [5:0] joy_o_db9,    // CB UDLR
+	output      db9_Select,
+	output      splitter_select, 
+
+
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -133,7 +133,7 @@ module emu
 assign ADC_BUS  = 'Z;
 assign USER_OUT = '1;
 assign {UART_RTS, UART_TXD, UART_DTR} = 0;
-assign BUTTONS   = 0;
+assign BUTTONS   = {bk_reload, 1'b0};
 assign {DDRAM_CLK, DDRAM_BURSTCNT, DDRAM_ADDR, DDRAM_DIN, DDRAM_BE, DDRAM_RD, DDRAM_WE} = 0;
 assign {SD_SCK, SD_MOSI, SD_CS} = 'Z;
 
@@ -174,7 +174,7 @@ assign AUDIO_MIX = 0;
 
 assign LED_POWER = {1'b1,MCD_LED_GREEN};
 assign LED_DISK  = {1'b1,MCD_LED_RED};
-assign LED_USER  = cart_download | sav_pending;
+assign LED_USER  = rom_download | sav_pending;
 
 
 ///////////////////////////////////////////////////
@@ -197,15 +197,17 @@ localparam CONF_STR = {
 	"O2,Reset on insertion,Yes,No;",
 	"-;",
 	"F1,BINGENMD ,Load BIOS;",
+	"H2F4,BINGENMD ,Load Cart;",
 	"O67,Region,JP,US,EU;",
 	"-;",
 //	"C,Cheats;",
 //	"H1OO,Cheats Enabled,Yes,No;",
 //	"-;",
-//	"D0RG,Load Backup RAM;",
-//	"D0RH,Save Backup RAM;",
-//	"D0OD,Autosave,No,Yes;",
-//	"-;",
+	"O3,Backup RAM,Internal,Internal+Cart;",
+	"D0RG,Reload Backup RAM;",
+	"D0RH,Save Backup RAM;",
+	"D0OD,Autosave,No,Yes;",
+	"-;",
 	"OA,Aspect Ratio,4:3,16:9;",
 	"OU,320x224 Aspect,Original,Corrected;",
 	"o13,Scandoubler Fx,None,HQ2x,CRT 25%,CRT 50%,CRT 75%;",
@@ -217,7 +219,7 @@ localparam CONF_STR = {
 	"O8,FM Chip,YM2612,YM3438;",
 	"ON,HiFi PCM,No,Yes;",
 	"-;",
-	"o45,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
+	"o56,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;",
 	"O4,Swap Joysticks,No,Yes;",
 	"O5,6 Buttons Mode,No,Yes;",
 	"OLM,Multitap,Disabled,4-Way,TeamPlayer,J-Cart;",
@@ -228,6 +230,9 @@ localparam CONF_STR = {
 	"H2OC,Enable PSG,Yes,No;",//12
 	"H2OP,Enable PCM,Yes,No;",//25
 	"H2OQ,Enable CDDA,Yes,No;",//26
+	"H2o4,Enable BGA,Yes,No;",//36
+	"H2o5,Enable BGB,Yes,No;",//37
+	"H2o6,Enable SPR,Yes,No;",//38
 	"H2-;",
 	//"R1,Reset;"
 	"R0,Reset & Eject CD;",
@@ -237,101 +242,97 @@ localparam CONF_STR = {
 	"V,v",`BUILD_DATE
 };
 
-////////////////////  JOYSTICKS added by Benitoss ///////////////////
-
-// First we applied the Splitter , later 6 buttons Megadrive 
-
-
-// I/O 2 Joystick splitter option added from joy_o_db9 ////////////////
-
 // create a binary counter
 reg [31:0] cnt; // 32-bit counter
 
 initial begin
      cnt <= 32'h00000000; // start at zero
 end
-always @(posedge clk_sys) begin
+always @(posedge CLK_50M) begin
      cnt <= cnt + 1; // count up
 end
 
+//////  I/O 2 Joystick splitter option added from JOYAV ////////////////
+wire [6:0] JOYAV_T1;      // CB UDLR  negative Logic
+wire [6:0] JOYAV_T2;      // CB UDLR  negative Logic
+reg  [6:0] joy1, joy2;   // CB UDLR  negative Logic
 
-assign joy_splitter_select = cnt[6];    // 53 Mhz /64  = 800 Khz 
+//assign db9_Select = 1'b1;
 
-reg  [5:0] joy1, joy2;   // CB UDLR  (in negative logic)
+reg joy_split = 1'b1;
+assign splitter_select = joy_split;   
 
-always @(posedge clk_sys) begin //2joysplit
-    if (~joy_splitter_select)    
-        joy1 <= joy_o_db9;
+always @(posedge cnt[4])  // 50/16  = 3.125 Mhz
+  begin
+    if (joy_split)
+		begin
+			joy1 <= joy_o_db9;
+			joy_split <= 1'b0;
+		end
     else 
-        joy2 <= joy_o_db9;  
-end  
-
-
-// Now we apply the menu options
-
-wire [5:0] JOYAV_T1;      // CB UDLR  (in negative logic)
-wire [5:0] JOYAV_T2;      // CB UDLR  (in negative logic)
+		begin
+			joy2 <= joy_o_db9; 
+			joy_split <= 1'b1;
+		end
+  end
 
 
 always @(posedge clk_sys)
   begin
-    case (status[37:36])
-      3'b000  : begin
-						JOYAV_T1 <= joy_o_db9;
-						JOYAV_T2 <=  6'b1; // because is negative logic
+    case (status[38:37])
+        2'b00 : begin							// Player 1
+						JOYAV_T1 <=  joy_o_db9;
+						JOYAV_T2 <=  6'b111111; // because is negative logic
 					 end
-      3'b001  : begin
-						JOYAV_T1 <=  6'b1; // because is negative logic
-						JOYAV_T2 <= joy_o_db9;
+        2'b01 : begin							// Player 2
+						JOYAV_T1 <=  6'b111111; // because is negative logic
+						JOYAV_T2 <=  joy_o_db9;
 					 end
-      3'b010  : begin
+        2'b10 : begin							// P1 + P2 (Splitter)
 						JOYAV_T1 <=  joy1;
 						JOYAV_T2 <=  joy2;
 					 end
-   // default : r_RESULT <= 9; 
+		  2'b11 : begin							// DB9 OFF
+						JOYAV_T1 <=  6'b111111; // because is negative logic
+						JOYAV_T2 <=  6'b111111; // because is negative logic
+					 end
     endcase
   end
 
 
-
 // Now we apply the megadrive desmultiplexor conversor
 
-wire [11:0] joy1_o;   // MXYZ SACB RLDU  (in negative logic)
-wire [11:0] joy2_o;   // MXYZ SACB RLDU  (in negative logic)
+wire [11:0] joy1_o;   // MXYZ SACB RLDU  in negative logic
+wire [11:0] joy2_o;   // MXYZ SACB RLDU  in negative logic
 
 // Llamamos a la maquina de estados para leer los 6 botones del mando de Megadrive
-// Formato joy1_o [11:0] =  MXYZ SACB RLDU
+// Formato joy1_o [11:0] =  MXYZ SACB RLDU negative logic
 sega_joystick joy (
-	.joy1_up_i		(JOYAV_T1[3]),   // JOYAV_T1 // CB UDLR (in negative logic)
+	.joy1_up_i		(JOYAV_T1[3]),   // JOYAV_T1 // CB UDLR (negative logic)
 	.joy1_down_i	(JOYAV_T1[2]),
 	.joy1_left_i	(JOYAV_T1[1]),
 	.joy1_right_i	(JOYAV_T1[0]),
 	.joy1_p6_i		(JOYAV_T1[4]),
 	.joy1_p9_i		(JOYAV_T1[5]),
-	.joy2_up_i		(JOYAV_T2[3]),   // JOYAV_T2 // CB UDLR (in negative logic)
+	.joy2_up_i		(JOYAV_T2[3]),
 	.joy2_down_i	(JOYAV_T2[2]),
 	.joy2_left_i	(JOYAV_T2[1]),
 	.joy2_right_i	(JOYAV_T2[0]),
 	.joy2_p6_i		(JOYAV_T2[4]),
 	.joy2_p9_i		(JOYAV_T2[5]),
-	.vga_hsync_n_s (VGA_HS),
+	.vga_hsync_n_s (hs),  
 	.joyX_p7_o		(db9_Select), // select signal
-	.joy1_o			(joy1_o),    // MXYZ SACB RLDU (in negative logic)
-	.joy2_o			(joy2_o)     // MXYZ SACB RLDU (in negative logic)
-);
+	.joy1_o			(joy1_o),    // MXYZ SACB RLDU in negative logic
+	.joy2_o			(joy2_o)     // MXYZ SACB RLDU in negative logic
+); 
 
-
-wire [11:0] JOYAV_1;   // ZYXM SCBA UDLR   (in positive logic)
-wire [11:0] JOYAV_2;   // ZYXM SCBA UDLR   (in positive logic)
+wire [11:0] JOYAV_1;   // ZYXM SCBA UDLR   in positive logic
+wire [11:0] JOYAV_2;   // ZYXM SCBA UDLR   in positive logic
 
 assign JOYAV_1 = ~{joy1_o[8],joy1_o[9],joy1_o[10],joy1_o[11],joy1_o[7],joy1_o[5],joy1_o[4],joy1_o[6],joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
 assign JOYAV_2 = ~{joy2_o[8],joy2_o[9],joy2_o[10],joy2_o[11],joy2_o[7],joy2_o[5],joy2_o[4],joy2_o[6],joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+ 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 wire [15:0] status_menumask = {1'b1,~dbg_menu,1'b0,~bk_ena};
 wire [63:0] status;
@@ -350,7 +351,7 @@ reg         sd_wr = 0;
 wire        sd_ack;
 wire  [7:0] sd_buff_addr;
 wire [15:0] sd_buff_dout;
-wire [15:0] sd_buff_din;
+wire [15:0] sd_buff_din = sd_lba[10:4] ? tmpram_sd_buff_data : bram_sd_buff_data;
 wire        sd_buff_wr;
 wire        img_mounted;
 wire        img_readonly;
@@ -430,12 +431,15 @@ always @(posedge clk_sys) begin
 	end
 end
 
-wire cart_download = ioctl_download & (ioctl_index[5:0] <= 6'h01);
+wire bios_download = ioctl_download & (ioctl_index[5:0] <= 6'h01);
 wire cdc_dat_download = ioctl_download & (ioctl_index[5:0] == 6'h02);
 wire cdc_sub_download = ioctl_download & (ioctl_index[5:0] == 6'h03);
+wire cart_download = ioctl_download & (ioctl_index[5:0] == 6'h04);
+wire save_download = ioctl_download & (ioctl_index[5:0] == 6'h05);
 
+wire rom_download = bios_download | cart_download;
 
-wire reset = RESET | status[0] | buttons[1] | region_set | bk_loading;
+wire reset = RESET | status[0] | buttons[1] | region_set;
 
 //Genesis
 wire [23:1] GEN_VA;
@@ -446,12 +450,14 @@ wire        GEN_RAS2_N;
 wire        EXT_ROM_N;
 wire        EXT_FDC_N;
 wire        GEN_VCLK_CE;
+wire        GEN_CE0_N;
 wire        GEN_WRL_N, GEN_WRH_N, GEN_OE_N;
 wire        GEN_ROM_CE_N;
 wire        GEN_RAM_CE_N;
 
 wire [15:0] GEN_MEM_DO;
 wire        GEN_MEM_BUSY;
+wire        GEN_RFS;
 
 wire [7:0] color_lut[16] = '{
 	8'd0,   8'd27,  8'd49,  8'd71,
@@ -471,6 +477,9 @@ wire EN_GEN_FM   = ~status[11] | ~dbg_menu;
 wire EN_GEN_PSG  = ~status[12] | ~dbg_menu;
 wire EN_MCD_PCM  = ~status[25] | ~dbg_menu;
 wire EN_MCD_CDDA = ~status[26] | ~dbg_menu;
+wire EN_VDP_BGA  = ~status[36] | ~dbg_menu;
+wire EN_VDP_BGB  = ~status[37] | ~dbg_menu;
+wire EN_VDP_SPR  = ~status[38] | ~dbg_menu;
 
 gen gen
 (
@@ -487,9 +496,11 @@ gen gen
 	.DTACK_N(GEN_DTACK_N),
 	.ASEL_N(GEN_ASEL_N),
 	.VCLK_CE(GEN_VCLK_CE),
+	.CE0_N(GEN_CE0_N),
 	.RAS2_N(GEN_RAS2_N),
 	.ROM_N(EXT_ROM_N),
 	.FDC_N(EXT_FDC_N),
+	.CART_N(CART_CART_N),
 	.DISK_N(0),
 	.WRL_N(GEN_WRL_N),
 	.WRH_N(GEN_WRH_N),
@@ -498,7 +509,7 @@ gen gen
 	.EXT_SL(MCD_SL),
 	.EXT_SR(MCD_SR),
 
-	.LOADING(cart_download),
+	.LOADING(rom_download),
 	.EXPORT(|status[7:6]),
 	.PAL(PAL),
 
@@ -517,10 +528,13 @@ gen gen
 	.FIELD(VGA_F1),
 	.INTERLACE(interlace),
 	.RESOLUTION(resolution),
+	.EN_BGA(EN_VDP_BGA),
+	.EN_BGB(EN_VDP_BGB),
+	.EN_SPR(EN_VDP_SPR),
 
 	.J3BUT(~status[5]),
-	.JOY_1(status[4] ? (joystick_1 | JOYAV_2) : (joystick_0 | JOYAV_1) ), // Modification by benitoss
-	.JOY_2(status[4] ? (joystick_0 | JOYAV_1) : (joystick_1 | JOYAV_2) ), // modification by benitoss
+	.JOY_1(status[4] ? (joystick_1 | JOYAV_2 ) : (joystick_0 | JOYAV_1 ) ),  // ZYXM SCBA UDLR
+	.JOY_2(status[4] ? (joystick_0 | JOYAV_1 ) : (joystick_1 | JOYAV_2 ) ),  // ZYXM SCBA UDLR 
 	.JOY_3(joystick_2),
 	.JOY_4(joystick_3),
 	.MULTITAP(status[22:21]),
@@ -537,12 +551,16 @@ gen gen
 	.OBJ_LIMIT_HIGH(status[31]),
 
 	.RAM_CE_N(GEN_RAM_CE_N),
-	.RAM_RDY(~GEN_MEM_BUSY)
+	.RAM_RDY(~GEN_MEM_BUSY),
 	
+	.RFS(GEN_RFS),
+	.RFS_RDY(~GEN_MEM_BUSY & rom_cart_mode)
 );
 
 assign GEN_VDI = !GEN_RAM_CE_N ? GEN_MEM_DO_R :
+					  !CART_DTACK_N ? CART_DO :
 					  MCD_DO;
+assign GEN_DTACK_N = MCD_DTACK_N & CART_DTACK_N;
 
 reg [15:0] GEN_MEM_DO_R;
 always @(posedge clk_sys) begin
@@ -554,6 +572,7 @@ end
 
 // MCD
 wire [15:0] MCD_DO;
+wire        MCD_DTACK_N;
 
 wire [15:0] MCD_PCM_SL;
 wire [15:0] MCD_PCM_SR;
@@ -590,7 +609,7 @@ MCD MCD
 	.EXT_RNW(GEN_RNW),
 	.EXT_LDS_N(GEN_LDS_N),
 	.EXT_UDS_N(GEN_UDS_N),
-	.EXT_DTACK_N(GEN_DTACK_N),
+	.EXT_DTACK_N(MCD_DTACK_N),
 	.EXT_ASEL_N(GEN_ASEL_N),
 	.EXT_VCLK_CE(GEN_VCLK_CE),
 	.EXT_RAS2_N(GEN_RAS2_N),
@@ -651,14 +670,59 @@ SND_MIX mcd_mix
 	.OUT_L(MCD_SL)
 );
 
-//MCD PRGRAM, GEN ROM/RAM
+//ROM/RAM Cart
+wire [15:0] CART_DO;
+wire        CART_DTACK_N;
+wire        CART_CART_N;
+
+wire        CART_ROM_CE_N;
+wire        CART_RAM_CE_N;
+
+wire [15:0] CART_ROM_DO;
+wire        CART_ROM_BUSY;
+
+wire        CART_EN = status[3];
+
+CART CART
+(
+	.RST_N(~reset),
+	.CLK(clk_sys),
+	.ENABLE(1),
+	
+	.ROM_MODE(rom_cart_mode),
+	.RAM_ID(CART_EN ? 8'd6 : 8'd255),	//backup ram size = (1<<n)*8192, n=0..6, when n=255 ram is not present
+
+	.VA(GEN_VA),
+	.VDI(GEN_VDO),
+	.VDO(CART_DO),
+	.AS_N(GEN_AS_N),
+	.RNW(GEN_RNW),
+	.LDS_N(GEN_LDS_N),
+	.UDS_N(GEN_UDS_N),
+	.DTACK_N(CART_DTACK_N),
+	.ASEL_N(GEN_ASEL_N),
+	.VCLK_CE(GEN_VCLK_CE),
+	.CE0_N(GEN_CE0_N),
+	.CART_N(CART_CART_N),
+	
+	.ROM_CE_N(CART_ROM_CE_N),
+	.ROM_DI(GEN_MEM_DO),
+	.ROM_RDY(~GEN_MEM_BUSY),
+	
+	.RAM_CE_N(CART_RAM_CE_N),
+	.RAM_DI(GEN_MEM_DO),
+	.RAM_RDY(~GEN_MEM_BUSY)
+);
+
+//MCD PRGRAM, GEN ROM/RAM/CART RAM
 sdram sdram
 (
 	.*,
 	.init(~locked),
 	.clk(clk_ram),
 	
-	.addr0({2'b00,MCD_PRG_ADDR}),
+	.addr0({4'b0000,MCD_PRG_ADDR}),
+	.bank0(2'd0),
 	.din0(MCD_PRG_DO),
 	.dout0(MCD_PRG_DI),
 	.rd0(~MCD_PRG_OE_N),
@@ -667,26 +731,33 @@ sdram sdram
 	.rfs0(MCD_PRG_RFS),
 	.busy0(MCD_PRG_BUSY),
 	
-	.addr1(cart_download ? {4'b0000,ioctl_addr[16:1]} : (!GEN_RAM_CE_N ? {5'b10000,GEN_VA[15:1]} : {4'b0000,GEN_VA[16:1]}) ),
-	.din1(cart_download ? {ioctl_data[7:0],ioctl_data[15:8]} : GEN_VDO),
+	.addr1(rom_download ? {1'b0,ioctl_addr[21:1]} : 									//ROM 000000-3FFFFF
+			 !GEN_RAM_CE_N ? {7'b1000000,GEN_VA[15:1]} : 								//WORK RAM 400000-40FFFF
+			 !CART_RAM_CE_N ? {3'b110,GEN_VA[19:1]} : 									//CART RAM 600000-6FFFFF
+			 !CART_ROM_CE_N ? {1'b0,GEN_VA[21:1] & {rom_mask[21:13],12'hFFF}} :	//CART ROM 000000-3FFFFF
+			 {6'b000000,GEN_VA[16:1]} ),														//BIOS ROM 000000-01FFFF
+	.bank1(2'd1),
+	.din1(rom_download ? {ioctl_data[7:0],ioctl_data[15:8]} : GEN_VDO),
 	.dout1(GEN_MEM_DO),
-	.rd1(cart_download ? 1'b0 : (~GEN_RAM_CE_N | ~GEN_ROM_CE_N) & ~GEN_OE_N),
-	.wrl1(cart_download ? ioctl_wr : ~GEN_RAM_CE_N & ~GEN_WRL_N),
-	.wrh1(cart_download ? ioctl_wr : ~GEN_RAM_CE_N & ~GEN_WRH_N),
-	.rfs1(0),
+	.rd1(rom_download ? 1'b0 : (~GEN_RAM_CE_N | ~GEN_ROM_CE_N | ~CART_RAM_CE_N | ~CART_ROM_CE_N) & ~GEN_OE_N),
+	.wrl1(rom_download ? ioctl_wr : (~GEN_RAM_CE_N | ~CART_RAM_CE_N) & ~GEN_WRL_N),
+	.wrh1(rom_download ? ioctl_wr : (~GEN_RAM_CE_N | ~CART_RAM_CE_N) & ~GEN_WRH_N),
+	.rfs1(GEN_RFS & rom_cart_mode),
 	.busy1(GEN_MEM_BUSY),
 	
-	.addr2(0),
-	.din2(0),
-	.dout2(),
-	.rd2(0),
-	.wrl2(0),
-	.wrh2(0),
+	.addr2({3'b110,tmpram_lba[9:0],tmpram_addr}), //CART RAM 600000-6FFFFF for sd_*
+	.bank2(2'd1),
+	.din2({tmpram_dout,tmpram_dout}),
+	.dout2(tmpram_din),
+	.rd2(tmpram_req & ~bk_loading),
+	.wrl2(tmpram_req & bk_loading),
+	.wrh2(tmpram_req & bk_loading),
 	.rfs2(0),
-	.busy2()
+	.busy2(tmpram_busy)
 );
 
-dpram #(13,8,"bram.mif") bram
+wire [15:0] bram_sd_buff_data;
+dpram_dif #(13,8,12,16) bram
 (
 	.clock(clk_sys),
 	.address_a(MCD_BRAM_ADDR),
@@ -694,10 +765,59 @@ dpram #(13,8,"bram.mif") bram
 	.wren_a(MCD_BRAM_WE),
 	.q_a(MCD_BRAM_DI),
 
-	.address_b(0),
-	.wren_b(0),
-	.q_b()
+	.address_b({sd_lba[3:0],sd_buff_addr}),
+	.data_b(sd_buff_dout),
+	.wren_b(sd_buff_wr & sd_ack & !sd_lba[10:4]),
+	.q_b(bram_sd_buff_data)
 );
+
+wire [7:0] tmpram_dout;
+wire [7:0] tmpram_din;
+wire       tmpram_busy;
+
+wire [15:0] tmpram_sd_buff_data;
+dpram_dif #(9,8,8,16) tmpram
+(
+	.clock(clk_sys),
+
+	.address_a(tmpram_addr),
+	.wren_a(~bk_loading & tmpram_busy_d & ~tmpram_busy),
+	.data_a(tmpram_din),
+	.q_a(tmpram_dout),
+
+	.address_b(sd_buff_addr),
+	.wren_b(sd_buff_wr & sd_ack & |sd_lba[10:4]),
+	.data_b(sd_buff_dout),
+	.q_b(tmpram_sd_buff_data)
+);
+
+reg [10:0] tmpram_lba;
+reg  [8:0] tmpram_addr;
+reg tmpram_tx_start;
+reg tmpram_tx_finish;
+reg tmpram_req;
+reg tmpram_busy_d;
+always @(posedge clk_sys) begin
+	reg state;
+
+	tmpram_lba <= sd_lba[10:0]-11'h10;
+	
+	tmpram_busy_d <= tmpram_busy;
+	if(~tmpram_busy_d & tmpram_busy) tmpram_req <= 0;
+
+	if(~tmpram_tx_start) {tmpram_addr, state, tmpram_tx_finish} <= 0;
+	else if(~tmpram_tx_finish) begin
+		if(!state) begin
+			tmpram_req <= 1;
+			state <= 1;
+		end
+		else if(tmpram_busy_d & ~tmpram_busy) begin
+			state <= 0;
+			if(~&tmpram_addr) tmpram_addr <= tmpram_addr + 1'd1;
+			else tmpram_tx_finish <= 1;
+		end
+	end
+end
 
 //DDR3
 //wire [24:1] rom_addr;
@@ -726,14 +846,16 @@ dpram #(13,8,"bram.mif") bram
 //);
 //assign DDRAM_CLK = clk_ram;
 
-//reg [24:0] rom_sz;
-//always @(posedge clk_sys) begin
+//reg [24:0]  rom_sz;
+reg [23:13] rom_mask;
+reg         rom_cart_mode;
+always @(posedge clk_sys) begin
 //	reg old_download, old_reset;
-//	old_download <= cart_download;
+//	old_download <= rom_download;
 //	old_reset <= reset;
-//
+
 //	if(~old_reset && reset) ioctl_wait <= 0;
-//	if (old_download & ~cart_download) begin
+//	if (old_download & ~rom_download) begin
 //		rom_sz <= ioctl_addr[24:0];
 //		ioctl_wait <= 0;
 //	end
@@ -748,7 +870,12 @@ dpram #(13,8,"bram.mif") bram
 //			ioctl_wait <= 0;
 //		end
 //	end
-//end
+	
+	if (rom_download & ioctl_wr) begin
+		rom_cart_mode <= ioctl_index[2];
+		rom_mask <= ioctl_addr[23:13];
+	end
+end
 
 //CD communication
 reg [48:0] cd_in;
@@ -815,7 +942,7 @@ always @(posedge clk_sys) begin
 	reg old_pal;
 	int to;
 	
-	if(~(reset | cart_download)) begin
+	if(~(reset | rom_download)) begin
 		old_pal <= PAL;
 		if(old_pal != PAL) to <= 5000000;
 	end
@@ -929,12 +1056,12 @@ reg cart_hdr_ready = 0;
 reg hdr_j=0,hdr_u=0;
 always @(posedge clk_sys) begin
 	reg old_download;
-	old_download <= cart_download;
+	old_download <= rom_download;
 
-	if(~old_download && cart_download) {hdr_j,hdr_u,cart_hdr_ready} <= 0;
-	if(old_download && ~cart_download) cart_hdr_ready <= 0;
+	if(~old_download && rom_download) {hdr_j,hdr_u,cart_hdr_ready} <= 0;
+	if(old_download && ~rom_download) cart_hdr_ready <= 0;
 
-	if(ioctl_wr & cart_download) begin
+	if(ioctl_wr & rom_download) begin
 		if(ioctl_addr == 'h1F0) begin
 			if(ioctl_data[7:0] == "J") hdr_j <= 1;
 			else if(ioctl_data[7:0] == "U") hdr_u <= 1;
@@ -946,12 +1073,14 @@ end
 
 /////////////////////////  BRAM SAVE/LOAD  /////////////////////////////
 
-wire downloading = cart_download;
+wire downloading = save_download;
+wire bk_change  = MCD_BRAM_WE | (CART_EN & ~CART_RAM_CE_N & (~GEN_WRL_N | ~GEN_WRH_N));
+wire autosave   = status[13];
+wire bk_load    = status[16];
+wire bk_save    = status[17];
 
 reg bk_ena = 0;
 reg sav_pending = 0;
-wire bk_change = 0;
-
 always @(posedge clk_sys) begin
 	reg old_downloading = 0;
 	reg old_change = 0;
@@ -963,53 +1092,95 @@ always @(posedge clk_sys) begin
 	if(downloading && img_mounted && !img_readonly) bk_ena <= 1;
 
 	old_change <= bk_change;
-	if (~old_change & bk_change & ~OSD_STATUS) sav_pending <= status[13];
+	if (~old_change & bk_change) sav_pending <= 1;
 	else if (bk_state) sav_pending <= 0;
 end
 
-wire bk_load    = status[16];
-wire bk_save    = status[17] | (sav_pending & OSD_STATUS);
+wire bk_save_a  = autosave & OSD_STATUS;
 reg  bk_loading = 0;
 reg  bk_state   = 0;
+reg  bk_reload  = 0;
 
 always @(posedge clk_sys) begin
 	reg old_downloading = 0;
-	reg old_load = 0, old_save = 0, old_ack;
+	reg old_load = 0, old_save = 0, old_save_a = 0, old_ack;
+	reg [1:0] state;
 
 	old_downloading <= downloading;
 
-	old_load <= bk_load;
-	old_save <= bk_save;
-	old_ack  <= sd_ack;
+	old_load   <= bk_load;
+	old_save   <= bk_save;
+	old_save_a <= bk_save_a;
+	old_ack    <= sd_ack;
 
 	if(~old_ack & sd_ack) {sd_rd, sd_wr} <= 0;
 
 	if(!bk_state) begin
-		if(bk_ena & ((~old_load & bk_load) | (~old_save & bk_save))) begin
+		tmpram_tx_start <= 0;
+		state <= 0;
+		sd_lba <= 0;
+		bk_reload <= 0;
+		bk_loading <= 0;
+		if(bk_ena & ((~old_load & bk_load) | (~old_save & bk_save) | (~old_save_a & bk_save_a & sav_pending))) begin
 			bk_state <= 1;
 			bk_loading <= bk_load;
-			sd_lba <= 0;
+			bk_reload <= bk_load;
 			sd_rd <=  bk_load;
 			sd_wr <= ~bk_load;
 		end
-		if(old_downloading & ~cart_download & |img_size & bk_ena) begin
+		if(old_downloading & ~rom_download & bk_ena) begin
 			bk_state <= 1;
 			bk_loading <= 1;
-			sd_lba <= 0;
 			sd_rd <= 1;
 			sd_wr <= 0;
 		end
-	end else begin
+	end
+	else if(!sd_lba[10:4]) begin
 		if(old_ack & ~sd_ack) begin
-			if(&sd_lba[6:0]) begin
-				bk_loading <= 0;
-				bk_state <= 0;
+			sd_lba <= sd_lba + 1'd1;
+			if(&sd_lba[3:0]) begin
+				if(~CART_EN) bk_state <= 0;
 			end else begin
-				sd_lba <= sd_lba + 1'd1;
-				sd_rd  <=  bk_loading;
-				sd_wr  <= ~bk_loading;
+				sd_rd <=  bk_loading;
+				sd_wr <= ~bk_loading;
 			end
 		end
+	end
+	else if(bk_loading) begin
+		case(state)
+			0: begin
+					sd_rd <= 1;
+					state <= 1;
+				end
+			1: if(old_ack & ~sd_ack) begin
+					tmpram_tx_start <= 1;
+					state <= 2;
+				end
+			2: if(tmpram_tx_finish) begin
+					tmpram_tx_start <= 0;
+					state <= 0;
+					sd_lba <= sd_lba + 1'd1;
+					if(sd_lba[10:0] == 11'h40F) bk_state <= 0;
+				end
+		endcase
+	end
+	else begin
+		case(state)
+			0: begin
+					tmpram_tx_start <= 1;
+					state <= 1;
+				end
+			1: if(tmpram_tx_finish) begin
+					tmpram_tx_start <= 0;
+					sd_wr <= 1;
+					state <= 2;
+				end
+			2: if(old_ack & ~sd_ack) begin
+					state <= 0;
+					sd_lba <= sd_lba + 1'd1;
+					if(sd_lba[10:0] == 11'h40F) bk_state <= 0;
+				end
+		endcase
 	end
 end
 

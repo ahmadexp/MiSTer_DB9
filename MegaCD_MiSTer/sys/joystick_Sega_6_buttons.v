@@ -116,11 +116,13 @@ module sega_joystick
 					begin
 						if (j1_sixbutton_v == 1'b1)
 							joy1_s[11:8] <= { joy1_right_i, joy1_left_i, joy1_down_i, joy1_up_i }; //-- Mode, X, Y e Z
-						
+					//	else 
+					//	   joy1_s[11:8] <= 4'b1111; 
 						
 						if (j2_sixbutton_v == 1'b1)
 							joy2_s[11:8] <= { joy2_right_i, joy2_left_i, joy2_down_i, joy2_up_i }; //-- Mode, X, Y e Z
-						
+					//	else 
+					//	   joy2_s[11:8] <= 4'b1111;
 						
 						joyP7_s <= 1'b0;
 					end 
