@@ -52,11 +52,12 @@ module emu
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
 
-        // DB9 Joystick
+	// DB9 Joystick
 	input [5:0] joy_o_db9,    // CB UDLR
 	output      db9_Select ,
 	output      splitter_select, 
-
+ 
+	
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -210,7 +211,7 @@ localparam CONF_STR = {
 	"OB,FM Chip,YM2612,YM3438;",
 	"ON,HiFi PCM,No,Yes;",
 	"-;",
-   "o56,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;", 
+	"o56,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;",
 	"O4,Swap Joysticks,No,Yes;",
 	"O5,6 Buttons Mode,No,Yes;",
 	"OLM,Multitap,Disabled,4-Way,TeamPlayer,J-Cart;",
@@ -246,7 +247,7 @@ end
 //////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
 wire [6:0] JOYAV_T1;      // CB UDLR  negative Logic
 wire [6:0] JOYAV_T2;      // CB UDLR  negative Logic
-reg  [6:0] joy1, joy2;   // CB UDLR  negative Logic
+reg  [6:0] joy1, joy2;    // CB UDLR  negative Logic
 
 //assign db9_Select = 1'b1;
 
@@ -325,7 +326,8 @@ assign JOYAV_1 = ~{joy1_o[8],joy1_o[9],joy1_o[10],joy1_o[11],joy1_o[7],joy1_o[5]
 assign JOYAV_2 = ~{joy2_o[8],joy2_o[9],joy2_o[10],joy2_o[11],joy2_o[7],joy2_o[5],joy2_o[4],joy2_o[6],joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
 
 
-///////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////// 
+
 
 wire [63:0] status;
 wire  [1:0] buttons;
@@ -534,7 +536,6 @@ system system
 	.ROM_ADDR(rom_addr),
 	.ROM_DATA(use_sdr ? sdrom_data : ddrom_data),
 	.ROM_WDATA(rom_wdata),
-	.ROM_RD(rom_rd),
 	.ROM_WE(rom_we),
 	.ROM_BE(rom_be),
 	.ROM_REQ(rom_req),
@@ -663,7 +664,6 @@ sdram sdram
 	.addr0(ioctl_addr[24:1]),
 	.din0({ioctl_data[7:0],ioctl_data[15:8]}),
 	.dout0(),
-	.rd0(0),
 	.wrl0(1),
 	.wrh0(1),
 	.req0(rom_wr),
@@ -672,7 +672,6 @@ sdram sdram
 	.addr1(rom_addr),
 	.din1(rom_wdata),
 	.dout1(sdrom_data),
-	.rd1(rom_rd),
 	.wrl1(rom_we & rom_be[0]),
 	.wrh1(rom_we & rom_be[1]),
 	.req1(rom_req),
@@ -681,7 +680,6 @@ sdram sdram
 	.addr2(0),
 	.din2(0),
 	.dout2(),
-	.rd2(0),
 	.wrl2(0),
 	.wrh2(0),
 	.req2(0),
@@ -691,13 +689,13 @@ sdram sdram
 wire [24:1] rom_addr, rom_addr2;
 wire [15:0] sdrom_data, ddrom_data, rom_data2, rom_wdata;
 wire  [1:0] rom_be;
-wire rom_req, rom_rd, sdrom_rdack, ddrom_rdack, rom_rd2, rom_rdack2, rom_we;
+wire rom_req, sdrom_rdack, ddrom_rdack, rom_rd2, rom_rdack2, rom_we;
 
 assign DDRAM_CLK = clk_ram;
 ddram ddram
 (
 	.*,
-	.wraddr(ioctl_addr),
+	.wraddr(ioctl_addr[24:1]),
 	.din({ioctl_data[7:0],ioctl_data[15:8]}),
 	.we_req(rom_wr),
 	.we_ack(ddrom_wrack),
@@ -719,7 +717,7 @@ ddram ddram
 reg use_sdr;
 always @(posedge clk_sys) use_sdr <= (!status[36:35]) ? |sdram_sz[2:0] : status[35];
 
-reg  rom_wr;
+reg  rom_wr = 0;
 wire sdrom_wrack, ddrom_wrack;
 reg [24:0] rom_sz;
 always @(posedge clk_sys) begin
@@ -728,20 +726,13 @@ always @(posedge clk_sys) begin
 	old_reset <= reset;
 
 	if(~old_reset && reset) ioctl_wait <= 0;
-	if (old_download & ~cart_download) begin
-		rom_sz <= ioctl_addr[24:0];
-		ioctl_wait <= 0;
-	end
+	if (old_download & ~cart_download) rom_sz <= ioctl_addr[24:0];
 
-	if(~old_download && cart_download)
-		rom_wr <= 0;
-	else if (cart_download) begin
-		if(ioctl_wr) begin
-			ioctl_wait <= 1;
-			rom_wr <= ~rom_wr;
-		end else if(ioctl_wait && (rom_wr == sdrom_wrack) && (rom_wr == ddrom_wrack)) begin
-			ioctl_wait <= 0;
-		end
+	if (cart_download & ioctl_wr) begin
+		ioctl_wait <= 1;
+		rom_wr <= ~rom_wr;
+	end else if(ioctl_wait && (rom_wr == sdrom_wrack) && (rom_wr == ddrom_wrack)) begin
+		ioctl_wait <= 0;
 	end
 end
 
