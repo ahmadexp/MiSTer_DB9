@@ -50,7 +50,9 @@ module emu
 	output [1:0]  VGA_SL,
 
 	// DB9 Joystick
-  	input   [5:0] joy1_o_db9, // CB UDLR
+  	input   [5:0] joy_o_db9, // CB UDLR
+	output        splitter_select,
+	output		  db9_Select, 
 	
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
@@ -154,6 +156,7 @@ localparam CONF_STR = {
 	"O2,CRTC,Type 1,Type 0;",
 	"O78,Stereo mix,none,25%,50%,100%;",
 	"-;",
+	"o45,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;",
 	"OI,Joysticks swap,No,Yes;",
 	"OJ,Mouse,Enabled,Disabled;",
 	"-;",
@@ -167,6 +170,70 @@ localparam CONF_STR = {
 	"J,Fire 1,Fire 2,Fire 3;",
 	"V,v",`BUILD_DATE
 };
+
+////////////////////   JOYSTICKS   ///////////////////
+
+// create a binary counter
+reg [31:0] cnt; // 32-bit counter
+
+initial begin
+     cnt <= 32'h00000000; // start at zero
+end
+always @(posedge CLK_50M) begin
+     cnt <= cnt + 1; // count up
+end
+
+
+//////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
+wire [5:0] JOYAV_T1;      // CB UDLR  Positive Logic
+wire [5:0] JOYAV_T2;      // CB UDLR  Positive Logic
+reg  [5:0] joy_1, joy_2;   // CB UDLR  Positive Logic
+
+assign db9_Select = 1'bz;
+
+reg joy_split = 1'b1;
+assign splitter_select = joy_split;   
+
+always @(posedge cnt[8])  // 50/256  = 195 khz 
+  begin
+    if (joy_split)
+	   begin
+	     joy_1 <= joy_o_db9;
+		  joy_split <= 1'b0;
+		end
+    else 
+	   begin
+        joy_2 <= joy_o_db9; 
+		  joy_split <= 1'b1;
+		end
+  end
+  
+  
+always @(posedge clk_sys)
+  begin
+    case (status[37:36])
+      2'b00  :  begin
+						JOYAV_T1 <=  joy_o_db9;
+						JOYAV_T2 <=  7'b0;  // Positive Logic
+					 end
+      2'b01  :  begin
+						JOYAV_T1 <=  7'b0;  // Positive Logic
+						JOYAV_T2 <=  joy_o_db9;
+					 end
+      2'b10  :  begin
+						JOYAV_T1 <=  joy_1;
+						JOYAV_T2 <=  joy_2;
+					 end
+		2'b11  :  begin
+						JOYAV_T1 <=  7'b0;  // Positive Logic
+						JOYAV_T2 <=  7'b0;  // Positive Logic
+					 end
+   // default : r_RESULT <= 9; 
+    endcase
+  end  
+  
+wire [5:0] JOYAV_1 = JOYAV_T1;      // CB UDLR  Positive Logic
+wire [5:0] JOYAV_2 = JOYAV_T2;      // CB UDLR  Positive Logic
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -225,7 +292,7 @@ wire [24:0] ps2_mouse;
 wire  [1:0] buttons;
 wire  [6:0] joy1;
 wire  [6:0] joy2;
-wire [31:0] status;
+wire [63:0] status;
 
 wire        forced_scandoubler;
 
@@ -663,8 +730,8 @@ Amstrad_motherboard motherboard
 
 	// .joy1(status[18] ? joy2 : joy1),
 	// .joy2(status[18] ? joy1 : joy2),
-	.joy1(status[18] ? joy2 : (joy1| joy1_o_db9) ),
-	.joy2(status[18] ? (joy1| joy1_o_db9 ) : joy2),
+	.joy1( status[18] ? (joy2 | JOYAV_2) : (joy1 | JOYAV_1) ),
+	.joy2( status[18] ? (joy1 | JOYAV_1) : (joy2 | JOYAV_2) ),
 
 	.tape_in(tape_play),
 	.tape_out(tape_rec),

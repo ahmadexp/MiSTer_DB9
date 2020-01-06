@@ -22,12 +22,14 @@
 module sys_top
 (
 	// Joysticks i/o 
-	input     joy1_up_i,
-	input     joy1_down_i,
-	input     joy1_left_i,
-	input     joy1_right_i,
-	input     joy1_p6_i,
-	input     joy1_p9_i,
+	input     joy_up_i,
+	input     joy_down_i,
+	input     joy_left_i,
+	input     joy_right_i,
+	input     joy_p6_i,
+	input     joy_p9_i,
+   output    db9_Select,
+	output    splitter_select,
 
 
 	/////////// CLOCK //////////
@@ -136,13 +138,12 @@ module sys_top
 
 // asignacion de Joy Db9  ///////
 
-wire  [5:0] joy1_o_db9;  // CB UDLR
-assign joy1_o_db9 = ~{joy1_p9_i, joy1_p6_i,  joy1_up_i, joy1_down_i,joy1_left_i, joy1_right_i};
-
-
+wire  [5:0] joy_o_db9;  // CB UDLR  in positive logic
+assign joy_o_db9 = ~{joy_p9_i, joy_p6_i, joy_up_i, joy_down_i, joy_left_i, joy_right_i};
 
 //////////////////////  Secondary SD  ///////////////////////////////////
 
+/*
 wire sd_miso;
 wire SD_CS, SD_CLK, SD_MOSI, SD_MISO;
 
@@ -152,16 +153,16 @@ wire SD_CS, SD_CLK, SD_MOSI, SD_MISO;
 	assign SDIO_CLK     = SW[3] ? 1'bZ  : SD_CLK;
 	assign SDIO_CMD     = SW[3] ? 1'bZ  : SD_MOSI;
 	assign sd_miso      = SW[3] ? 1'b1  : SDIO_DAT[0];
-	//assign SD_SPI_CS    = mcp_sdcd ? ((~VGA_EN & sog & ~cs1) ? 1'b1 : 1'bZ) : SD_CS;
+	assign SD_SPI_CS    = mcp_sdcd ? ((~VGA_EN & sog & ~cs1) ? 1'b1 : 1'bZ) : SD_CS;
 `else
 	assign sd_miso      = 1'b1;
-	//assign SD_SPI_CS    = mcp_sdcd ? 1'bZ : SD_CS;
+	assign SD_SPI_CS    = mcp_sdcd ? 1'bZ : SD_CS;
 `endif
 
-// assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ    : SD_CLK;
-// assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ    : SD_MOSI;
-// assign SD_MISO     = mcp_sdcd ? sd_miso : SD_SPI_MISO;
-
+ assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ    : SD_CLK;
+ assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ    : SD_MOSI;
+ assign SD_MISO     = mcp_sdcd ? sd_miso : SD_SPI_MISO;
+*/
 //////////////////////  LEDs/Buttons  ///////////////////////////////////
 
 reg [7:0] led_overtake = 0;
@@ -1064,24 +1065,23 @@ alsa alsa
 
 
 ////////////////  User I/O (USB 3.0 connector) /////////////////////////
+/*
+ assign USER_IO[0] =                       !user_out[0]  ? 1'b0 : 1'bZ;
+ assign USER_IO[1] =                       !user_out[1]  ? 1'b0 : 1'bZ;
+ assign USER_IO[2] = !(SW[1] ? HDMI_I2S   : user_out[2]) ? 1'b0 : 1'bZ;
+ assign USER_IO[3] =                       !user_out[3]  ? 1'b0 : 1'bZ;
+ assign USER_IO[4] = !(SW[1] ? HDMI_SCLK  : user_out[4]) ? 1'b0 : 1'bZ;
+ assign USER_IO[5] = !(SW[1] ? HDMI_LRCLK : user_out[5]) ? 1'b0 : 1'bZ;
+ assign USER_IO[6] =                       !user_out[6]  ? 1'b0 : 1'bZ;
 
-// assign USER_IO[0] =                       !user_out[0]  ? 1'b0 : 1'bZ;
-// assign USER_IO[1] =                       !user_out[1]  ? 1'b0 : 1'bZ;
-// assign USER_IO[2] = !(SW[1] ? HDMI_I2S   : user_out[2]) ? 1'b0 : 1'bZ;
-// assign USER_IO[3] =                       !user_out[3]  ? 1'b0 : 1'bZ;
-// assign USER_IO[4] = !(SW[1] ? HDMI_SCLK  : user_out[4]) ? 1'b0 : 1'bZ;
-// assign USER_IO[5] = !(SW[1] ? HDMI_LRCLK : user_out[5]) ? 1'b0 : 1'bZ;
-// assign USER_IO[6] =                       !user_out[6]  ? 1'b0 : 1'bZ;
-
-// assign user_in[0] =         USER_IO[0];
-// assign user_in[1] =         USER_IO[1];
-// assign user_in[2] = SW[1] | USER_IO[2];
-// assign user_in[3] =         USER_IO[3];
-// assign user_in[4] = SW[1] | USER_IO[4];
-// assign user_in[5] = SW[1] | USER_IO[5];
-// assign user_in[6] =         USER_IO[6];
-
-
+ assign user_in[0] =         USER_IO[0];
+ assign user_in[1] =         USER_IO[1];
+ assign user_in[2] = SW[1] | USER_IO[2];
+ assign user_in[3] =         USER_IO[3];
+ assign user_in[4] = SW[1] | USER_IO[4];
+ assign user_in[5] = SW[1] | USER_IO[5];
+ assign user_in[6] =         USER_IO[6];
+*/
 ///////////////////  User module connection ////////////////////////////
 
 wire [15:0] audio_ls, audio_rs;
@@ -1140,8 +1140,9 @@ emu emu
 	.VGA_F1(f1),
 	.VGA_SL(scanlines),
 
-	.joy1_o_db9(joy1_o_db9),
-	
+	.joy_o_db9(joy_o_db9),
+	.db9_Select(db9_Select),
+	.splitter_select(splitter_select),
 
 	.LED_USER(led_user),
 	.LED_POWER(led_power),
