@@ -53,6 +53,7 @@ module emu
 	
 	input   [5:0] joy_o_db9, // CB UDLR
 	output        splitter_select,
+	output		  db9_Select, 
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -171,6 +172,7 @@ localparam CONF_STR = {
 	"-;",
 	"OHJ,Joystick,Kempston,Sinclair I,Sinclair II,Sinclair I+II,Cursor;",
 	"o45,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;",
+	"o6,Swap DB9 Joy,No,Yes;",
 	"OMO,CPU Speed,Original,7MHz,14MHz,28MHz,56MHz;",
 	"OD,Port #FF,Timex,SAA1099;",
 	"OE,ULA+,Enabled,Disabled;",
@@ -182,48 +184,75 @@ localparam CONF_STR = {
 
 ////////////////////   JOYSTICKS   ///////////////////
 
-assign splitter_select = VGA_HS;
+// create a binary counter
+reg [31:0] cnt; // 32-bit counter
 
-reg  [5:0] joy1, joy2;   // CB UDLR  in positive logic
-always @(posedge clk_sys) begin //2joysplit
-    if (~splitter_select)
-        joy1 <= joy_o_db9;
+initial begin
+     cnt <= 32'h00000000; // start at zero
+end
+always @(posedge CLK_50M) begin
+     cnt <= cnt + 1; // count up
+end
+
+
+//////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
+wire [6:0] JOYAV_T1;      // CB UDLR  Positive Logic
+wire [6:0] JOYAV_T2;      // CB UDLR  Positive Logic
+reg  [6:0] joy1, joy2;   // CB UDLR  Positive Logic
+
+assign db9_Select = 1'bz;
+
+reg joy_split = 1'b1;
+assign splitter_select = joy_split;   
+
+always @(posedge cnt[8])  // 50/256  = 195 khz 
+  begin
+    if (joy_split)
+	   begin
+	     joy1 <= joy_o_db9;
+		  joy_split <= 1'b0;
+		end
     else 
-        joy2 <= joy_o_db9;  
-end  
-
-// Now we applu the menu options
-
-wire [5:0] JOYAV_T1;      // CB UDLR  in positive logic
-wire [5:0] JOYAV_T2;      // CB UDLR  in positive logic
-
-
+	   begin
+        joy2 <= joy_o_db9; 
+		  joy_split <= 1'b1;
+		end
+  end
+  
+  
 always @(posedge clk_sys)
   begin
     case (status[37:36])
-        2'b00 : begin						// Player 1
+      2'b00  :  begin
 						JOYAV_T1 <=  joy_o_db9;
-						JOYAV_T2 <=  6'b0; // because is positive logic
+						JOYAV_T2 <=  7'b0;  // Positive Logic
 					 end
-        2'b01 : begin						// Player 2
-						JOYAV_T1 <=  6'b0; // because is positive logic
+      2'b01  :  begin
+						JOYAV_T1 <=  7'b0;  // Positive Logic
 						JOYAV_T2 <=  joy_o_db9;
 					 end
-        2'b10 : begin						// P1 + P2 (Splitter)
+      2'b10  :  begin
 						JOYAV_T1 <=  joy1;
 						JOYAV_T2 <=  joy2;
 					 end
-		  2'b11 : begin						// DB9 OFF
-						JOYAV_T1 <=  6'b0; // because is positive logic
-						JOYAV_T2 <=  6'b0; // because is positive logic
+		2'b11  :  begin
+						JOYAV_T1 <=  7'b0;  // Positive Logic
+						JOYAV_T2 <=  7'b0;  // Positive Logic
 					 end
    // default : r_RESULT <= 9; 
     endcase
-  end
+  end  
+  
+wire [6:0] JOYAV_1;      // CB UDLR  Positive Logic
+wire [6:0] JOYAV_2;      // CB UDLR  Positive Logic
 
-
-
-
+always @(posedge clk_sys)
+  begin
+    JOYAV_1 = status[38]? JOYAV_T2 : JOYAV_T1;
+	 JOYAV_2 = status[38]? JOYAV_T1 : JOYAV_T2;
+  end 
+  
+  
 ////////////////////   CLOCKS   ///////////////////
 
 assign CLK_VIDEO = clk_56;
@@ -892,16 +921,16 @@ wire [2:0] jsel = status[19:17];
 wire [5:0] joyk   = !jsel ? (joystick_0[5:0] | joystick_1[5:0] | joy_o_db9[5:0] ) : 6'd0;
 
 //sinclair 1 67890
-wire [4:0] joys1 = ({5{jsel[0]}} & {joystick_0[1:0] | JOYAV_T1[1:0], joystick_0[2] | JOYAV_T1[2], joystick_0[3] | JOYAV_T1[3], joystick_0[4] | JOYAV_T1[4]}) | ({5{jsel[1:0]==1}} & {joystick_1[1:0] | JOYAV_T2[1:0], joystick_1[2] | JOYAV_T2[2], joystick_1[3] | JOYAV_T2[3], joystick_1[4] | JOYAV_T2[4]});
+wire [4:0] joys1 = ({5{jsel[0]}} & {joystick_0[1:0] | JOYAV_1[1:0], joystick_0[2] | JOYAV_1[2], joystick_0[3] | JOYAV_1[3], joystick_0[4] | JOYAV_1[4]}) | ({5{jsel[1:0]==1}} & {joystick_1[1:0] | JOYAV_2[1:0], joystick_1[2] | JOYAV_2[2], joystick_1[3] | JOYAV_2[3], joystick_1[4] | JOYAV_2[4]});
 //wire [4:0] joys1 = ({5{jsel[0]}} & {joystick_0[1:0], joystick_0[2], joystick_0[3], joystick_0[4]}) | ({5{jsel[1:0]==1}} & {joystick_1[1:0], joystick_1[2], joystick_1[3], joystick_1[4]});
 
 
 //sinclair 2 12345
-wire [4:0] joys2 = ({5{jsel[1]}} & {joystick_1[4:2] | JOYAV_T2[4:2], joystick_1[0] | JOYAV_T2[0], joystick_1[1] | JOYAV_T2[1]})                | ({5{jsel[1:0]==2}} & {joystick_0[4:2],joystick_0[0],joystick_0[1]});
+wire [4:0] joys2 = ({5{jsel[1]}} & {joystick_1[4:2] | JOYAV_2[4:2], joystick_1[0] | JOYAV_2[0], joystick_1[1] | JOYAV_2[1]})                | ({5{jsel[1:0]==2}} & {joystick_0[4:2],joystick_0[0],joystick_0[1]});
 
 //cursor 56780
-wire [4:0] joyc1 = {5{jsel[2]}} & ({joystick_0[2] | JOYAV_T1[2], joystick_0[3] | JOYAV_T1[3], joystick_0[0] | JOYAV_T1[0],1'b0, joystick_0[4] | JOYAV_T1[4]} | {joystick_1[2] | JOYAV_T2[2], joystick_1[3] | JOYAV_T2[3], joystick_1[0] | JOYAV_T2[0], 1'b0, joystick_1[4] | JOYAV_T2[4]});
-wire [4:0] joyc2 = {5{jsel[2]}} & {joystick_0[1] | JOYAV_T1[1] | joystick_1[1] | JOYAV_T2[1], 4'b0000};
+wire [4:0] joyc1 = {5{jsel[2]}} & ({joystick_0[2] | JOYAV_1[2], joystick_0[3] | JOYAV_1[3], joystick_0[0] | JOYAV_1[0],1'b0, joystick_0[4] | JOYAV_1[4]} | {joystick_1[2] | JOYAV_2[2], joystick_1[3] | JOYAV_2[3], joystick_1[0] | JOYAV_2[0], 1'b0, joystick_1[4] | JOYAV_2[4]});
+wire [4:0] joyc2 = {5{jsel[2]}} & {joystick_0[1] | JOYAV_1[1] | joystick_1[1] | JOYAV_2[1], 4'b0000};
 
 //map to keyboard
 wire [4:0] joy_kbd = ({5{addr[12]}} | ~(joys1 | joyc1)) & ({5{addr[11]}} | ~(joys2 | joyc2));

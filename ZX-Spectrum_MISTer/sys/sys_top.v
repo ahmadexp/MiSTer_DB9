@@ -1143,6 +1143,7 @@ emu emu
 	.VGA_SL(scanlines),
 
 	.joy_o_db9(joy_o_db9),
+	.db9_Select(db9_Select),
 	.splitter_select(splitter_select),
 
 	.LED_USER(led_user),
