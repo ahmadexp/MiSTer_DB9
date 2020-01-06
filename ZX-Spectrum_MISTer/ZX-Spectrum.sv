@@ -196,9 +196,9 @@ end
 
 
 //////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
-wire [6:0] JOYAV_T1;      // CB UDLR  Positive Logic
-wire [6:0] JOYAV_T2;      // CB UDLR  Positive Logic
-reg  [6:0] joy1, joy2;   // CB UDLR  Positive Logic
+wire [5:0] JOYAV_T1;      // CB UDLR  Positive Logic
+wire [5:0] JOYAV_T2;      // CB UDLR  Positive Logic
+reg  [5:0] joy1, joy2;   // CB UDLR  Positive Logic
 
 assign db9_Select = 1'bz;
 
@@ -243,8 +243,8 @@ always @(posedge clk_sys)
     endcase
   end  
   
-wire [6:0] JOYAV_1;      // CB UDLR  Positive Logic
-wire [6:0] JOYAV_2;      // CB UDLR  Positive Logic
+wire [5:0] JOYAV_1;      // CB UDLR  Positive Logic
+wire [5:0] JOYAV_2;      // CB UDLR  Positive Logic
 
 always @(posedge clk_sys)
   begin
