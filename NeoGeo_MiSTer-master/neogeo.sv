@@ -69,10 +69,10 @@ module emu
 	output        VGA_F1,
 	output  [1:0] VGA_SL,
 
-	// DB9 Joystick by Benitoss
-  	input [5:0] joy_o_db9,    // CB UDLR (in negative logic)
-	output      joy_select ,
-	output      joy_splitter_select,
+	// DB9 Joystick
+	input [5:0] joy_o_db9,    // CB UDLR (negative Logic)
+	output      db9_Select,
+	output      splitter_select, 
 	
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
@@ -173,9 +173,6 @@ module emu
 	input         OSD_STATUS
 );
 
-
-
-
 assign ADC_BUS  = 'Z;
 assign USER_OUT = '1;
 assign {UART_RTS, UART_TXD, UART_DTR} = 0;
@@ -254,7 +251,8 @@ localparam CONF_STR = {
 	"H2O8,[DIP] Freeplay,OFF,ON;",
 	"H2O9,[DIP] Freeze,OFF,ON;",
 	"-;",
-	"o45,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
+	"oAB,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;",
+	"oC,Swap Joysticks,No,Yes;",
 	"-;",
 	"OG,Width,320px,304px;",
 	"OH,Aspect Ratio,Original,Wide;",
@@ -266,107 +264,96 @@ localparam CONF_STR = {
 	"V,v",`BUILD_DATE								// keyboards that don't allow more than 2 keypresses at once
 };
 
-
-////////////////////  JOYSTICKS added by Benitoss ///////////////////
-
-// First we applied the Splitter , later 6 buttons Megadrive 
-
-
-// I/O 2 Joystick splitter option added from joy_o_db9 ////////////////
-
 // create a binary counter
 reg [31:0] cnt; // 32-bit counter
 
 initial begin
      cnt <= 32'h00000000; // start at zero
 end
-always @(posedge clk_sys) begin
+always @(posedge CLK_50M) begin
      cnt <= cnt + 1; // count up
 end
 
+//////  I/O 2 Joystick splitter option added from JOYAV ////////////////
+wire [5:0] JOYAV_T1;      // CB UDLR  negative Logic
+wire [5:0] JOYAV_T2;      // CB UDLR  negative Logic
+reg  [5:0] joy1, joy2;   // CB UDLR  negative Logic
 
-assign joy_splitter_select = cnt[6];    // 53 Mhz /64  = 800 Khz 
+//assign db9_Select = 1'b1;
 
-reg  [5:0] joy1, joy2;   // CB UDLR  (in negative logic)
+reg joy_split = 1'b1;
+assign splitter_select = joy_split;   
 
-always @(posedge clk_sys) begin //2joysplit
-    if (~joy_splitter_select)    
-        joy1 <= joy_o_db9;
+always @(posedge cnt[4])  // 50/16  = 3.125 Mhz
+  begin
+    if (joy_split)
+		begin
+			joy1 <= joy_o_db9;
+			joy_split <= 1'b0;
+		end
     else 
-        joy2 <= joy_o_db9;  
-end  
-
-
-// Now we apply the menu options
-
-wire [5:0] JOYAV_T1;      // CB UDLR  (in negative logic)
-wire [5:0] JOYAV_T2;      // CB UDLR  (in negative logic)
+		begin
+			joy2 <= joy_o_db9; 
+			joy_split <= 1'b1;
+		end
+  end
 
 
 always @(posedge clk_sys)
   begin
-    case (status[37:36])
-      3'b000  : begin
-						JOYAV_T1 <= joy_o_db9;
-						JOYAV_T2 <=  6'b1; // because is negative logic
+    case (status[43:42])
+        2'b00 : begin							// Player 1
+						JOYAV_T1 <=  joy_o_db9;
+						JOYAV_T2 <=  6'b111111; // because is negative logic
 					 end
-      3'b001  : begin
-						JOYAV_T1 <=  6'b1; // because is negative logic
-						JOYAV_T2 <= joy_o_db9;
+        2'b01 : begin							// Player 2
+						JOYAV_T1 <=  6'b111111; // because is negative logic
+						JOYAV_T2 <=  joy_o_db9;
 					 end
-      3'b010  : begin
+        2'b10 : begin							// P1 + P2 (Splitter)
 						JOYAV_T1 <=  joy1;
 						JOYAV_T2 <=  joy2;
 					 end
-   // default : r_RESULT <= 9; 
+		  2'b11 : begin							// DB9 OFF
+						JOYAV_T1 <=  6'b111111; // because is negative logic
+						JOYAV_T2 <=  6'b111111; // because is negative logic
+					 end
     endcase
   end
 
 
-
 // Now we apply the megadrive desmultiplexor conversor
 
-wire [11:0] joy1_o;   // MXYZ SACB RLDU  (in negative logic)
-wire [11:0] joy2_o;   // MXYZ SACB RLDU  (in negative logic)
+wire [11:0] joy1_o;   // MXYZ SACB RLDU  in negative logic
+wire [11:0] joy2_o;   // MXYZ SACB RLDU  in negative logic
 
 // Llamamos a la maquina de estados para leer los 6 botones del mando de Megadrive
-// Formato joy1_o [11:0] =  MXYZ SACB RLDU
+// Formato joy1_o [11:0] =  MXYZ SACB RLDU negative logic
 sega_joystick joy (
-	.joy1_up_i		(JOYAV_T1[3]),   // JOYAV_T1 // CB UDLR (in negative logic)
+	.joy1_up_i		(JOYAV_T1[3]),   // JOYAV_T1 // CB UDLR (negative logic)
 	.joy1_down_i	(JOYAV_T1[2]),
 	.joy1_left_i	(JOYAV_T1[1]),
 	.joy1_right_i	(JOYAV_T1[0]),
 	.joy1_p6_i		(JOYAV_T1[4]),
 	.joy1_p9_i		(JOYAV_T1[5]),
-	.joy2_up_i		(JOYAV_T2[3]),   // JOYAV_T2 // CB UDLR (in negative logic)
+	.joy2_up_i		(JOYAV_T2[3]),
 	.joy2_down_i	(JOYAV_T2[2]),
 	.joy2_left_i	(JOYAV_T2[1]),
 	.joy2_right_i	(JOYAV_T2[0]),
 	.joy2_p6_i		(JOYAV_T2[4]),
 	.joy2_p9_i		(JOYAV_T2[5]),
-	.vga_hsync_n_s (VGA_HS),
-	.joyX_p7_o		(joy_Select), // select signal
-	.joy1_o			(joy1_o),    // MXYZ SACB RLDU (in negative logic)
-	.joy2_o			(joy2_o)     // MXYZ SACB RLDU (in negative logic)
-);
+	.vga_hsync_n_s (hs),  
+	.joyX_p7_o		(db9_Select), // select signal
+	.joy1_o			(joy1_o),    // MXYZ SACB RLDU in negative logic
+	.joy2_o			(joy2_o)     // MXYZ SACB RLDU in negative logic
+); 
 
+wire [11:0] JOYAV_1;   // ABC Coin Se St  DCBA UDLR   in positive logic
+wire [11:0] JOYAV_2;   // ABC Coin Se St  DCBA UDLR   in positive logic
 
-wire [11:0] JOYAV_1;   // YXMS ZCBA UDLR   (in positive logic)   //  it is asociated here  ----HNLS DCBA UDLR
-wire [11:0] JOYAV_2;   // YXMS ZCBA UDLR   (in positive logic)                                 YXMS ZCBA UDLR    
-
-assign JOYAV_1 = ~{joy1_o[9],joy1_o[10],joy1_o[11],joy1_o[7],  joy1_o[8],joy1_o[5],joy1_o[4],joy1_o[6],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
-assign JOYAV_2 = ~{joy2_o[9],joy2_o[10],joy2_o[11],joy2_o[7],  joy2_o[8],joy2_o[5],joy2_o[4],joy2_o[6],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
-
-
-/// Yo metería el abcd de NeoGeo en el ABCZ de Megadrive. 
-/// El S de NeoGeo en el Start de Megadrive. El H de NeoGeo en la Y de Megadrive, 
-/// y luego el N y L de NeoGeo (que seran Coin y Select) en la X y en el Mode de Megadrive
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
+assign JOYAV_1 = ~{joy1_o[9],joy1_o[11],joy1_o[10],joy1_o[7],  joy1_o[8],joy1_o[5],joy1_o[4],joy1_o[6],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+assign JOYAV_2 = ~{joy2_o[9],joy2_o[11],joy2_o[10],joy2_o[7],  joy2_o[8],joy2_o[5],joy2_o[4],joy2_o[6],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
+ 
 
 ////////////////////   CLOCKS   ///////////////////
 
@@ -438,7 +425,7 @@ wire [63:0] img_size;
 reg  [31:0] sd_lba;
 wire [31:0] CD_sd_lba;
 
-wire [15:0] joystick_0;	// ----HNLS DCBAUDLR   
+wire [15:0] joystick_0;	// ----HNLS DCBAUDLR
 wire [15:0] joystick_1;
 wire  [1:0] buttons;
 wire [10:0] ps2_key;
@@ -467,7 +454,7 @@ hps_io #(.STRLEN($size(CONF_STR)>>3), .WIDE(1), .VDNUM(2)) hps_io
 	.conf_str(CONF_STR),
 	.forced_scandoubler(forced_scandoubler),
 
-	.joystick_0(joystick_0),    // ----HNLS DCBAUDLR   //JOYAV_1; -- ZYXM SCBA UDLR 
+	.joystick_0(joystick_0), 
 	.joystick_1(joystick_1),
 	.buttons(buttons),
 	.ps2_key(ps2_key),
@@ -1328,7 +1315,8 @@ end
 		.nDIPRD0(nDIPRD0), .nDIPRD1(nDIPRD1),
 		.nBITW0(nBITW0), .nBITWD0(nBITWD0),
 		.DIPSW({~status[9:8], 5'b11111, ~status[7]}),
-		.COIN1(~joystick_0[10] | ~JOYAV_1[10] ), .COIN2(~joystick_1[10] | ~JOYAV_2[10]),  // mod by benitoss
+		.COIN1( status[44] ? ~(joystick_0[10] | JOYAV_1[10]) : ~(joystick_1[10] | JOYAV_2[10]) ), 
+		.COIN2( status[44] ? ~(joystick_1[10] | JOYAV_2[10]) : ~(joystick_0[10] | JOYAV_1[10]) ),
 		.M68K_ADDR(M68K_ADDR[7:4]),
 		.M68K_DATA(M68K_DATA[7:0]),
 		.SYSTEMB(~nSYSTEM_G),
@@ -1365,12 +1353,12 @@ end
 		.nLSPOE(nLSPOE), .nLSPWE(nLSPWE),
 		.nCRDO(nCRDO), .nCRDW(nCRDW), .nCRDC(nCRDC),
 		.nSDW(nSDW),
-		// 
 //		.P1_IN(~{joystick_0[9:4] | {3{joystick_0[11]}}, joystick_0[0], joystick_0[1], joystick_0[2], joystick_0[3]}),
 //		.P2_IN(~{joystick_1[9:4] | {3{joystick_1[11]}}, joystick_1[0], joystick_1[1], joystick_1[2], joystick_1[3]}),
 		
-		.P1_IN(~{joystick_0[9:4] | JOYAV_1[9:4] | {3{joystick_0[11] | JOYAV_1[11] }}, joystick_0[0] | JOYAV_1[0], joystick_0[1] | JOYAV_1[1], joystick_0[2] | JOYAV_1[2], joystick_0[3] | JOYAV_1[3]}),
-		.P2_IN(~{joystick_1[9:4] | JOYAV_2[9:4] | {3{joystick_1[11] | JOYAV_2[11] }}, joystick_1[0] | JOYAV_2[0], joystick_1[1] | JOYAV_2[1], joystick_1[2] | JOYAV_2[2], joystick_1[3] | JOYAV_2[3]}),
+		.P1_IN( status[44] ? (~{ (joystick_0[9:4] | JOYAV_1[9:4]) | {3{joystick_0[11] | JOYAV_1[11] }}, joystick_0[0] | JOYAV_1[0], joystick_0[1] | JOYAV_1[1], joystick_0[2] | JOYAV_1[2], joystick_0[3] | JOYAV_1[3]}) : (~{ (joystick_1[9:4] | JOYAV_2[9:4]) | {3{joystick_1[11] | JOYAV_2[11] }}, joystick_1[0] | JOYAV_2[0], joystick_1[1] | JOYAV_2[1], joystick_1[2] | JOYAV_2[2], joystick_1[3] | JOYAV_2[3]})  ),
+		.P2_IN( status[44] ? (~{ (joystick_1[9:4] | JOYAV_2[9:4]) | {3{joystick_1[11] | JOYAV_2[11] }}, joystick_1[0] | JOYAV_2[0], joystick_1[1] | JOYAV_2[1], joystick_1[2] | JOYAV_2[2], joystick_1[3] | JOYAV_2[3]}) : (~{ (joystick_0[9:4] | JOYAV_1[9:4]) | {3{joystick_0[11] | JOYAV_1[11] }}, joystick_0[0] | JOYAV_1[0], joystick_0[1] | JOYAV_1[1], joystick_0[2] | JOYAV_1[2], joystick_0[3] | JOYAV_1[3]})  ),
+		
 		
 		.nCD1(nCD1), .nCD2(nCD2),
 		.nWP(0),			// Memory card is never write-protected
