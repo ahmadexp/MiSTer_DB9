@@ -52,7 +52,10 @@ module emu
 	output  [1:0] VGA_SL,
 
 	// DB9 Joystick
-  	input   [6:0] joy1_o_db9, // CBA UDLR
+  	input   [5:0] joy_o_db9, // CB UDLR negative logic
+	output        splitter_select,
+	output		  db9_Select, 
+
 
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
@@ -157,7 +160,7 @@ localparam CONF_STR = {
 	"-;",
 	"O7,Internal Mapper,2048KB RAM,4096KB RAM;",
 	"-;",
-        "OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
+   "OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
 	"OD,Joysticks Swap,No,Yes;",
 	"OC,Mouse,Port 1,Port 2;",
 	"-;",
@@ -168,39 +171,69 @@ localparam CONF_STR = {
 
 ////////////////////   JOYSTICKS   ///////////////////
 
-reg  [6:0] JOYAV; // BA UDLR
-assign JOYAV  = joy1_o_db9;
+// create a binary counter
+reg [31:0] cnt; // 32-bit counter
+
+initial begin
+     cnt <= 32'h00000000; // start at zero
+end
+always @(posedge CLK_50M) begin
+     cnt <= cnt + 1; // count up
+end
+
 
 //////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
-wire [6:0] JOYAV_1;      // BA UDLR
-wire [6:0] JOYAV_2;      // BA UDLR
-reg  [6:0] joy1, joy2;   // BA UDLR
+wire [5:0] JOYAV_T1;      // CB UDLR  Positive Logic
+wire [5:0] JOYAV_T2;      // CB UDLR  Positive Logic
+reg  [5:0] joy1, joy2;   // CB UDLR  Positive Logic
 
-always @(posedge clk_sys) begin //2joysplit
-    if (~VGA_HS)
-        joy1 <= JOYAV;
+assign db9_Select = 1'bz;
+
+reg joy_split = 1'b1;
+assign splitter_select = joy_split;   
+
+always @(posedge cnt[8])  // 50/256  = 195 khz 
+  begin
+    if (joy_split)
+	   begin
+	     joy1 <= ~joy_o_db9;  // positive logic
+		  joy_split <= 1'b0;
+		end
     else 
-        joy2 <= JOYAV;  
-end  
-
+	   begin
+        joy2 <= ~joy_o_db9;  // positive logic
+		  joy_split <= 1'b1;
+		end
+  end
+  
+  
 always @(posedge clk_sys)
   begin
     case (status[17:16])
-      3'b000  : begin
-						JOYAV_1 <= JOYAV;
-						JOYAV_2 <=  6'b0;
+      2'b00  :  begin
+						JOYAV_T1 <=  ~joy_o_db9; 
+						JOYAV_T2 <=  6'b0;  // Positive Logic
 					 end
-      3'b001  : begin
-						JOYAV_1 <=  6'b0;
-						JOYAV_2 <= JOYAV;
+      2'b01  :  begin
+						JOYAV_T1 <=  6'b0;  // Positive Logic
+						JOYAV_T2 <=  ~joy_o_db9;
 					 end
-      3'b010  : begin
-						JOYAV_1 <=  joy1;
-						JOYAV_2 <=  joy2;
+      2'b10  :  begin
+						JOYAV_T1 <=  joy1;
+						JOYAV_T2 <=  joy2;
+					 end
+		2'b11  :  begin
+						JOYAV_T1 <=  6'b0;  // Positive Logic
+						JOYAV_T2 <=  6'b0;  // Positive Logic
 					 end
    // default : r_RESULT <= 9; 
     endcase
-  end
+  end  
+  
+wire [5:0] JOYAV_1;      // CB UDLR  Positive Logic
+wire [5:0] JOYAV_2;      // CB UDLR  Positive Logic
+assign  JOYAV_1 = JOYAV_T1 ;
+assign  JOYAV_2 = JOYAV_T2 ;
 
 
 ////////////////////   CLOCKS   ///////////////////

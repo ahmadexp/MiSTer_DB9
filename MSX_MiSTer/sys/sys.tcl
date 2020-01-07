@@ -46,26 +46,21 @@ set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to IO_S*
 #set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to USER_IO[*]
 #set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to USER_IO[*]
 
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_*
-set_location_assignment PIN_AF15 -to joy1_up_i
-set_location_assignment PIN_AH9 -to joy1_left_i
-set_location_assignment PIN_AH11 -to joy1_p6_i
-set_location_assignment PIN_AF17 -to joy1_p9_i
-set_location_assignment PIN_AH12 -to joy1_right_i
-set_location_assignment PIN_AE15 -to joy1_down_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_down_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_left_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_p6_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_p9_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_right_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy1_up_i
 
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_down_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_left_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_p6_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_p9_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_right_i
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy1_up_i
+set_location_assignment PIN_AF15 -to joy_up_i
+set_location_assignment PIN_AH9  -to joy_left_i
+set_location_assignment PIN_AH11 -to joy_p6_i
+set_location_assignment PIN_AF17 -to joy_p9_i
+set_location_assignment PIN_AH12 -to joy_right_i
+set_location_assignment PIN_AE15 -to joy_down_i
+set_location_assignment PIN_AG16 -to splitter_select
+set_location_assignment PIN_AG11 -to db9_Select
+
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_*
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_*
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to splitter_select
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to db9_Select
 
 #============================================================
 # SDIO_CD or SPDIF_OUT
