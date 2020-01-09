@@ -54,7 +54,7 @@ set_global_assignment -name SEED 1
 source sys/sys.tcl
 source sys/sys_analog.tcl
 source files.qip
-set_global_assignment -name VERILOG_FILE sys/joystick_Sega_6_buttons.v
+set_global_assignment -name VERILOG_FILE joystick_Sega_6_buttons.v
 set_global_assignment -name CDF_FILE jtag.cdf
 set_global_assignment -name QIP_FILE sys/sys.qip
 set_global_assignment -name QIP_FILE src/65C816/65C816.qip

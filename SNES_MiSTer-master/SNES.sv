@@ -50,6 +50,11 @@ module emu
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
 
+	// DB9 Joystick
+	input [5:0] joy_o_db9,    // CB UDLR nw=egative Logic
+	output      db9_Select,
+	output      joy_splitter_select,  
+	
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -63,12 +68,6 @@ module emu
 	// b[0]: osd button
 	output  [1:0] BUTTONS,
 
-	
-	// DB9 Joystick
-	input [5:0] joy_o_db9,    // CB UDLR nw=egative Logic
-	output      db9_Select ,
-	output      joy_splitter_select, 
-	
 	output [15:0] AUDIO_L,
 	output [15:0] AUDIO_R,
 	output        AUDIO_S, // 1 - signed audio samples, 0 - unsigned
@@ -137,7 +136,7 @@ assign AUDIO_MIX = status[20:19];
 assign LED_USER  = cart_download | (status[23] & bk_pending);
 assign LED_DISK  = 0;
 assign LED_POWER = 0;
-assign BUTTONS   = 0;
+assign BUTTONS   = osd_btn;
 
 assign VIDEO_ARX = status[31:30] == 2 ? 8'd16 : (status[30] ? 8'd8 : 8'd64);
 assign VIDEO_ARY = status[31:30] == 2 ? 8'd9  : (status[30] ? 8'd7 : 8'd49);
@@ -156,9 +155,8 @@ pll pll
 	.refclk(CLK_50M),
 	.rst(0),
 	.outclk_0(clk_mem),
-	.outclk_1(SDRAM_CLK),
-	.outclk_2(CLK_VIDEO),
-	.outclk_3(clk_sys),
+	.outclk_1(CLK_VIDEO),
+	.outclk_2(clk_sys),
 	.reconfig_to_pll(reconfig_to_pll),
 	.reconfig_from_pll(reconfig_from_pll),
 	.locked(clock_locked)
@@ -259,6 +257,7 @@ parameter CONF_STR = {
     "V,v",`BUILD_DATE
 };
 
+
 ////////////////////   JOYSTICKS   ///////////////////
 
 // First we applied the Splitter , later 6 buttons Megadrive 
@@ -275,16 +274,25 @@ always @(posedge clk_sys) begin
 end
 
 
-assign joy_splitter_select = cnt[9];    // 43 Mhz /512 = 83 Khz 
+//////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
+reg  [5:0] joy_1, joy_2;   // CB UDLR  Positive Logic
 
-reg  [5:0] joy1_s, joy2_s;   // CB UDLR  in negative logic
+reg joy_split = 1'b1;
+assign splitter_select = joy_split;   
 
-always @(posedge clk_mem) begin //2joysplit
-    if (joy_splitter_select)
-        joy1_s <= joy_o_db9;
+always @(posedge cnt[8])  // 50/256  = 195 khz 
+  begin
+    if (joy_split)
+	   begin
+	     joy_1 <= joy_o_db9;
+		  joy_split <= 1'b0;
+		end
     else 
-        joy2_s <= joy_o_db9;  
-end  
+	   begin
+        joy_2 <= joy_o_db9; 
+		  joy_split <= 1'b1;
+		end
+  end
 
 
 // Now we applu the menu options
@@ -305,8 +313,8 @@ always @(posedge clk_mem)
 						JOYAV_T2 <=  joy_o_db9;
 					 end
         2'b10 : begin						// P1 + P2 (Splitter)
-						JOYAV_T1 <=  joy1_s;
-						JOYAV_T2 <=  joy2_s;
+						JOYAV_T1 <=  joy_1;
+						JOYAV_T2 <=  joy_2;
 					 end
 		  2'b11 : begin						// DB9 OFF
 						JOYAV_T1 <=  6'b1; // because is negative logic
@@ -351,8 +359,12 @@ wire [11:0] JOYAV_2;   // SMCY XABZ UDLR   in positive logic
 assign JOYAV_1 = ~{joy1_o[7],joy1_o[11],joy1_o[5],joy1_o[9],  joy1_o[10],joy1_o[6],joy1_o[4],joy1_o[8],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
 assign JOYAV_2 = ~{joy2_o[7],joy2_o[11],joy2_o[5],joy2_o[9],  joy2_o[10],joy2_o[6],joy2_o[4],joy2_o[8],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
 
-
  
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
 // free bits: 8,L,M
 
 wire  [1:0] buttons;
@@ -510,6 +522,26 @@ always @(posedge clk_sys) begin
 	end
 	else begin
 		PAL <= (!status[15:14]) ? rom_region : status[15];
+	end
+end
+
+reg osd_btn = 0;
+always @(posedge clk_sys) begin
+	integer timeout = 0;
+	reg     has_bootrom = 0;
+	reg     last_rst = 0;
+
+	if (RESET) last_rst = 0;
+	if (status[0]) last_rst = 1;
+
+	if (cart_download & ioctl_wr & status[0]) has_bootrom <= 1;
+
+	if(last_rst & ~status[0]) begin
+		osd_btn <= 0;
+		if(timeout < 24000000) begin
+			timeout <= timeout + 1;
+			osd_btn <= ~has_bootrom;
+		end
 	end
 end
 
@@ -673,6 +705,7 @@ dpram #(17)	wram
 
 	// clear the RAM on loading
 	.address_b(ioctl_addr[16:0]),
+	.data_b(ioctl_addr[7:0]),
 	.wren_b(ioctl_wr & cart_download)
 );
 
@@ -736,7 +769,7 @@ dpram_dif #(BSRAM_BITS,8,BSRAM_BITS-1,16) bsram
 
 	//Thrash the BSRAM upon ROM loading
 	.address_a(cart_download ? ioctl_addr[BSRAM_BITS-1:0] : BSRAM_ADDR[BSRAM_BITS-1:0]),
-	.data_a(cart_download ? ioctl_addr[7:0] : BSRAM_D),
+	.data_a(cart_download ? 8'hFF : BSRAM_D),
 	.wren_a(cart_download ? ioctl_wr : ~BSRAM_CE_N & ~BSRAM_WE_N),
 	.q_a(BSRAM_Q),
 
@@ -824,7 +857,7 @@ ioport port1
 	.PORT_P6(JOY1_P6),
 	.PORT_DO(JOY1_DO),
 
-	.JOYSTICK1((joy_swap ^ raw_serial) ? (joy1|JOYAV_2)  : (joy0 | JOYAV_1) ),
+	.JOYSTICK1((joy_swap ^ raw_serial) ? joy1 : joy0),
 
 	.MOUSE(ps2_mouse),
 	.MOUSE_EN(mouse_mode[0])
@@ -844,7 +877,7 @@ ioport port2
 	.PORT_P6(JOY2_P6),
 	.PORT_DO(JOY2_DO),
 
-	.JOYSTICK1((joy_swap ^ raw_serial) ? (joy0 | JOYAV_1) : (joy1|JOYAV_2) ),
+	.JOYSTICK1((joy_swap ^ raw_serial) ? joy0 : joy1),
 	.JOYSTICK2(joy2),
 	.JOYSTICK3(joy3),
 	.JOYSTICK4(joy4),
