@@ -1356,8 +1356,8 @@ end
 //		.P1_IN(~{joystick_0[9:4] | {3{joystick_0[11]}}, joystick_0[0], joystick_0[1], joystick_0[2], joystick_0[3]}),
 //		.P2_IN(~{joystick_1[9:4] | {3{joystick_1[11]}}, joystick_1[0], joystick_1[1], joystick_1[2], joystick_1[3]}),
 		
-		.P1_IN( status[44] ? (~{ (joystick_1[9:4] | JOYAV_2[9:4]) | {3{joystick_1[11] | JOYAV_2[11] }}, joystick_1[0] | JOYAV_2[0], joystick_1[1] | JOYAV_2[1], joystick_1[2] | JOYAV_2[2], joystick_1[3] | JOYAV_2[3]}) : (~{ (joystick_0[9:4] | JOYAV_1[9:4]) | {3{joystick_0[11] | JOYAV_1[11] }}, joystick_0[0] | JOYAV_1[0], joystick_0[1] | JOYAV_1[1], joystick_0[2] | JOYAV_1[2], joystick_0[3] | JOYAV_1[3]}) ),
-		.P2_IN( status[44] ? (~{ (joystick_0[9:4] | JOYAV_1[9:4]) | {3{joystick_0[11] | JOYAV_1[11] }}, joystick_0[0] | JOYAV_1[0], joystick_0[1] | JOYAV_1[1], joystick_0[2] | JOYAV_1[2], joystick_0[3] | JOYAV_1[3]}) : (~{ (joystick_1[9:4] | JOYAV_2[9:4]) | {3{joystick_1[11] | JOYAV_2[11] }}, joystick_1[0] | JOYAV_2[0], joystick_1[1] | JOYAV_2[1], joystick_1[2] | JOYAV_2[2], joystick_1[3] | JOYAV_2[3]}) ),
+		.P1_IN( status[44] ? (~{ (joystick_1[9:4] | JOYAV_2[9:4]) | {3{ joystick_1[11] | JOYAV_2[11] }}, joystick_1[0] | JOYAV_2[0], joystick_1[1] | JOYAV_2[1], joystick_1[2] | JOYAV_2[2], joystick_1[3] | JOYAV_2[3]}) : (~{ (joystick_0[9:4] | JOYAV_1[9:4]) | {3{joystick_0[11] | JOYAV_1[11] }}, joystick_0[0] | JOYAV_1[0], joystick_0[1] | JOYAV_1[1], joystick_0[2] | JOYAV_1[2], joystick_0[3] | JOYAV_1[3]}) ),
+		.P2_IN( status[44] ? (~{ (joystick_0[9:4] | JOYAV_1[9:4]) | {3{ joystick_0[11] | JOYAV_1[11] }}, joystick_0[0] | JOYAV_1[0], joystick_0[1] | JOYAV_1[1], joystick_0[2] | JOYAV_1[2], joystick_0[3] | JOYAV_1[3]}) : (~{ (joystick_1[9:4] | JOYAV_2[9:4]) | {3{joystick_1[11] | JOYAV_2[11] }}, joystick_1[0] | JOYAV_2[0], joystick_1[1] | JOYAV_2[1], joystick_1[2] | JOYAV_2[2], joystick_1[3] | JOYAV_2[3]}) ),
 		
 		
 		.nCD1(nCD1), .nCD2(nCD2),
