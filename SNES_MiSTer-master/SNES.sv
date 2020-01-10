@@ -306,10 +306,10 @@ always @(posedge clk_mem)
     case (status[37:36])
         2'b00 : begin						// Player 1
 						JOYAV_T1 <=  joy_o_db9;
-						JOYAV_T2 <=  6'b1; // because is negative logic
+						JOYAV_T2 <=  6'b111111; // because is negative logic
 					 end
         2'b01 : begin						// Player 2
-						JOYAV_T1 <=  6'b1; // because is negative logic
+						JOYAV_T1 <=  6'b111111; // because is negative logic
 						JOYAV_T2 <=  joy_o_db9;
 					 end
         2'b10 : begin						// P1 + P2 (Splitter)
@@ -317,8 +317,8 @@ always @(posedge clk_mem)
 						JOYAV_T2 <=  joy_2;
 					 end
 		  2'b11 : begin						// DB9 OFF
-						JOYAV_T1 <=  6'b1; // because is negative logic
-						JOYAV_T2 <=  6'b1; // because is negative logic
+						JOYAV_T1 <=  6'b111111; // because is negative logic
+						JOYAV_T2 <=  6'b111111; // because is negative logic
 					 end
    // default : r_RESULT <= 9; 
     endcase
@@ -353,12 +353,13 @@ sega_joystick joy (
 );
 
 
-wire [11:0] JOYAV_1;   // SMCY XABZ UDLR   in positive logic
-wire [11:0] JOYAV_2;   // SMCY XABZ UDLR   in positive logic
+                       // SMrl YXBA UDLR <-- SNES buttons  (M is selectect)
+wire [11:0] JOYAV_1;   // SMZX AYBC UDLR   in positive logic    
+wire [11:0] JOYAV_2;   // SMZX AYBC UDLR   in positive logic
 
-assign JOYAV_1 = ~{joy1_o[7],joy1_o[11],joy1_o[5],joy1_o[9],  joy1_o[10],joy1_o[6],joy1_o[4],joy1_o[8],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
-assign JOYAV_2 = ~{joy2_o[7],joy2_o[11],joy2_o[5],joy2_o[9],  joy2_o[10],joy2_o[6],joy2_o[4],joy2_o[8],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
-
+assign JOYAV_1 = ~{joy1_o[7],joy1_o[11],joy1_o[8],joy1_o[10],  joy1_o[6],joy1_o[9],joy1_o[4],joy1_o[5],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+assign JOYAV_2 = ~{joy2_o[7],joy2_o[11],joy2_o[8],joy2_o[10],  joy2_o[6],joy2_o[9],joy2_o[4],joy2_o[5],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
+ 
  
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -857,7 +858,7 @@ ioport port1
 	.PORT_P6(JOY1_P6),
 	.PORT_DO(JOY1_DO),
 
-	.JOYSTICK1((joy_swap ^ raw_serial) ? joy1 : joy0),
+	.JOYSTICK1((joy_swap ^ raw_serial) ? (joy1|JOYAV_2)  : (joy0 | JOYAV_1 | JOVA_1SNES) ), 
 
 	.MOUSE(ps2_mouse),
 	.MOUSE_EN(mouse_mode[0])
@@ -877,7 +878,7 @@ ioport port2
 	.PORT_P6(JOY2_P6),
 	.PORT_DO(JOY2_DO),
 
-	.JOYSTICK1((joy_swap ^ raw_serial) ? joy0 : joy1),
+	.JOYSTICK1((joy_swap ^ raw_serial) ? (joy0 | JOYAV_1 | JOVA_1SNES) : (joy1|JOYAV_2) ),
 	.JOYSTICK2(joy2),
 	.JOYSTICK3(joy3),
 	.JOYSTICK4(joy4),
