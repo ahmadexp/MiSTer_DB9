@@ -38,7 +38,7 @@ module sys_top
 	input     joy_right_i,
 	input     joy_p6_i,
 	input     joy_p9_i,
-	output	  db9_Select = 1'b1,
+	output	 db9_Select = 1'bz,
 	output    splitter_select,  
 
 	//////////// HDMI //////////
@@ -138,6 +138,12 @@ module sys_top
 	///////// USER IO ///////////
 //	inout   [6:0] USER_IO
 );
+
+////////  Joy Db9  ///////
+
+wire  [5:0] joy_o_db9;  // CB UDLR logic negative
+assign joy_o_db9 = {joy_p9_i, joy_p6_i,  joy_up_i, joy_down_i,joy_left_i, joy_right_i}; 
+ 
 
 //////////////////////  Secondary SD  ///////////////////////////////////
 /*

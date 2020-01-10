@@ -51,7 +51,7 @@ module emu
 	output [1:0]  VGA_SL,
 
 	// DB9 Joystick
-	input [5:0] joy_o_db9,    // CB UDLR nw=egative Logic
+	input [5:0] joy_o_db9,    // CB UDLR negative Logic
 	output      db9_Select,
 	output      joy_splitter_select,  
 	
