@@ -49,11 +49,9 @@ module emu
 	// b[1]: user button
 	// b[0]: osd button
 	output  [1:0] BUTTONS,
-	
-		// I/O Joystick added  
-	input [11:0] JOYAV,
-		// BUZZER
-	output		BUZZER,		  // Salida para Altavoz
+
+	inout  [6:0] JOYAV,
+	output		 BUZZER,		  // Salida para Altavoz
 	
 	output [15:0] AUDIO_L,
 	output [15:0] AUDIO_R,
@@ -189,17 +187,23 @@ pll pll
 (
 	.refclk(CLK_50M),
 	.outclk_0(clk_114),
-	.outclk_1(clk_57),
-	.outclk_2(clk_sys),
+	.outclk_1(clk_sys),
 	.locked(locked)
 );
 
 wire reset = ~locked | buttons[1] | RESET;
 
-reg [7:0] reset_s;
+reg reset_d;
 always @(posedge clk_sys, posedge reset) begin
+	reg [7:0] reset_s;
+	reg rs;
+	
 	if(reset) reset_s <= '1;
-	else reset_s <= reset_s << 1;
+	else begin
+		reset_s <= reset_s << 1;
+		rs <= reset_s[7];
+		reset_d <= rs;
+	end
 end
 
 //// amiga clocks ////
@@ -261,7 +265,7 @@ end
 wire  [1:0] cpu_state;
 wire        cpu_nrst_out;
 wire  [3:0] cpu_cacr;
-wire [31:0] cpu_vbr;
+wire [31:0] cpu_nmi_addr;
 wire        cpu_rst;
 
 wire  [2:0] chip_ipl;
@@ -303,9 +307,7 @@ cpu_wrapper cpu_wrapper
 	.chip_ipl     (chip_ipl        ),
 
 	.cpucfg       (cpucfg          ),
-	.turbochipram (turbochipram    ),
-	.turbokick    (turbokick       ),
-	.dcache       (cachecfg[2]     ),
+	.cachecfg     (cachecfg        ),
 	.fastramcfg   (memcfg[6:4]     ),
 	.bootrom      (bootrom         ),
 
@@ -320,11 +322,8 @@ cpu_wrapper cpu_wrapper
 	//custom CPU signals
 	.cpustate     (cpu_state       ),
 	.cacr         (cpu_cacr        ),
-	.vbr          (cpu_vbr         )
+	.nmi_addr     (cpu_nmi_addr    )
 );
-
-assign SDRAM_CKE = 1;
-assign SDRAM_CLK = clk_57;
 
 wire [15:0] ram_dout1;
 wire        ram_ready1;
@@ -332,7 +331,7 @@ wire        ram_ready1;
 sdram_ctrl ram1
 (
 	.sysclk       (clk_114         ),
-	.reset_n      (~reset_s[7]     ),
+	.reset_n      (~reset_d        ),
 	.c_7m         (c1              ),
 
 	.cache_rst    (cpu_rst         ),
@@ -346,6 +345,8 @@ sdram_ctrl ram1
 	.sd_we        (SDRAM_nWE       ),
 	.sd_ras       (SDRAM_nRAS      ),
 	.sd_cas       (SDRAM_nCAS      ),
+	.sd_cke       (SDRAM_CKE       ),
+	.sd_clk       (SDRAM_CLK       ),
 
 	.cpuWR        (ram_din         ),
 	.cpuAddr      (ram_addr[22:1]  ),
@@ -371,7 +372,7 @@ wire        ram_ready2;
 ddram_ctrl ram2
 (
 	.sysclk       (clk_114         ),
-	.reset_n      (~reset_s[7]     ),
+	.reset_n      (~reset_d        ),
 
 	.cache_rst    (cpu_rst         ),
 	.cpu_cache_ctrl(cpu_cacr       ),
@@ -402,8 +403,6 @@ ddram_ctrl ram2
 wire  [1:0] cpucfg;
 wire  [2:0] cachecfg;
 wire  [6:0] memcfg;
-wire        turbochipram;
-wire        turbokick;
 wire        bootrom;   
 wire [15:0] ram_data;      // sram data bus
 wire [15:0] ramdata_in;    // sram data bus in
@@ -419,6 +418,37 @@ wire        vs;
 wire        hs;
 wire  [1:0] ar;
 
+//Gestion Joystick DB9
+   reg spliter_ena = 1'b1; //Pendiente asignar una tecla para cambiarlo.
+   wire joyav1_ena = ~(&joyav1); 
+   wire joyav2_ena = ~(&joyav2);
+   wire [11:0] joyav1,joyav2;
+   reg   [5:0] joy1r, joy2r;
+	reg clk_joy, joy_split;
+	reg [7:0]clk_dly;
+	
+   always @ (posedge clk_sys) begin
+    clk_dly <= clk_dly + 1;
+   end
+	assign clk_joy = clk_dly[3];	
+   assign JOYAV[6] = joy_split;
+   always @(posedge clk_joy) begin  
+      if(joy_split == 1) begin 
+	    joy_split <= 1'b0; 
+	   end else begin 
+	    joy_split <= 1'b1; 
+	   end
+   end
+   always @(posedge clk_joy) begin 
+		if (~joy_split)
+				joy1r <= JOYAV[5:0];
+		if (joy_split) 
+				joy2r <= JOYAV[5:0];	
+   end  		
+   assign joyav1 = spliter_ena ? {10'b1111111111,joy1r} : {10'b1111111111,JOYAV[5:0]}; //10'b1.. podria ser 10'h3FF
+   assign joyav2 = spliter_ena ? {10'b1111111111,joy2r} : 16'hffff;
+
+
 minimig minimig
 (
 	//m68k pins
@@ -433,7 +463,7 @@ minimig minimig
 	._cpu_dtack   (chip_dtack       ), // M68K data acknowledge
 	._cpu_reset   (cpu_rst          ), // M68K reset
 	._cpu_reset_in(cpu_nrst_out     ), // M68K reset out
-	.cpu_vbr      (cpu_vbr          ), // M68K VBR
+	.nmi_addr     (cpu_nmi_addr     ), // M68K NMI address
 
 	//sram pins
 	.ram_data     (ram_data         ), // SRAM data bus
@@ -446,7 +476,7 @@ minimig minimig
 	.chip48       (chip48           ), // big chipram read
 
 	//system  pins
-	.rst_ext      (reset_s[7]       ), // reset from ctrl block
+	.rst_ext      (reset_d          ), // reset from ctrl block
 	.rst_out      (                 ), // minimig reset status
 	.clk          (clk_sys          ), // output clock c1 ( 28.687500MHz)
 	.clk7_en      (clk7_en          ), // 7MHz clock enable
@@ -468,8 +498,8 @@ minimig minimig
 
 	.drv_snd      (BUZZER),            //PIN DEL BUZZER
 	//I/O
-	._joy1        (~JOY0&JOYAV      ), // joystick 1 [fire4,fire3,fire2,fire,up,down,left,right] (default mouse port)
-	._joy2        (~JOY1            ), // joystick 2 [fire4,fire3,fire2,fire,up,down,left,right] (default joystick port)
+	._joy1        (joyav1_ena ? joyav1 : ~JOY0 ), // joystick 1 [fire4,fire3,fire2,fire,up,down,left,right] (default mouse port)
+	._joy2        (joyav2_ena ? joyav2 : ~JOY1 ), // joystick 2 [fire4,fire3,fire2,fire,up,down,left,right] (default joystick port)
 	._joy3        (~JOY2            ), // joystick 1 [fire4,fire3,fire2,fire,up,down,left,right]
 	._joy4        (~JOY3            ), // joystick 2 [fire4,fire3,fire2,fire,up,down,left,right]
 	.mouse_btn    (MOUSE_BUTTONS    ), // mouse buttons
@@ -513,8 +543,6 @@ minimig minimig
 	.cpucfg       (cpucfg           ), // CPU config
 	.cachecfg     (cachecfg         ), // Cache config
 	.memcfg       (memcfg           ), // memory config
-	.turbochipram (turbochipram     ), // turbo chipRAM
-	.turbokick    (turbokick        ), // turbo kickstart
 	.bootrom      (bootrom          )  // bootrom mode. Needed here to tell tg68k to also mirror the 256k Kickstart 
 );
 

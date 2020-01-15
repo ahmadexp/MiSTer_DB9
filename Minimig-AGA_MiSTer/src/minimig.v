@@ -160,7 +160,7 @@ module minimig
 	output 	     _cpu_dtack,  // m68k data acknowledge
 	output 	     _cpu_reset,  // m68k reset
 	input 	     _cpu_reset_in,//m68k reset in
-	input  [31:0] cpu_vbr,     // m68k VBR
+	input  [31:0] nmi_addr,    // m68k NMI address
 	output 	     ovr,         // NMI address decoding override
 
 	//sram pins
@@ -195,8 +195,8 @@ module minimig
 	input 	     ri,          // rs232 Ring Indicator
 
 	//BUZZER
-	output drv_snd,        //Salida del la emulacion de sonido FD al Buzzer
-
+	output drv_snd,            //Salida del la emulacion de sonido FD al Buzzer
+	
 	//I/O
 	input  [15:0] _joy1,       // joystick 1 [fire2,fire,up,down,left,right] (default mouse port)
 	input  [15:0] _joy2,       // joystick 2 [fire2,fire,up,down,left,right] (default joystick port)
@@ -244,8 +244,6 @@ module minimig
 	output  [1:0] cpucfg,
 	output  [2:0] cachecfg,
 	output  [6:0] memcfg,
-	output 	     turbochipram,
-	output 	     turbokick,
 	output        bootrom,     // enable bootrom magic in gary.v
 
 	// fifo / track display
@@ -296,13 +294,11 @@ wire        cpu_lwr;				//cpu low byte write enable
 wire  [8:1] reg_address; 		//main register address bus
 
 //rest of local signals
-wire        reset;				//global reset
 wire        cpu_custom;
 wire        dbr;					//data bus request, Agnus tells CPU that she is using the bus
 wire        dbwe;					//data bus write enable, Agnus tells the RAM it's writing data
 wire        dbs;					//data bus slow down, used for slowing down CPU access to chip, slow and custor register address space
 wire        xbs;					//cross bridge access (memory and custom registers)
-wire        ovl;					//kickstart overlay enable
 wire        _led;					//power led
 wire  [3:0] sel_chip;			//chip ram select
 wire  [2:0] sel_slow;			//slow ram select
@@ -376,9 +372,6 @@ wire [15:0] cart_data_out;
 
 wire        usrrst;				//user reset from osd interface
 wire        hires;				//hires signal from Denise for interpolation filter enable in Amber
-//wire        aron;				//Action Replay is enabled
-wire        cpu_speed;			//requests CPU to switch speed mode
-wire        turbo;				//CPU is working in turbo mode
 wire  [7:0] memory_config;		//memory configuration
 wire  [3:0] floppy_config;		//floppy drives configuration (drive number and speed)
 wire  [4:0] chipset_config;	//chipset features selection
@@ -416,11 +409,10 @@ wire        host_ack;
 wire        sys_reset;    		//reset output from minimig_syscontrol.v
 wire        rom_readonly; 		//writeprotect $f8-ff in gary.v
 
-assign      reset = sys_reset  | ~_cpu_reset_in; // both tg68k and minimig_syscontrol hold the reset signal for some clicks
+wire        reset = sys_reset | ~_cpu_reset_in; // both tg68k and minimig_syscontrol hold the reset signal for some clicks
 
 //--------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------
-
 // drive step sound emulation
 reg	_step_del;
 always @(posedge clk)
@@ -459,14 +451,8 @@ end
 assign pwr_led = ~(_led & led_dim);
 
 assign memcfg = {memory_config[7],memory_config[5:0]};
+assign cachecfg = {cachecfg_pre[2], ~ovl, ~ovl};
 
-// turbo chipram only when in AGA mode, no overlay is active, cachecfg[0] (fast chip) is enabled or Agnus allows CPU on the bus and chipRAM=2MB
-assign turbochipram = !ovl && (cachecfg[0] && cpu_custom) && (&memory_config[1:0]);
-
-// turbo kickstart only when no overlay is active and cachecfg[1] (fast kick) enabled or AGA mode is enabled
-assign turbokick = rom_readonly && !ovl && cachecfg[1];
-//writing to the ROM area is not implemented in turbo mode (see tg68k.vhd)
-   
 // NTSC/PAL switching is controlled by OSD menu, change requires reset to take effect
 always @(posedge clk) if (clk7_en && reset) ntsc <= chipset_config[1];
 
@@ -518,8 +504,7 @@ agnus AGNUS1
 	.a1k(chipset_config[2]),
 	.ecs(|chipset_config[4:3]),
 	.aga(chipset_config[4]),
-	.floppy_speed(floppy_config[0]),
-	.turbo(turbo)
+	.floppy_speed(floppy_config[0])
 );
 
 //instantiate paula
@@ -585,6 +570,7 @@ paula PAULA1
 	.floppy_frd (floppy_frd)
 );
 
+wire [2:0] cachecfg_pre;
 //instantiate user IO
 userio USERIO1 
 (	
@@ -617,7 +603,7 @@ userio USERIO1
 	.blver(blver),
 	.ide_config(ide_config),
 	.cpu_config(cpucfg),
-	.cache_config(cachecfg),
+	.cache_config(cachecfg_pre),
 	.usrrst(usrrst),
 	.cpurst(cpurst),
 	.cpuhlt(cpuhlt),
@@ -631,14 +617,9 @@ userio USERIO1
 	.host_ack     (host_ack         )
 );
 
-//assign cpu_speed = (chipset_config[0] & ~int7 & ~freeze & ~ovr);
-assign cpu_speed = 1'b0;
-
-assign ce_pix = (shres & |chipset_config[4:3]) | (hires & clk7n_en) | clk7_en;
-
-assign res = {shres & |chipset_config[4:3], hires};
-
 wire shres;
+assign ce_pix = (shres & |chipset_config[4:3]) | (hires & clk7n_en) | clk7_en;
+assign res = {shres & |chipset_config[4:3], hires};
 
 //instantiate Denise
 denise DENISE1
@@ -666,6 +647,9 @@ denise DENISE1
 );
 
 //instantiate cia A
+wire [3:0] porta_out;
+assign {_fire1_dat,_fire0_dat,_led} = porta_out[3:1];
+
 ciaa CIAA1
 (
 	.clk(clk),
@@ -682,7 +666,7 @@ ciaa CIAA1
 	.eclk(eclk[8]),
 	.irq(int2),
 	.porta_in({_fire1,_fire0,_ready,_track0,_wprot,_change}),
-	.porta_out({_fire1_dat,_fire0_dat,_led,ovl}),
+	.porta_out(porta_out),
 	.portb_in({_joy4[0],_joy4[1],_joy4[2],_joy4[3],_joy3[0],_joy3[1],_joy3[2],_joy3[3]}),
 	.kbd_mouse_type(kbd_mouse_type),
 	.kms_level(kms_level),
@@ -729,9 +713,7 @@ minimig_m68k_bridge CPU1
 	.xbs(xbs),
 	.nrdy(gayle_nrdy),
 	.bls(bls),
-	.cpu_speed(cpu_speed & ~int7 & ~ovr & ~usrrst),
 	.memory_config(memory_config[3:0]),
-	.turbo(turbo),
 	._as(_cpu_as),
 	._lds(_cpu_lds),
 	._uds(_cpu_uds),
@@ -771,8 +753,6 @@ minimig_bankmapper BMAP1
 	.kick1mb(sel_kick1mb),
 	.kick256kmirror(sel_kick256kmirror),
  	.cart(sel_cart),
-//	.aron(aron),
-	.ecs(|chipset_config[4:3]),
 	.memory_config(memory_config[3:0]),
 	.bank(bank)
 );
@@ -810,7 +790,7 @@ cart CART1
   .cpu_rd         (cpu_rd         ),
   .cpu_hwr        (cpu_hwr        ),
   .cpu_lwr        (cpu_lwr        ),
-  .cpu_vbr        (cpu_vbr        ),
+  .nmi_addr       (nmi_addr       ),
   .reg_address_in (reg_address    ),
   .reg_data_in    (custom_data_in ),
   .dbr            (dbr            ),
@@ -820,7 +800,6 @@ cart CART1
   .int7           (int7           ),
   .sel_cart       (sel_cart       ),
   .ovr            (ovr            ),
-//  .aron           (aron           ),
   .cpuhlt         (cpuhlt)
 );
 
@@ -910,10 +889,15 @@ minimig_syscontrol CONTROL1
 	.clk(clk),
 	.clk7_en(clk7_en),
 	.cnt(sof),
-	.mrst(usrrst | rst_ext),// | ~_cpu_reset_in),
+	.mrst(usrrst | rst_ext),
 	.reset(sys_reset)
 );
 
+reg ovl; //kickstart overlay enable
+always @(posedge clk) begin
+	if(~_cpu_reset | ~_cpu_reset_in)       ovl <= 1;
+	else if(sel_cia_a & (cpu_lwr|cpu_hwr)) ovl <= 0;
+end
 
 //-------------------------------------------------------------------------------------
 
@@ -933,8 +917,14 @@ assign custom_data_out[15:0] = agnus_data_out[15:0]
 
 //--------------------------------------------------------------------------------------
 
-//cpu reset and clock
-assign _cpu_reset = ~(cpurst || sys_reset); //~(reset || cpurst);
+assign _cpu_reset = _rst;
+
+reg _rst;
+always @(posedge clk) begin
+	reg r;
+	r <= ~(cpurst || sys_reset);
+	_rst <= r;
+end
 
 //--------------------------------------------------------------------------------------
 
@@ -943,4 +933,3 @@ assign rst_out = reset;
 
 
 endmodule
-

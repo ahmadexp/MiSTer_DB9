@@ -88,6 +88,7 @@ video_calc video_calc
 (
 	.clk_100(HPS_BUS[43]),
 	.clk_vid(clk_sys),
+	.clk_sys(clk_sys),
 	.ce_pix(ce_pix),
 	.de(HPS_BUS[40]),
 	.hs(HPS_BUS[39]),
@@ -156,9 +157,6 @@ always@(posedge clk_sys) begin
 		if(byte_cnt == 0) begin
 			cmd <= io_din[7:0];
 			case(io_din[7:0])
-				'h04: kbd_mouse_type <= 0;  // first mouse axis
-				'h05: kbd_mouse_type <= 2;  // keyboard
-				'h06: kbd_mouse_type <= 3;  // OSD keyboard	
 				'h2B: io_dout <= 1;
 				'h2F: io_dout <= 1;
 				'h32: io_dout <= gamma_bus[21];
@@ -170,20 +168,29 @@ always@(posedge clk_sys) begin
 				'h01: cfg <= io_din[7:0];
 				'h02: if(byte_cnt==1) joystick_0[15:0] <= io_din;
 				'h03: if(byte_cnt==1) joystick_1[15:0] <= io_din;
-				'h16: if(byte_cnt==1) joystick_2[15:0] <= io_din;
-				'h17: if(byte_cnt==1) joystick_3[15:0] <= io_din;
-				
-				// mouse, keyboard or OSD
-				'h05,
+				'h10: if(byte_cnt==1) joystick_2[15:0] <= io_din;
+				'h11: if(byte_cnt==1) joystick_3[15:0] <= io_din;
+
+				// keyboard
+				'h05:
+					if(byte_cnt == 1) begin
+						kbd_mouse_data <= io_din[7:0];
+						kbd_mouse_type <= 2;
+						kbd_mouse_level <= ~kbd_mouse_level;
+					end
+
 				'h06:
 					if(byte_cnt == 1) begin
 						kbd_mouse_data <= io_din[7:0];
+						kbd_mouse_type <= 3;
 						kbd_mouse_level <= ~kbd_mouse_level;
 					end
-				
+
+				// mouse
 				'h04:
 					if(byte_cnt == 1) begin
 						kbd_mouse_data <= io_din[7:0];
+						kbd_mouse_type <= 0;
 						kbd_mouse_level <= ~kbd_mouse_level;
 					end
 					else if(byte_cnt == 2) begin
