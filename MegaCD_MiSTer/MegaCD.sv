@@ -253,9 +253,9 @@ always @(posedge CLK_50M) begin
 end
 
 //////  I/O 2 Joystick splitter option added from JOYAV ////////////////
-wire [6:0] JOYAV_T1;      // CB UDLR  negative Logic
-wire [6:0] JOYAV_T2;      // CB UDLR  negative Logic
-reg  [6:0] joy1, joy2;   // CB UDLR  negative Logic
+wire [5:0] JOYAV_T1;      // CB UDLR  negative Logic
+wire [5:0] JOYAV_T2;      // CB UDLR  negative Logic
+reg  [5:0] joy1, joy2;    // CB UDLR  negative Logic
 
 //assign db9_Select = 1'b1;
 
