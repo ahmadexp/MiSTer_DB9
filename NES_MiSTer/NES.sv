@@ -271,7 +271,7 @@ sega_joystick joy (
 	.joy2_right_i	(JOYAV_T2[0]),
 	.joy2_p6_i		(JOYAV_T2[4]),
 	.joy2_p9_i		(JOYAV_T2[5]),
-	.vga_hsync_n_s (cnt[12]),   
+	.vga_hsync_n_s (cnt[11]),   
 	.joyX_p7_o		(db9_select_temp), // select signal
 	.joy1_o			(joy1_o),    // MXYZ SACB RLDU in negative logic
 	.joy2_o			(joy2_o)     // MXYZ SACB RLDU in negative logic
@@ -285,8 +285,8 @@ wire [7:0] JOYAV_2;   // MS XCBA UDLR   in positive logic
 wire [7:0] JOYAV_P1;   //  (pp12 - PP1  Triggger Mic )  SSeBA UDLR   in positive logic
 wire [7:0] JOYAV_P2;   //  (PP12 - pp1  Triggger Mic )  SSeBA UDLR
 
-assign JOYAV_P1 = ~{~joy1_o[7],~joy1_o[11],joy1_o[5],joy1_o[4],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
-assign JOYAV_P2 = ~{~joy2_o[7],~joy2_o[11],joy2_o[5],joy2_o[4],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
+assign JOYAV_P1 = ~{joy1_o[7],joy1_o[11],joy1_o[5],joy1_o[4],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+assign JOYAV_P2 = ~{joy2_o[7],joy2_o[11],joy2_o[5],joy2_o[4],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
  
  
 always @(posedge clk)
@@ -299,8 +299,8 @@ always @(posedge clk)
 					 end
         2'b01 : begin			// Atari Joy
 						db9_Select <= 1'bz;
-						JOYAV_1 <=   ~{2'b00,JOYAV_T1}; 
-						JOYAV_2 <=   ~{2'b00,JOYAV_T2}; 
+						JOYAV_1 <=   ~{2'b11,JOYAV_T1}; 
+						JOYAV_2 <=   ~{2'b11,JOYAV_T2}; 
 					 end
     endcase
  end 
@@ -578,10 +578,13 @@ reg   [1:0] last_joypad_clock;
 
 wire [11:0] powerpad = joyA[22:11] | joyB[22:11] | joyC[22:11] | joyD[22:11];
 
-wire [7:0] nes_joy_A = { joyA[0] | JOYAV_1[0], joyA[1] | JOYAV_1[1], joyA[2] | JOYAV_1[2], joyA[3] | JOYAV_1[3], joyA[7] | JOYAV_1[7], joyA[6] | JOYAV_1[6], joyA[5] | JOYAV_1[5], joyA[4]  | JOYAV_1[4]};
-wire [7:0] nes_joy_B = { joyB[0] | JOYAV_2[0], joyB[1] | JOYAV_2[1], joyB[2] | JOYAV_2[2], joyB[3] | JOYAV_2[3], joyB[7] | JOYAV_2[7], joyB[6] | JOYAV_2[6], joyB[5] | JOYAV_2[5], joyB[4]  | JOYAV_2[4]};
+wire [7:0] nes_joy_A = { joyA[0], joyA[1], joyA[2], joyA[3], joyA[7], joyA[6], joyA[5], joyA[4] };
+wire [7:0] nes_joy_B = { joyB[0], joyB[1], joyB[2], joyB[3], joyB[7], joyB[6], joyB[5], joyB[4] };
 wire [7:0] nes_joy_C = { joyC[0], joyC[1], joyC[2], joyC[3], joyC[7], joyC[6], joyC[5], joyC[4] };
 wire [7:0] nes_joy_D = { joyD[0], joyD[1], joyD[2], joyD[3], joyD[7], joyD[6], joyD[5], joyD[4] };
+
+wire [7:0] nes_joy_DB9_A = { JOYAV_1[0], JOYAV_1[1], JOYAV_1[2], JOYAV_1[3], JOYAV_1[7], JOYAV_1[6], JOYAV_1[5], JOYAV_1[4] };
+wire [7:0] nes_joy_DB9_B = { JOYAV_2[0], JOYAV_2[1], JOYAV_2[2], JOYAV_2[3], JOYAV_2[7], JOYAV_2[6], JOYAV_2[5], JOYAV_2[4] };
 
 wire mic_button = joyA[9] | joyB[9];
 wire fds_btn = joyA[8] | joyB[8];
@@ -689,8 +692,8 @@ always @(posedge clk) begin
 	end else begin
 		if (joypad_strobe) begin
 			joypad_bits  <= piano ? {15'h0000, uart_data[8:0]}
-			               : {status[10] ? {8'h08, nes_joy_C} : 16'hFFFF, joy_swap ? nes_joy_B : nes_joy_A};
-			joypad_bits2 <= {status[10] ? {8'h04, nes_joy_D} : 16'hFFFF, joy_swap ? nes_joy_A : nes_joy_B};
+			               : {status[10] ? {8'h08, nes_joy_C} : 16'hFFFF, joy_swap ? nes_joy_B | nes_joy_DB9_B : nes_joy_A | nes_joy_DB9_A};
+			joypad_bits2 <=  {status[10] ? {8'h04, nes_joy_D} : 16'hFFFF, joy_swap ? nes_joy_A | nes_joy_DB9_A : nes_joy_B | nes_joy_DB9_B};
 			powerpad_d4 <= {4'b0000, powerpad[7], powerpad[11], powerpad[2], powerpad[3]};
 			powerpad_d3 <= {powerpad[6], powerpad[10], powerpad[9], powerpad[5], powerpad[8], powerpad[4], powerpad[0], powerpad[1]};
 		end
