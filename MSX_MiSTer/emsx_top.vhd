@@ -90,12 +90,14 @@ entity emsx_top is
         pDac_VR         : out   std_logic_vector(  5 downto 0);     -- RGB_Red
         pDac_VG         : out   std_logic_vector(  5 downto 0);     -- RGB_Grn
         pDac_VB         : out   std_logic_vector(  5 downto 0);     -- RGB_Blu
-
+		  	  
         pVideoDE        : out   std_logic;
         pVideoHS        : out   std_logic;
         pVideoVS        : out   std_logic;
         pScandoubler    : in    std_logic;
 
+		  cmtin           : in    std_logic;    							  -- EAR
+		  
         pAudioPSG       : out   std_logic_vector(  9 downto 0);
         pAudioOPLL      : out   std_logic_vector( 13 downto 0);
         pAudioPCM       : out   std_logic_vector( 15 downto 0)
@@ -2173,7 +2175,7 @@ begin
 
     U30 : psg
         port map(clk21m, reset, cpucen, PsgReq, open, wrt, adr, PsgDbi, dbo,
-                        pJoyA, pStrA, pJoyB, pStrB, open, '0', w_key_mode, PsgAmp);
+                        pJoyA, pStrA, pJoyB, pStrB, open, cmtin, w_key_mode, PsgAmp);
 
     U31_1 : megaram
         port map(clk21m, reset, cpucen, Scc1Req, Scc1Ack, wrt, adr, Scc1Dbi, dbo,

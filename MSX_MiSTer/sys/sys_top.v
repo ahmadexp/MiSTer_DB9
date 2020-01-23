@@ -31,7 +31,6 @@ module sys_top
 	output    db9_Select,
 	output    splitter_select,
 
-
 	/////////// CLOCK //////////
 	input         FPGA_CLK1_50,
 	input         FPGA_CLK2_50,
@@ -158,9 +157,9 @@ wire SD_CS, SD_CLK, SD_MOSI, SD_MISO;
 	//assign SD_SPI_CS    = mcp_sdcd ? 1'bZ : SD_CS;
 `endif
 
- assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ    : SD_CLK;
- assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ    : SD_MOSI;
- assign SD_MISO     = mcp_sdcd ? sd_miso : SD_SPI_MISO;
+assign SD_SPI_CLK  = mcp_sdcd ? 1'bZ    : SD_CLK;
+assign SD_SPI_MOSI = mcp_sdcd ? 1'bZ    : SD_MOSI;
+assign SD_MISO     = mcp_sdcd ? sd_miso : SD_SPI_MISO;
 */
 //////////////////////  LEDs/Buttons  ///////////////////////////////////
 
@@ -1081,6 +1080,7 @@ alsa alsa
  assign user_in[5] = SW[1] | USER_IO[5];
  assign user_in[6] =         USER_IO[6];
 */
+
 ///////////////////  User module connection ////////////////////////////
 
 wire [15:0] audio_ls, audio_rs;

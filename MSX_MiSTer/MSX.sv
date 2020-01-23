@@ -54,7 +54,7 @@ module emu
 	// DB9 Joystick
   	input   [5:0] joy_o_db9, // CB UDLR negative logic
 	output        splitter_select,
-	output		  db9_Select, 
+	output        db9_Select, 
 
 
 	output        LED_USER,  // 1 - ON, 0 - OFF.
@@ -129,7 +129,7 @@ module emu
 	input         OSD_STATUS
 );
 
-assign ADC_BUS  = 'Z;
+//assign ADC_BUS  = 'Z;
 assign USER_OUT = '1;
 assign {UART_RTS, UART_TXD, UART_DTR} = 0;
 assign {DDRAM_CLK, DDRAM_BURSTCNT, DDRAM_ADDR, DDRAM_DIN, DDRAM_BE, DDRAM_RD, DDRAM_WE} = 0;
@@ -160,7 +160,7 @@ localparam CONF_STR = {
 	"-;",
 	"O7,Internal Mapper,2048KB RAM,4096KB RAM;",
 	"-;",
-   "OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
+        "OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter);",
 	"OD,Joysticks Swap,No,Yes;",
 	"OC,Mouse,Port 1,Port 2;",
 	"-;",
@@ -427,6 +427,8 @@ emsx_top emsx
 	.pVideoVS(vs),
 	.pScandoubler(scandoubler),
 
+	.cmtin(tape_in),   		// TAPE IN Added by Fernando Mosquera
+	
 	.pAudioPSG(audioPSG),   //10bits unsigned
 	.pAudioOPLL(audioOPLL), //14bits signed
 	.pAudioPCM(audioPCM)    //16bits signed
@@ -499,5 +501,19 @@ always @(posedge clk_sys) begin
 
 	if((old_mosi ^ sdmosi) || (old_miso ^ sdmiso)) timeout <= 0;
 end
+
+// TAPE IN added by Fernando Mosquera
+wire tape_in;
+assign tape_in = tape_adc_act & tape_adc;
+
+wire tape_adc, tape_adc_act;
+ltc2308_tape ltc2308_tape
+(
+  .clk(CLK_50M),
+  .ADC_BUS(ADC_BUS),
+  .dout(tape_adc),
+  .active(tape_adc_act)
+);
+
 
 endmodule
