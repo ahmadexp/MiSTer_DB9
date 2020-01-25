@@ -214,23 +214,25 @@ assign splitter_select = joy_split;
 
 always @(posedge cnt[7])  // 50/64  = 1.5 Mhz
   begin
-    if (joy_split)
+    if (status[34:33] == 2'b10) //only when you activate P1+P2 (Splitter)
 		begin
-			joy1 <= joy_o_db9;
-			joy_split <= 1'b0;
+			if (joy_split)
+				begin
+					joy1 <= joy_o_db9;
+					joy_split <= 1'b0;
+				end
+			else 
+				begin
+					joy2 <= joy_o_db9; 
+					joy_split <= 1'b1;
+			end
 		end
-    else 
-		begin
-			joy2 <= joy_o_db9; 
-			joy_split <= 1'b1;
-		end
-  end
-
+	end
 
 always @(posedge clk)
   begin
     case (status[34:33])
-        2'b00 : begin							// Player 1
+        2'b00 : begin		  // Player 1
 						JOYAV_T1 <=  joy_o_db9;
 						JOYAV_T2 <=  6'b111111; // because is negative logic
 					 end
@@ -255,6 +257,10 @@ always @(posedge clk)
 wire [11:0] joy1_o;   // MXYZ SACB RLDU  in negative logic
 wire [11:0] joy2_o;   // MXYZ SACB RLDU  in negative logic
 reg db9_select_temp; 
+reg j1_sixbutton_v = 1'b0;
+reg j2_sixbutton_v = 1'b0;
+reg j1_atari_v = 1'b1;
+reg j2_atari_v = 1'b1;
 
 // Llamamos a la maquina de estados para leer los 6 botones del mando de Megadrive
 // Formato joy1_o [11:0] =  MXYZ SACB RLDU negative logic
@@ -273,23 +279,41 @@ sega_joystick joy (
 	.joy2_p9_i		(JOYAV_T2[5]),
 	.vga_hsync_n_s (cnt[11]),   
 	.joyX_p7_o		(db9_select_temp), // select signal
+	.j1_sixbutton_v (j1_sixbutton_v),
+	.j2_sixbutton_v (j2_sixbutton_v),
+	.j1_atari_v		(j1_atari_v),
+	.j2_atari_v		(j2_atari_v),
 	.joy1_o			(joy1_o),    // MXYZ SACB RLDU in negative logic
 	.joy2_o			(joy2_o)     // MXYZ SACB RLDU in negative logic
 ); 
 
 
-wire [7:0] JOYAV_1;   // MS xCBA UDLR   in positive logic
-wire [7:0] JOYAV_2;   // MS XCBA UDLR   in positive logic
+wire [7:0] JOYAV_1;   // (pp12 - PP1  Triggger Mic )  SSeBA UDLR   in positive logic
+wire [7:0] JOYAV_2;   // (pp12 - PP1  Triggger Mic )  SSeBA UDLR   in positive logic
 
 
 wire [7:0] JOYAV_P1;   //  (pp12 - PP1  Triggger Mic )  SSeBA UDLR   in positive logic
 wire [7:0] JOYAV_P2;   //  (PP12 - pp1  Triggger Mic )  SSeBA UDLR
 
-assign JOYAV_P1 = ~{joy1_o[7],joy1_o[11],joy1_o[5],joy1_o[4],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
-assign JOYAV_P2 = ~{joy2_o[7],joy2_o[11],joy2_o[5],joy2_o[4],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
+//assign JOYAV_P1 = ~{joy1_o[7],joy1_o[11] | joy1_o[6],joy1_o[5],joy1_o[4],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+//assign JOYAV_P2 = ~{joy2_o[7],joy2_o[11] | joy2_o[6],joy2_o[5],joy2_o[4],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
  
- 
+
 always @(posedge clk)
+  begin
+		if (j1_sixbutton_v ==1'b1)
+			JOYAV_P1 <= ~{joy1_o[7],joy1_o[11] ,joy1_o[4],joy1_o[5],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+		else
+			JOYAV_P1 <= ~{joy1_o[7],joy1_o[6]  ,joy1_o[4],joy1_o[5],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};
+		
+		if (j2_sixbutton_v ==1'b1)
+			JOYAV_P2 = ~{joy2_o[7],joy2_o[11]  ,joy2_o[4],joy2_o[5],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};
+		else 
+			JOYAV_P2 = ~{joy2_o[7],joy2_o[6]    ,joy2_o[4],joy2_o[5],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};
+  end
+
+ 
+always @(posedge cnt[6])
   begin
      case (status[32])
         2'b00 : begin		  // Megadrive Joy
@@ -304,10 +328,9 @@ always @(posedge clk)
 					 end
     endcase
  end 
-  
-
-
-
+ 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ 
 wire [22:0] joyA,joyB,joyC,joyD;
 wire [1:0] buttons;
 
@@ -376,7 +399,6 @@ always @(posedge clk) begin : osd_block
 		end
 	end
 end
-
 
 // Remove DC offset and convert to signed
 // At this CE rate, it also slightly lowers the bass to
