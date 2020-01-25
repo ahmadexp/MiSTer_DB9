@@ -53,7 +53,7 @@ module emu
 	// DB9 Joystick
 	input [5:0] joy_o_db9,    // CB UDLR negative Logic
 	output      db9_Select,
-	output      joy_splitter_select,  
+	output      splitter_select,  
 	
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
@@ -240,7 +240,8 @@ parameter CONF_STR = {
     "OJK,Stereo Mix,None,25%,50%,100%;", 
     "-;",
     "O56,Mouse,None,Port1,Port2;",
-	 "o45,Db9 MegaJoy,Player1,Player2,P1+P2(Splitter),OFF;", 
+	 "o45,DB9 MegaJoy,Player1,Player2,P1+P2(Splitter),OFF;", 
+	 "o6,DB9 Conf,Opt1(Oscar),Opt2(Paco);",
     "O7,Swap Joysticks,No,Yes;",
     "OH,Multitap,Disabled,Port2;",
     "O8,Serial,OFF,SNAC;",
@@ -269,7 +270,7 @@ reg [31:0] cnt; // 32-bit counter
 initial begin
      cnt <= 32'h00000000; // start at zero
 end
-always @(posedge clk_sys) begin
+always @(posedge CLK_50M) begin
      cnt <= cnt + 1; // count up
 end
 
@@ -353,13 +354,35 @@ sega_joystick joy (
 );
 
 
-                       // SMrl YXBA UDLR <-- SNES buttons  (M is selectect)
+// option Buttons 1         // SMrl YXBA UDLR <-- SNES buttons  (M is select)
+wire [11:0] JOYAV_1_opt1;   // SMZX AYBC UDLR   in positive logic    
+wire [11:0] JOYAV_2_opt1;   // SMZX AYBC UDLR   in positive logic
+
+assign JOYAV_1_opt1 = ~{joy1_o[7],joy1_o[11],joy1_o[8],joy1_o[10],  joy1_o[6],joy1_o[9],joy1_o[4],joy1_o[5],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+assign JOYAV_2_opt1 = ~{joy2_o[7],joy2_o[11],joy2_o[8],joy2_o[10],  joy2_o[6],joy2_o[9],joy2_o[4],joy2_o[5],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
+  
+// option Buttons 2         // SMrl YXBA UDLR <-- SNES buttons  (M is select)
+wire [11:0] JOYAV_1_opt2;   // SMCZ XYAB UDLR   in positive logic    
+wire [11:0] JOYAV_2_opt2;   // SMCZ XYAB UDLR   in positive logic
+
+assign JOYAV_1_opt2 = ~{joy1_o[7],joy1_o[11],joy1_o[5],joy1_o[8],  joy1_o[10],joy1_o[9],joy1_o[6],joy1_o[4],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+assign JOYAV_2_opt2 = ~{joy2_o[7],joy2_o[11],joy2_o[5],joy2_o[8],  joy2_o[10],joy2_o[9],joy2_o[6],joy2_o[4],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
+   
+
+// Select Buttons option 	
 wire [11:0] JOYAV_1;   // SMZX AYBC UDLR   in positive logic    
 wire [11:0] JOYAV_2;   // SMZX AYBC UDLR   in positive logic
+	
+// Option button Selection  
+always @(posedge clk_mem)
+  begin
+      JOYAV_1 <= status[38]? JOYAV_1_opt2:JOYAV_1_opt1;
+		JOYAV_2 <= status[38]? JOYAV_2_opt2:JOYAV_2_opt1;
+  end
 
-assign JOYAV_1 = ~{joy1_o[7],joy1_o[11],joy1_o[8],joy1_o[10],  joy1_o[6],joy1_o[9],joy1_o[4],joy1_o[5],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
-assign JOYAV_2 = ~{joy2_o[7],joy2_o[11],joy2_o[8],joy2_o[10],  joy2_o[6],joy2_o[9],joy2_o[4],joy2_o[5],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
- 
+
+
+
  
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -419,7 +442,7 @@ hps_io #(.STRLEN($size(CONF_STR)>>3), .WIDE(1)) hps_io
 
 	.status(status),
 	.status_menumask(status_menumask),
-	.status_in({status[31:5],1'b0,status[3:0]}),
+	.status_in({status[63:5],1'b0,status[3:0]}),
 	.status_set(cart_download),
 
 	.ioctl_addr(ioctl_addr),
@@ -858,7 +881,7 @@ ioport port1
 	.PORT_P6(JOY1_P6),
 	.PORT_DO(JOY1_DO),
 
-	.JOYSTICK1((joy_swap ^ raw_serial) ? (joy1|JOYAV_2)  : (joy0 | JOYAV_1 | JOVA_1SNES) ), 
+	.JOYSTICK1((joy_swap ^ raw_serial) ? (joy1|JOYAV_2)  : (joy0 | JOYAV_1) ), 
 
 	.MOUSE(ps2_mouse),
 	.MOUSE_EN(mouse_mode[0])
@@ -878,7 +901,7 @@ ioport port2
 	.PORT_P6(JOY2_P6),
 	.PORT_DO(JOY2_DO),
 
-	.JOYSTICK1((joy_swap ^ raw_serial) ? (joy0 | JOYAV_1 | JOVA_1SNES) : (joy1|JOYAV_2) ),
+	.JOYSTICK1((joy_swap ^ raw_serial) ? (joy0 | JOYAV_1) : (joy1|JOYAV_2) ),
 	.JOYSTICK2(joy2),
 	.JOYSTICK3(joy3),
 	.JOYSTICK4(joy4),
