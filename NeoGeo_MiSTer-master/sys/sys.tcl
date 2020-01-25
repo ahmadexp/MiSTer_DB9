@@ -35,6 +35,17 @@ set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to IO_S*
 #============================================================
 # USER PORT
 #============================================================
+#set_location_assignment PIN_AF17 -to USER_IO[6]
+#set_location_assignment PIN_AF15 -to USER_IO[5]
+#set_location_assignment PIN_AG16 -to USER_IO[4]
+#set_location_assignment PIN_AH11 -to USER_IO[3]
+#set_location_assignment PIN_AH12 -to USER_IO[2]
+#set_location_assignment PIN_AH9 -to USER_IO[1]
+#set_location_assignment PIN_AG11 -to USER_IO[0]
+#set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to USER_IO[*]
+#set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to USER_IO[*]
+#set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to USER_IO[*]
+
 set_location_assignment PIN_AF15 -to joy_up_i
 set_location_assignment PIN_AH9  -to joy_left_i
 set_location_assignment PIN_AH11 -to joy_p6_i
@@ -44,18 +55,22 @@ set_location_assignment PIN_AE15 -to joy_down_i
 set_location_assignment PIN_AG11 -to db9_Select
 set_location_assignment PIN_AG16 -to splitter_select
 
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_down_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_left_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_p6_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_p9_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_right_i
-set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_up_i
+set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_*
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to db9_Select
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to splitter_select
 
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_*
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_up_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_left_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_p6_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_p9_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_right_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_down_i
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to db9_Select
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to splitter_select
+
+set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to joy_*
+set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to db9_Select
+set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to splitter_select
 
 #============================================================
 # SDIO_CD or SPDIF_OUT
@@ -112,6 +127,7 @@ set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to SDRAM_*
 set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to SDRAM_*
 set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to SDRAM_*
 set_instance_assignment -name FAST_OUTPUT_ENABLE_REGISTER ON -to SDRAM_DQ[*]
+set_instance_assignment -name FAST_INPUT_REGISTER ON -to SDRAM_DQ[*]
 set_instance_assignment -name ALLOW_SYNCH_CTRL_USAGE OFF -to *|SDRAM_*
 
 #============================================================
@@ -228,7 +244,6 @@ set_location_assignment PIN_W20 -to SW[3]
 
 set_instance_assignment -name HPS_LOCATION HPSINTERFACEPERIPHERALSPIMASTER_X52_Y72_N111 -entity sys_top -to spi
 set_instance_assignment -name HPS_LOCATION HPSINTERFACEPERIPHERALUART_X52_Y67_N111 -entity sys_top -to uart
-set_location_assignment FRACTIONALPLL_X89_Y1_N0 -to emu:emu|pll:pll|pll_0002:pll_inst|altera_pll:altera_pll_i|altera_cyclonev_pll:cyclonev_pll|altera_cyclonev_pll_base:fpll_0|fpll
 
 set_global_assignment -name PRE_FLOW_SCRIPT_FILE "quartus_sh:sys/build_id.tcl"
 
