@@ -55,11 +55,11 @@ module emu
 	output        VGA_F1,
 	output [1:0]  VGA_SL,
 
-        // DB9 Joystick by Benitoss
-  	input [5:0] joy_o_db9,    // CB UDLR (in positive logic)
+	// DB9 Joystick by Benitoss
+  	input [5:0] joy_o_db9,    // CB UDLR (in negative logic)
 	output      db9_Select,
-	output      splitter_select, 
-
+	output      splitter_select,  
+	
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -149,8 +149,8 @@ assign BUTTONS   = 0;
 `include "build_id.v"
 localparam CONF_STR = {
 	"C64;;",
-	"S0,D64,Mount Drive #8;",
-	"D0S1,D64,Mount Drive #9;",
+	"S0,D64T64,Mount Drive #8;",
+	"D0S1,D64T64,Mount Drive #9;",
 	"OP,Enable Drive #9,No,Yes;",
 	"-;",
 	"F,PRG,Load File;",
@@ -172,7 +172,7 @@ localparam CONF_STR = {
 	"OC,Sound expander,No,OPL2;",
 	"OIJ,Stereo mix,none,25%,50%,100%;",
 	"-;",
-   "o45,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;",
+	"o45,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;", 
 	"O3,Swap joysticks,No,Yes;",
 	"O1,User port,Joysticks,UART;",
 	"OO,Mouse,Port 1,Port 2;",
@@ -210,32 +210,31 @@ always @(posedge cnt[8])  // 50/256  = 195 khz
   begin
     if (joy_split)
 	   begin
-	     joy1 <= joy_o_db9;
+	     joy1 <= ~joy_o_db9; // Positive Logic
 		  joy_split <= 1'b0;
 		end
     else 
 	   begin
-        joy2 <= joy_o_db9; 
+        joy2 <= ~joy_o_db9; // Positive Logic
 		  joy_split <= 1'b1;
 		end
   end
-  
   
 
 always @(posedge clk_sys)
   begin
     case (status[37:36])
       2'b00  :  begin
-						JOYAV_1 <=  joy_o_db9;
+						JOYAV_1 <=  ~joy_o_db9;
 						JOYAV_2 <=  7'b0;  // Positive Logic
 					 end
       2'b01  :  begin
 						JOYAV_1 <=  7'b0;  // Positive Logic
-						JOYAV_2 <=  joy_o_db9;
+						JOYAV_2 <=  ~joy_o_db9;
 					 end
       2'b10  :  begin
-						JOYAV_1 <=  joy1;
-						JOYAV_2 <=  joy2;
+						JOYAV_1 <=  joy1;  // Positive Logic
+						JOYAV_2 <=  joy2;  // Positive Logic
 					 end
 		2'b11  :  begin
 						JOYAV_1 <=  7'b0;  // Positive Logic
@@ -244,10 +243,9 @@ always @(posedge clk_sys)
    // default : r_RESULT <= 9; 
     endcase
   end 
-
-
-////////////////////   CLOCKS   ///////////////////
-
+ 
+////////////////////   CLOCKS   ///////////////////	
+	
 wire pll_locked;
 wire clk_sys;
 wire clk64;
@@ -340,7 +338,7 @@ always @(posedge clk_sys) begin
 		reset_counter <= 255;
 		reset_n <= 0;
 	end
-	else if (ioctl_download);
+	else if (ioctl_download || inj_meminit);
 	else if (erasing) force_erase <= 0;
 	else if (!reset_counter) reset_n <= 1;
 	else begin
@@ -480,7 +478,7 @@ cartridge cartridge
 //wire [6:0] joyB_int = {joyB[6:4], joyB[0], joyB[1], joyB[2], joyB[3]};
 
 wire [6:0] joyA_int = {joyA[6:4] | JOYAV_1[6:4] , joyA[0] | JOYAV_1[0] , joyA[1] | JOYAV_1[1] , joyA[2] | JOYAV_1[2], joyA[3] | JOYAV_1[3]};
-wire [6:0] joyB_int = {joyB[6:4] | JOYAV_2[6:4] , joyB[0] | JOYAV_2[0] , joyB[1] | JOYAV_2[1] , joyB[2] | JOYAV_2[2], joyB[3] | JOYAV_2[3]};
+wire [6:0] joyB_int = {joyB[6:4] | JOYAV_2[6:4] , joyB[0] | JOYAV_2[0] , joyB[1] | JOYAV_2[1] , joyB[2] | JOYAV_2[2], joyB[3] | JOYAV_2[3]}; 
 
 wire [6:0] joyC_c64 = {joyC[6:4], joyC[0], joyC[1], joyC[2], joyC[3]};
 wire [6:0] joyD_c64 = {joyD[6:4], joyD[0], joyD[1], joyD[2], joyD[3]};
@@ -506,8 +504,16 @@ reg  [3:0] cart_hdr_cnt;
 reg        cart_hdr_wr;
 reg [31:0] cart_blk_len;
 
+reg [15:0] inj_start;
+reg [15:0] inj_end;
+
 reg        force_erase;
 reg        erasing;
+
+wire       load_inj = (ioctl_index[5:0] == 4);
+wire       load_prg = (ioctl_index[7:6] == 0) && load_inj;
+reg        inj_meminit = 0;
+reg  [7:0] inj_meminit_data;
 
 wire       iec_cycle = (ces == 4'b1011);
 reg        iec_cycle_ce;
@@ -523,10 +529,12 @@ always @(posedge clk_sys) begin
 	reg erase_cram;
 	reg iec_cycleD;
 	reg old_st0 = 0;
+	reg old_meminit;
 
 	old_download <= ioctl_download;
 	iec_cycleD <= iec_cycle;
 	cart_hdr_wr <= 0;
+	old_meminit <= inj_meminit;
 	
 	if (~iec_cycle & iec_cycleD) begin
 		iec_cycle_ce <= 1;
@@ -538,6 +546,7 @@ always @(posedge clk_sys) begin
 			iec_cycle_addr <= ioctl_load_addr;
 			ioctl_load_addr <= ioctl_load_addr + 1'b1;
 			if (erasing) iec_cycle_data <= {8{ioctl_load_addr[6]}};
+			else if (inj_meminit) iec_cycle_data <= inj_meminit_data;
 			else iec_cycle_data <= ioctl_data;
 		end
 	end
@@ -545,10 +554,13 @@ always @(posedge clk_sys) begin
 	if (iec_cycle & iec_cycleD) {iec_cycle_ce, iec_cycle_we} <= 0;
 
 	if (ioctl_wr) begin
-		if (ioctl_index == 4) begin
-			if (ioctl_addr == 0) ioctl_load_addr[7:0] <= ioctl_data;
-			else if (ioctl_addr == 1) ioctl_load_addr[15:8] <= ioctl_data;
-			else ioctl_req_wr <= 1;
+		if (load_inj) begin
+			if (load_prg) begin
+				// PRG
+				if      (ioctl_addr == 0) begin ioctl_load_addr[7:0]  <= ioctl_data; inj_start[7:0]  <= ioctl_data; inj_end[7:0]  <= ioctl_data; end
+				else if (ioctl_addr == 1) begin ioctl_load_addr[15:8] <= ioctl_data; inj_start[15:8] <= ioctl_data; inj_end[15:8] <= ioctl_data; end
+				else begin ioctl_req_wr <= 1; inj_end <= inj_end + 1'b1; end
+			end
 		end
 
 		if (load_cart) begin
@@ -605,7 +617,35 @@ always @(posedge clk_sys) begin
 		erase_cram <= 1;
 	end 
 
-	start_strk <= (old_download && ~ioctl_download && ioctl_index == 4);
+	// meminit for RAM injection
+	if (old_download != ioctl_download && load_inj && !inj_meminit) begin
+		inj_meminit <= 1;
+		ioctl_load_addr <= 0;
+	end
+
+	if (inj_meminit) begin
+		if (!ioctl_req_wr) begin
+			// check if done
+			if (ioctl_load_addr == 'h100) begin
+				inj_meminit <= 0;
+			end
+			else begin
+			   // TXT (2B-2C), SAVE_START (AC-AD)
+				if      (ioctl_load_addr == 'h2B || ioctl_load_addr == 'hAC) begin ioctl_req_wr <= 1; inj_meminit_data <= inj_start[7:0];  end
+				else if (ioctl_load_addr == 'h2C || ioctl_load_addr == 'hAD) begin ioctl_req_wr <= 1; inj_meminit_data <= inj_start[15:8]; end
+				// VAR (2D-2E), ARY (2F-30)
+				else if (ioctl_load_addr == 'h2D || ioctl_load_addr == 'h2F) begin ioctl_req_wr <= 1; inj_meminit_data <= inj_end[7:0];    end
+				else if (ioctl_load_addr == 'h2E || ioctl_load_addr == 'h30) begin ioctl_req_wr <= 1; inj_meminit_data <= inj_end[15:8];   end
+				// STR (31-32), LOAD_END (AE-AF)
+				else if (ioctl_load_addr == 'h31 || ioctl_load_addr == 'hAE) begin ioctl_req_wr <= 1; inj_meminit_data <= inj_end[7:0];    end
+				else if (ioctl_load_addr == 'h32 || ioctl_load_addr == 'hAF) begin ioctl_req_wr <= 1; inj_meminit_data <= inj_end[15:8];   end
+				// advance the address
+				else ioctl_load_addr <= ioctl_load_addr + 1'b1;
+			end
+		end
+	end
+
+	start_strk <= (old_meminit && !inj_meminit);
 	
 	old_st0 <= status[0];
 	if (~old_st0 & status[0]) cart_attached <= 0;
@@ -613,8 +653,8 @@ always @(posedge clk_sys) begin
 	if (!erasing && force_erase) begin
 		erasing <= 1;
 		ioctl_load_addr <= 0;
-	end 
-	
+	end
+
 	if (erasing && !ioctl_req_wr) begin
 		erase_to <= erase_to + 1'b1;
 		if (&erase_to) begin
@@ -624,8 +664,8 @@ always @(posedge clk_sys) begin
 				erasing <= 0;
 				erase_cram <= 0;
 			end
-		end 
-	end 
+		end
+	end
 end
 
 reg start_strk = 0;
@@ -641,14 +681,15 @@ always @(posedge clk_sys) begin
 			to <= 0;
 			act <= act + 1'd1;
 			case(act)
-				1: key <= 'h12;
-				2: key <= 'h6c;   // CLR instead of ending with ":" so not to break compatibility (eg "a mind is born")
-				5: key <= 'h12;   // Unstuck shift
-				7: key <= 'h2d;
-				9: key <= 'h3c;
-				11: key <= 'h31;
-				13: key <= 'h5a;  
-				15:act <= 0;
+				// PS/2 scan codes
+				1:  key <= 'h12;
+				2:  key <= 'h6c;  // <HOME/CLR> instead of ending with ":" so not to break compatibility (eg "a mind is born")
+				5:  key <= 'h12;  // Unstuck shift
+				7:  key <= 'h2d;  // R
+				9:  key <= 'h3c;  // U
+				11: key <= 'h31;  // N
+				13: key <= 'h5a;  // <RETURN>
+				15: act <= 0;
 			endcase
 			key[9] <= act[0];
 		end
@@ -957,18 +998,13 @@ always @(posedge CLK_VIDEO) begin
 	reg       lores;
 
 	div <= div + 1'b1;
-
-	if(div == 5) begin
-		div <= 0;
-		lores <= ~lores;
-	end
-	
+	if(&div) lores <= ~lores;
 	ce_pix <= (~lores | ~hq2x160) && !div;
 end
 
 wire scandoubler = status[10:8] || forced_scandoubler;
 
-assign CLK_VIDEO = clk48;
+assign CLK_VIDEO = clk64;
 assign VIDEO_ARX = status[5:4] ? 8'd16 : 8'd4;
 assign VIDEO_ARY = status[5:4] ? 8'd9  : 8'd3;
 assign VGA_SL    = (status[10:8] > 2) ? status[9:8] - 2'd2 : 2'd0;
@@ -1006,13 +1042,11 @@ video_mixer #(.GAMMA(1)) video_mixer
 wire        opl_en = status[12];
 wire [15:0] opl_out;
 wire  [7:0] opl_dout;
-opl3 opl_inst
+opl3 #(.OPLCLK(47291931)) opl_inst
 (
 	.clk(clk_sys),
-	.clk_opl(clk64),
-	.rst_n(reset_n),
-
-	.period_80us(2560),
+	.clk_opl(clk48),
+	.rst_n(reset_n & opl_en),
 
 	.addr(c64_addr[4]),
 	.dout(opl_dout),
@@ -1079,8 +1113,8 @@ reg [15:0] al,ar;
 always @(posedge clk_sys) begin
 	reg [16:0] alm,arm;
 
-	alm <= (opl_en ? {opl_out[15],opl_out} + {audio_l[17],audio_l[17:2]} : {audio_l[17],audio_l[17:2]}) + {cass_snd, 10'd0};
-	arm <= (opl_en ? {opl_out[15],opl_out} + {audio_r[17],audio_r[17:2]} : {audio_r[17],audio_r[17:2]}) + {cass_snd, 10'd0};
+	alm <= {opl_out[15],opl_out} + {audio_l[17],audio_l[17:2]} + {cass_snd, 10'd0};
+	arm <= {opl_out[15],opl_out} + {audio_r[17],audio_r[17:2]} + {cass_snd, 10'd0};
 	al <= ($signed(alm) > $signed(17'd32767)) ? 16'd32767 : ($signed(alm) < $signed(-17'd32768)) ? -16'd32768 : alm[15:0];
 	ar <= ($signed(arm) > $signed(17'd32767)) ? 16'd32767 : ($signed(arm) < $signed(-17'd32768)) ? -16'd32768 : arm[15:0];
 end
