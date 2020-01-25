@@ -194,6 +194,8 @@ parameter CONF_STR = {
    "OK,Spritelimit,Off,On;",
 	"O78,Stereo Mix,None,25%,50%,100%;", 
 	"-;",
+	"OU,DB9 Conf,Option 1,Option 2;",
+	"-;",
 	"OEF,Storage,Auto,SDRAM,DDR3;",
 	"O5,Pause,Off,On;",
 	"H2OG,Turbo,Off,On;",
@@ -247,10 +249,24 @@ sega_joystick joy_megadrive (
 //	Game Boy format   	 Rew FF  S Se RLBA UDLR
 
 wire [11:0] JOYAV_1;   // Y  X   S  M CZBA UDLR   in positive logic
+wire [11:0] JOYAV_1_opt1;
+wire [11:0] JOYAV_1_opt2;
 
-assign JOYAV_1 = ~{joy1_o[9],joy1_o[10],joy1_o[7],joy1_o[11],  joy1_o[5],joy1_o[8],joy1_o[6],joy1_o[4],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+assign JOYAV_1_opt1 = ~{joy1_o[9],joy1_o[10],joy1_o[7],joy1_o[11],  joy1_o[5],joy1_o[8],joy1_o[6],joy1_o[4],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
  
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
+assign JOYAV_1_opt2 = ~{joy1_o[8],joy1_o[10],joy1_o[7],joy1_o[11],  joy1_o[5],joy1_o[9],joy1_o[6],joy1_o[4],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+
+ 	
+// Option button Selection  
+always @(posedge clk_sys)
+  begin
+      JOYAV_1 <= status[30]? JOYAV_1_opt2:JOYAV_1_opt1;
+  end 
+ 
+ 
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 wire  [1:0] buttons;
