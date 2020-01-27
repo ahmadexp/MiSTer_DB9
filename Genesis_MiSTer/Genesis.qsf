@@ -24,7 +24,7 @@ set_global_assignment -name MIN_CORE_JUNCTION_TEMP "-40"
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 100
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name TIMEQUEST_MULTICORNER_ANALYSIS OFF
+set_global_assignment -name TIMING_ANALYZER_MULTICORNER_ANALYSIS OFF
 set_global_assignment -name OPTIMIZE_POWER_DURING_FITTING OFF
 set_global_assignment -name FINAL_PLACEMENT_OPTIMIZATION ALWAYS
 set_global_assignment -name FITTER_EFFORT "STANDARD FIT"
@@ -54,7 +54,7 @@ set_global_assignment -name SEED 1
 source sys/sys.tcl
 source sys/sys_analog.tcl
 source files.qip
-set_global_assignment -name VERILOG_FILE sys/joystick_Sega_6_buttons.v
+set_global_assignment -name VERILOG_FILE joystick_Sega_6_buttons.v
 set_global_assignment -name CDF_FILE jtag.cdf
 set_global_assignment -name QIP_FILE sys/sys.qip
 set_global_assignment -name QIP_FILE FX68K/fx68k.qip
