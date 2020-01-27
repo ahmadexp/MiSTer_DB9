@@ -8,10 +8,10 @@
 | 3       | Arduino_IO12 | 6   | AH11  | 7 GND_D
 | 4       | Arduino_IO11 | shield | AG16  | 6 RX+  
 | 5       | Arduino_IO10 | 1   | AF15  | 5 RX-  
-| 6       | Arduino_IO8  | 9   | AF17* | 9 TX+  
+| 6       | Arduino_IO8  | 9   | AF17  | 9 TX+  
 |         | Arduino_IO9  | 2   | AE15  |        
 
-AF17* on SNAC+, with regular SNAC is 3.3V
+9 TX+ is AF17 on SNAC+, with regular SNAC is 3.3V
 
 ![SNES](photos/snes.jpg?raw=true "SNES")
 ![NeoGeo](photos/neogeo.jpg?raw=true "NeoGeo")
