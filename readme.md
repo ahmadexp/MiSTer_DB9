@@ -1,15 +1,15 @@
-USER_IO DE10  DB9  FPGA   USB3   
-======  ====  ===  ====   ===    
-              8           4 GND  
-              5           1 5V   
-0       IO15  7    AG11   3 D+   
-1       IO14  3    AH9    2 D-   
-2       IO13  4    AH12   8 TX-  
-3       IO12  6    AH11   7 GND_D
-4       IO11  sh*  AG16   6 RX+  
-5       IO10  1    AF15   5 RX-  
-6       IO8   9    AF17*  9 TX+  
-        IO9   2    AE15          
+| USER_IO | DE10         | DB9 | FPGA  | USB3
+| ------- | ------------ | --- | ----- | --------
+|         |              | 8   |       | 4 GND  
+|         |              | 5   |       | 1 5V   
+| 0       | Arduino_IO15 | 7   | AG11  | 3 D+   
+| 1       | Arduino_IO14 | 3   | AH9   | 2 D-   
+| 2       | Arduino_IO13 | 4   | AH12  | 8 TX-  
+| 3       | Arduino_IO12 | 6   | AH11  | 7 GND_D
+| 4       | Arduino_IO11 | sh* | AG16  | 6 RX+  
+| 5       | Arduino_IO10 | 1   | AF15  | 5 RX-  
+| 6       | Arduino_IO8  | 9   | AF17* | 9 TX+  
+|         | Arduino_IO9  | 2   | AE15  |        
 
 sh* shield
 AF17* on SNAC+, with regular SNAC is 3.3V
@@ -18,7 +18,7 @@ AF17* on SNAC+, with regular SNAC is 3.3V
 ![NeoGeo](photos/neogeo.jpg?raw=true "NeoGeo")
 ![Genesis](photos/genesis.jpg?raw=true "Genesis")
 
-Genesis - SNES (Option 1)
+``Genesis - SNES (Option 1)
 A - Y
 B - B
 C - A
@@ -98,4 +98,4 @@ Genesis - GAMEBOY/GAMEBOY COLOR (In a future)
 B - A
 C - B
 START - START
-MODE - SELECT
+MODE - SELECT``
