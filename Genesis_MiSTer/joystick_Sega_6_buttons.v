@@ -63,22 +63,12 @@ module sega_joystick
 
 			
 			case (state_v)			//-- joy_s format MXYZ SACB RLDU
-				8'd0:
-		         begin
-						joy1_s[5:4] <= {joy1_p9_i, joy1_p6_i}; //-- C, B
-						joy2_s[5:4] <= {joy2_p9_i, joy2_p6_i}; //-- C, B
-						joy1_s[3:0] <= {joy1_right_i, joy1_left_i, joy1_down_i, joy1_up_i}; //-- R, L, D, U
-						joy2_s[3:0] <= {joy2_right_i, joy2_left_i, joy2_down_i, joy2_up_i}; //-- R, L, D, U
-						joyP7_s <=  1'b0;
-					end
+				8'd0:  
+					joyP7_s <=  1'b0;
+					
 				8'd1:
-					begin
-						joy1_s[7:6] <= { joy1_p9_i , joy1_p6_i }; //-- Start, A
-						joy1_s[1:0] <= {joy1_down_i, joy1_up_i}; //-- D, U
-						joy2_s[7:6] <= { joy2_p9_i , joy2_p6_i }; //-- Start, A
-						joy2_s[1:0] <= {joy2_down_i, joy2_up_i}; //-- D, U
-						joyP7_s <=  1'b1;
-					end
+					joyP7_s <=  1'b1;
+
 				8'd2:
 					begin
 						joy1_s[3:0] <= {joy1_right_i, joy1_left_i, joy1_down_i, joy1_up_i}; //-- R, L, D, U
@@ -93,73 +83,47 @@ module sega_joystick
 				8'd3:
 					begin
 						if (joy1_right_i == 1'b0 && joy1_left_i == 1'b0) // it's a megadrive controller
-							begin
 								joy1_s[7:6] <= { joy1_p9_i , joy1_p6_i }; //-- Start, A
-								joy1_s[1:0] <= {joy1_down_i, joy1_up_i}; //-- D, U
-							end
 						else
-								//joy1_s[7:4] <= { 1'b1, 1'b1, joy1_p9_i, joy1_p6_i }; //-- read A/B as master System
+								joy1_s[7:4] <= { 1'b1, 1'b1, joy1_p9_i, joy1_p6_i }; //-- read A/B as master System
 							
 						if (joy2_right_i == 1'b0 && joy2_left_i == 1'b0) // it's a megadrive controller
-							begin
 								joy2_s[7:6] <= { joy2_p9_i , joy2_p6_i }; //-- Start, A
-								joy2_s[1:0] <= {joy2_down_i, joy2_up_i}; //-- D, U
-							end
 						else
-								//joy2_s[7:4] <= { 1'b1, 1'b1, joy2_p9_i, joy2_p6_i }; //-- read A/B as master System
+								joy2_s[7:4] <= { 1'b1, 1'b1, joy2_p9_i, joy2_p6_i }; //-- read A/B as master System
 
 							
 						joyP7_s <= 1'b1;
 					end
 					
-				8'd4: 
-				   begin
-					   joy1_s[3:0] <= {joy1_right_i, joy1_left_i, joy1_down_i, joy1_up_i}; //-- R, L, D, U
-						joy2_s[3:0] <= {joy2_right_i, joy2_left_i, joy2_down_i, joy2_up_i}; //-- R, L, D, U
-						joy1_s[5:4] <= {joy1_p9_i, joy1_p6_i}; //-- C, B
-						joy2_s[5:4] <= {joy2_p9_i, joy2_p6_i}; //-- C, B	
-						joyP7_s <= 1'b0;
-					end
+				8'd4:  
+					joyP7_s <= 1'b0;
+
 				8'd5:
 					begin
-					    /// Controller 1
-					   joy1_s[7:6] <= { joy1_p9_i , joy1_p6_i }; //-- Start, A
 						if (joy1_right_i == 1'b0 && joy1_left_i == 1'b0 && joy1_down_i == 1'b0 && joy1_up_i == 1'b0 )
 							j1_sixbutton_v <= 1'b1; // --it's a six button
-						else  // --it is NOT a six button
-							begin
-								joy1_s[1:0] <= {joy1_down_i, joy1_up_i}; //-- D, U
-								
-							end
-						/// Controler 2
-						joy2_s[7:6] <= { joy2_p9_i , joy2_p6_i }; //-- Start, A
+						
+						
 						if (joy2_right_i == 1'b0 && joy2_left_i == 1'b0 && joy2_down_i == 1'b0 && joy2_up_i == 1'b0 )
 							j2_sixbutton_v <= 1'b1; // --it's a six button
-						else  // --it is NOT a six button
-							begin
-								joy2_s[1:0] <= {joy2_down_i, joy2_up_i}; //-- D, U
-								
-							end
+						
 						
 						joyP7_s <= 1'b1;
 					end
 					
 				8'd6:
 					begin
-					   /// Controller 1
-						joy1_s[5:4] <= {joy1_p9_i, joy1_p6_i}; //-- C, B
 						if (j1_sixbutton_v == 1'b1)
 							joy1_s[11:8] <= { joy1_right_i, joy1_left_i, joy1_down_i, joy1_up_i }; //-- Mode, X, Y e Z
 						else 
-							joy1_s[3:0] <= {joy1_right_i, joy1_left_i, joy1_down_i, joy1_up_i}; //-- R, L, D, U
-
-						/// Controller 2	
-						joy2_s[5:4] <= {joy2_p9_i, joy2_p6_i}; //-- C, B
+						   joy1_s[11:8] <= 4'b1111; 
+						
 						if (j2_sixbutton_v == 1'b1)
 							joy2_s[11:8] <= { joy2_right_i, joy2_left_i, joy2_down_i, joy2_up_i }; //-- Mode, X, Y e Z
 						else 
-							joy2_s[3:0] <= {joy2_right_i, joy2_left_i, joy2_down_i, joy2_up_i}; //-- R, L, D, U
-
+						   joy2_s[11:8] <= 4'b1111;
+						
 						joyP7_s <= 1'b0;
 					end 
 					

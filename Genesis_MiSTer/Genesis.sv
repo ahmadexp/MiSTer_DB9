@@ -245,9 +245,9 @@ end
 
 
 //////  I/O 2 Joystick s[;iter option added from JOYAV ////////////////
-wire [6:0] JOYAV_T1;      // CB UDLR  negative Logic
-wire [6:0] JOYAV_T2;      // CB UDLR  negative Logic
-reg  [6:0] joy1, joy2;    // CB UDLR  negative Logic
+wire [5:0] JOYAV_T1;      // CB UDLR  negative Logic
+wire [5:0] JOYAV_T2;      // CB UDLR  negative Logic
+reg  [5:0] joy1, joy2;    // CB UDLR  negative Logic
 
 //assign db9_Select = 1'b1;
 
@@ -322,8 +322,8 @@ sega_joystick joy (
 wire [11:0] JOYAV_1;   // ZYXM SCBA UDLR   in positive logic
 wire [11:0] JOYAV_2;   // ZYXM SCBA UDLR   in positive logic
 
-assign JOYAV_1 = ~{joy1_o[8],joy1_o[9],joy1_o[10],joy1_o[11],joy1_o[7],joy1_o[5],joy1_o[4],joy1_o[6],joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
-assign JOYAV_2 = ~{joy2_o[8],joy2_o[9],joy2_o[10],joy2_o[11],joy2_o[7],joy2_o[5],joy2_o[4],joy2_o[6],joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
+assign JOYAV_1 = ~{joy1_o[8],joy1_o[9],joy1_o[10],joy1_o[11],  joy1_o[7],joy1_o[5],joy1_o[4],joy1_o[6],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
+assign JOYAV_2 = ~{joy2_o[8],joy2_o[9],joy2_o[10],joy2_o[11],  joy2_o[7],joy2_o[5],joy2_o[4],joy2_o[6],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
 
 
 /////////////////////////////////////////////////////////////////////////// 

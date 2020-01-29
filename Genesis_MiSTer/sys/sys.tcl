@@ -64,7 +64,12 @@ set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to joy_up_i
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to db9_Select
 set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to splitter_select
 
-set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_*
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_up_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_left_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_p6_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_p9_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_right_i
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to joy_down_i
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to db9_Select
 set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to splitter_select
 

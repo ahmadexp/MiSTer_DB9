@@ -111,6 +111,7 @@ module sys_top
 `endif
 
 	////////// I/O ALT /////////
+	
 /*	output        SD_SPI_CS,
 	input         SD_SPI_MISO,
 	output        SD_SPI_CLK,
@@ -1264,7 +1265,7 @@ emu emu
 
 	.joy_o_db9(joy_o_db9),
 	.db9_Select (db9_Select),
-	.joy_splitter_select(splitter_select),  
+	.splitter_select(splitter_select),
 
 	.LED_USER(led_user),
 	.LED_POWER(led_power),
