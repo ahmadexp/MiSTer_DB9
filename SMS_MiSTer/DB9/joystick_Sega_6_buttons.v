@@ -47,8 +47,8 @@ module sega_joystick
  
 //----   Joystick read with sega 6 button support  ---------------------- 
 
-   reg [11:0]joy1_s = 12'b111111111111;	
-	reg [11:0]joy2_s = 12'b111111111111;
+   reg [11:0]joy1_s = 12'hFFF;	
+	reg [11:0]joy2_s = 12'hFFF;
 	reg joyP7_s;
 
 	reg [7:0]state_v = 8'd0;
