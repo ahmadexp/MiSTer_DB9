@@ -17,3 +17,4 @@ set_global_assignment -name VHDL_FILE vdp.vhd
 set_global_assignment -name VHDL_FILE system.vhd
 set_global_assignment -name VHDL_FILE io.vhd
 set_global_assignment -name SYSTEMVERILOG_FILE SMS.sv
+set_global_assignment -name VERILOG_FILE DB9/joystick_Sega_6_buttons.v

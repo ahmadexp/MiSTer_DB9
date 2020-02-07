@@ -51,11 +51,9 @@ module emu
 	output        VGA_F1,
 	output  [1:0] VGA_SL,
 
-   // DB9 Joystick
-	input [5:0] joy_o_db9,    // CB UDLR nw=egative Logic
-	output      db9_Select,
-	output      joy_splitter_select,  
-
+	// DB9 Joystick
+	input  		 joy_down_i,
+	
 	output        LED_USER,  // 1 - ON, 0 - OFF.
 
 	// b[1]: 0 - LED status is system status OR'd with b[0]
@@ -139,7 +137,7 @@ localparam SP64     = 1'b0;
 `endif
 
 assign ADC_BUS  = 'Z;
-assign USER_OUT = '1;
+//assign USER_OUT = '1;
 assign VGA_F1 = 0;
 
 assign {UART_RTS, UART_TXD, UART_DTR} = 0;
@@ -179,7 +177,7 @@ parameter CONF_STR = {
 	"OC,FM sound,Enable,Disable;",
 	"OA,Region,US/UE,Japan;",
 	"-;",
-   "OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;", 
+	"OGH,DB9 Joy,Player1,Player2,P1+P2(Splitter),OFF;", 
 	"O1,Swap joysticks,No,Yes;",
 	"OE,Multitap,Disabled,Port1;",
 	"OB,BIOS,Enable,Disable;",
@@ -189,6 +187,20 @@ parameter CONF_STR = {
 	"J1,Fire 1,Fire 2,Pause;",
 	"V,v",`BUILD_DATE
 };
+
+assign USER_OUT[1] = 1;
+assign USER_OUT[2] = 1;
+assign USER_OUT[3] = 1;
+assign USER_OUT[5] = 1;
+assign USER_OUT[6] = 1;
+					
+reg [5:0] joy_o_db9;
+assign joy_o_db9 = {USER_IN[6],USER_IN[3],USER_IN[5],joy_down_i,USER_IN[1],USER_IN[2] };  // CB UDLR (negative Logic)
+reg db9_Select = 1'b1;
+reg joy_split  = 1'b1;
+
+assign USER_OUT[0] = db9_Select;
+assign USER_OUT[4] = joy_split;
 
 // create a binary counter
 reg [31:0] cnt; // 32-bit counter
@@ -206,12 +218,7 @@ wire [5:0] JOYAV_T1;      // CB UDLR  negative Logic
 wire [5:0] JOYAV_T2;      // CB UDLR  negative Logic
 reg  [5:0] joy1, joy2;   // CB UDLR  negative Logic
 
-//assign db9_Select = 1'b1;
-
-reg joy_split = 1'b1;
-assign splitter_select = joy_split;   
-
-always @(posedge cnt[4])  // 50/16  = 3.125 Mhz
+always @(posedge cnt[4])  // 50/32  = 1.50 Mhz
   begin
     if (joy_split)
 		begin
@@ -224,7 +231,6 @@ always @(posedge cnt[4])  // 50/16  = 3.125 Mhz
 			joy_split <= 1'b1;
 		end
   end
-
 
 always @(posedge clk_sys)
   begin
@@ -248,7 +254,6 @@ always @(posedge clk_sys)
     endcase
   end
 
-
 // Now we apply the megadrive desmultiplexor conversor
 
 wire [11:0] joy1_o;   // MXYZ SACB RLDU  in negative logic
@@ -269,7 +274,7 @@ sega_joystick sega_joy (
 	.joy2_right_i	(JOYAV_T2[0]),
 	.joy2_p6_i		(JOYAV_T2[4]),
 	.joy2_p9_i		(JOYAV_T2[5]),
-	.vga_hsync_n_s (hs),  
+	.vga_hsync_n_s (HS),  
 	.joyX_p7_o		(db9_Select), // select signal
 	.joy1_o			(joy1_o),    // MXYZ SACB RLDU in negative logic
 	.joy2_o			(joy2_o)     // MXYZ SACB RLDU in negative logic
@@ -281,8 +286,6 @@ wire [6:0] JOYAV_2;   // start CB UDLR   in positive logic
 
 assign JOYAV_1 = ~{joy1_o[7],joy1_o[5],joy1_o[4],  joy1_o[0],joy1_o[1],joy1_o[2],joy1_o[3]};  
 assign JOYAV_2 = ~{joy2_o[7],joy2_o[5],joy2_o[4],  joy2_o[0],joy2_o[1],joy2_o[2],joy2_o[3]};  
-
-
 
 ////////////////////   CLOCKS   ///////////////////
 
@@ -529,7 +532,7 @@ system #(MAX_SPPL) system
 	.j2_right(joyb[0]),
 	.j2_tl(joyb[4]),
 	.j2_tr(joyb[5]),
-	.pause(joya[6]&joyb[6]),
+	.pause(joya[6]&joyb[6]&(~JOYAV_1[6])&(~JOYAV_2[6])),
 
 	.x(x),
 	.y(y),
@@ -560,8 +563,8 @@ system #(MAX_SPPL) system
 	.nvram_q(nvram_q)
 );
 
-assign joy[0] = status[1] ? joy_1 | JOYAV_2 : joy_0 | JOYAV_1;
-assign joy[1] = status[1] ? joy_0 | JOYAV_1 : joy_1 | JOYAV_2;
+assign joy[0] = status[1] ? joy_1 | JOYAV_1: joy_0 | JOYAV_1;
+assign joy[1] = status[1] ? joy_0 | JOYAV_1: joy_1 | JOYAV_2;
 
 wire [6:0] joya = ~joy[jcnt];
 wire [6:0] joyb = status[14] ? 7'h7F : ~joy[1];
