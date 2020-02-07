@@ -108,3 +108,4 @@
 | C       | B
 | START   | START
 | MODE    | SELECT
+| A    | SELECT
