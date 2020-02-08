@@ -35,3 +35,6 @@ https://github.com/neurorulez/MiSTer-Arcade-SEGASYS1.git
 
 Arcade Rygar
 https://github.com/neurorulez/rygar-fpga.git
+
+Arcade Atari Tetris
+https://github.com/neurorulez/Arcade-ATetris_MiSTer.git
