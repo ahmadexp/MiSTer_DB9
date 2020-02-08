@@ -38,3 +38,12 @@ https://github.com/neurorulez/rygar-fpga.git
 
 Arcade Atari Tetris
 https://github.com/neurorulez/Arcade-ATetris_MiSTer.git
+
+Arcade Tower of Druaga (Multicore)
+https://github.com/neurorulez/Arcade-Druaga_MiSTer.git
+
+Arcade Food Fight
+https://github.com/neurorulez/Arcade-FoodFight_MiSTer.git
+
+Arcade Rush and Atack / Green Beret
+https://github.com/neurorulez/Arcade-RushnAttack_MiSTer.git
