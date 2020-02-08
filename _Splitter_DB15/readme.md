@@ -6,6 +6,9 @@ Gracias en especial a Miguel T80c y Fernando Mosquera por la ayuda y las pruebas
 Neogeo
 https://github.com/neurorulez/NeoGeo_MiSTer.git
 
+Vectrex
+https://github.com/neurorulez/Vectrex_MiSTer.git
+
 Arcade Galaxian (Multicore)
 https://github.com/neurorulez/Arcade-Galaxian_MiSTer.git
 
@@ -30,4 +33,5 @@ https://github.com/neurorulez/Arcade-MCR3Scroll_MiSTer.git
 Arcade Sega System 1 (Multicore)
 https://github.com/neurorulez/MiSTer-Arcade-SEGASYS1.git
 
-
+Arcade Rygar
+https://github.com/neurorulez/rygar-fpga.git
