@@ -39,7 +39,19 @@
 | START   | START
 | MODE    | SELECT
 
+
 | Genesis | GBA Option 1
+| ------- | ------------
+| A       | B
+| B       | A
+| C       | R
+| X       | FAST FORWARD
+| Y       | L
+| Z       | REWIND
+| START   | START
+| MODE    | SELECT
+
+| Genesis | GBA Option 2
 | ------- | ------------
 | A       | B
 | B       | A
@@ -50,16 +62,6 @@
 | START   | START
 | MODE    | SELECT
 
-| Genesis | GBA Option 2
-| ------- | ------------
-| A       | B
-| B       | A
-| C       | R
-| X       | FAST FORWARD
-| Y       | L
-| Z       | REWIND
-| START   | START
-| MODE    | SELECT
 
 | Genesis | Neo Geo
 | ------- | ------------
@@ -72,6 +74,7 @@
 | START   | START
 | MODE    | COIN
 
+
 | Genesis | NES
 | ------- | ------------
 | B       | A
@@ -79,11 +82,13 @@
 | START   | START
 | MODE    | SELECT
 
+
 | Genesis | Master System
 | ------- | ------------
 | B       | 1
 | C       | 2
 | START   | START/PAUSE
+
 
 | Genesis | TurboGrafx
 | ------- | ------------
@@ -96,11 +101,13 @@
 | START   | RUN
 | MODE    | SELECT
 
+
 | Genesis | Atari 2600
 | ------- | ------------
 | B       | A
 | START   | START
 | MODE    | SELECT
+
 
 | Genesis | GB/GBC
 | ------- | ------------
@@ -109,6 +116,7 @@
 | START   | START
 | MODE    | SELECT
 | A    | SELECT
+
 
 | Genesis | Generic Arcade
 | ------- | ------------
