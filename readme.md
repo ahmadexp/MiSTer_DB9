@@ -109,3 +109,17 @@
 | START   | START
 | MODE    | SELECT
 | A    | SELECT
+
+| Genesis | Generic Arcade
+| ------- | ------------
+| A       | Button 1
+| B       | Button 2 (Fire)
+| C       | Button 3 (Jump)
+| X       | Button 4
+| Y       | Button 5
+| Z       | Button 6
+| START+A | OSD
+| START+B | COIN1
+| START+C | PAUSE
+| START   | START
+| MODE    | COIN2
