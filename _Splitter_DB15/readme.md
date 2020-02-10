@@ -47,3 +47,6 @@ https://github.com/neurorulez/Arcade-FoodFight_MiSTer.git
 
 Arcade Rush and Atack / Green Beret
 https://github.com/neurorulez/Arcade-RushnAttack_MiSTer.git
+
+Arcade Scramble  (Multicore)
+https://github.com/neurorulez/Arcade-Scramble_MiSTer.git
