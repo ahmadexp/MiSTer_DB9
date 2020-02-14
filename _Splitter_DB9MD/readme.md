@@ -26,3 +26,7 @@ https://github.com/Miguel-T80c/Arcade-MCR3Scroll_MiSTer/tree/Joy_DB9MD
 
 Pacman (multiarcde)
 https://github.com/Miguel-T80c/Arcade-Pacman_MiSTer/tree/Joy_DB9MD
+
+Galaxian (multiarcade)
+https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer/tree/Joy_DB9MD
+
