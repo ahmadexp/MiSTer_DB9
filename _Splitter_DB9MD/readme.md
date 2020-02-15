@@ -31,7 +31,10 @@ Galaxian (multiarcade)
 https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer/tree/Joy_DB9MD
 
 The Tower of Druaga (multiarcade)
-https://github.com/MiSTer-devel/Arcade-Druaga_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Druaga_MiSTer/tree/Joy_DB9MD
 
-RushnAttack (Green Beret) (multiarcade)
+RushnAttack/Green Beret
 https://github.com/Miguel-T80c/Arcade-RushnAttack_MiSTer/tree/Joy_DB9MD
+
+DonkeyKong
+https://github.com/Miguel-T80c/Arcade-DonkeyKong_MiSTer/tree/Joy_DB9MD
