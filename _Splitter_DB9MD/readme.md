@@ -33,7 +33,7 @@ https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer/tree/Joy_DB9MD
 The Tower of Druaga (multiarcade)
 https://github.com/Miguel-T80c/Arcade-Druaga_MiSTer/tree/Joy_DB9MD
 
-RushnAttack/Green Beret
+Arcade RushnAttack/Green Beret
 https://github.com/Miguel-T80c/Arcade-RushnAttack_MiSTer/tree/Joy_DB9MD
 
 DonkeyKong
@@ -47,3 +47,6 @@ https://github.com/Miguel-T80c/Arcade-Berzerk_MiSTer/tree/Joy_DB9MD
 
 Centipede
 https://github.com/Miguel-T80c/Arcade-Centipede_MiSTer/tree/Joy_DB9MD
+
+Galaga
+https://github.com/Miguel-T80c/Arcade-Galaga_MiSTer/tree/Joy_DB9MD
