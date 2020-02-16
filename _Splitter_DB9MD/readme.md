@@ -44,3 +44,6 @@ https://github.com/Miguel-T80c/rygar-fpga/tree/Joy_DB9MD
 
 Berzerk
 https://github.com/Miguel-T80c/Arcade-Berzerk_MiSTer/tree/Joy_DB9MD
+
+Centipede
+https://github.com/Miguel-T80c/Arcade-Centipede_MiSTer/tree/Joy_DB9MD
