@@ -50,3 +50,9 @@ https://github.com/Miguel-T80c/Arcade-Centipede_MiSTer/tree/Joy_DB9MD
 
 Galaga
 https://github.com/Miguel-T80c/Arcade-Galaga_MiSTer/tree/Joy_DB9MD
+
+Gaplus
+https://github.com/Miguel-T80c/MiSTer-Arcade-Gaplus/tree/Joy_DB9MD
+
+Solomon's key
+https://github.com/Miguel-T80c/MiSTer-Arcade-SolomonsKey/tree/Joy_DB9MD
