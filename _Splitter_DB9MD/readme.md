@@ -56,3 +56,12 @@ https://github.com/Miguel-T80c/MiSTer-Arcade-Gaplus/tree/Joy_DB9MD
 
 Solomon's key
 https://github.com/Miguel-T80c/MiSTer-Arcade-SolomonsKey/tree/Joy_DB9MD
+
+Xevious
+https://github.com/Miguel-T80c/Arcade-Xevious_MiSTer/tree/JOY_DB9MD
+
+RallyX
+https://github.com/Miguel-T80c/MiSTer-Arcade-RallyX/tree/JOY_DB9MD
+
+NinjaKun
+https://github.com/Miguel-T80c/MiSTer-Arcade-NinjaKun/tree/JOY_DB9MD
