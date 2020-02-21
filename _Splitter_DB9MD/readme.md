@@ -60,8 +60,14 @@ https://github.com/Miguel-T80c/MiSTer-Arcade-SolomonsKey/tree/Joy_DB9MD
 Xevious
 https://github.com/Miguel-T80c/Arcade-Xevious_MiSTer/tree/JOY_DB9MD
 
-RallyX
+Rally X
 https://github.com/Miguel-T80c/MiSTer-Arcade-RallyX/tree/JOY_DB9MD
 
-NinjaKun
+Ninja Kun
 https://github.com/Miguel-T80c/MiSTer-Arcade-NinjaKun/tree/JOY_DB9MD
+
+Bomb Jack
+https://github.com/Miguel-T80c/Arcade-BombJack_MiSTer/tree/Joy_DB9MD
+
+Defender
+https://github.com/Miguel-T80c/Arcade-Defender_MiSTer/tree/Joy_DB9MD
