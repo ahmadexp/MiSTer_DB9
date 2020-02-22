@@ -3,12 +3,30 @@ Los fuentes estan en los siguientes Forks (Siempre en la rama "Joy_DB15"):
 (Excepto los de Jotego que esta pendiente de normalizar la forma de hacerlo)
 Gracias en especial a Miguel T80c y Fernando Mosquera por la ayuda y las pruebas.
 
+Menu
+https://github.com/neurorulez/Menu_MiSTer
+
+----------
+-CONSOLAS-
+----------
+MegaCD
+https://github.com/neurorulez/MegaCD_MiSTer
+
+Genesis
+https://github.com/neurorulez/Genesis_MiSTer
+
 Neogeo
-https://github.com/neurorulez/NeoGeo_MiSTer.git
+https://github.com/neurorulez/NeoGeo_MiSTer
 
 Vectrex
-https://github.com/neurorulez/Vectrex_MiSTer.git
+https://github.com/neurorulez/Vectrex_MiSTer
 
+Turbograph 16x
+https://github.com/neurorulez/TurboGrafx16_MiSTer
+
+---------
+-ARCADES-
+---------
 Arcade Galaxian (Multicore)
 https://github.com/neurorulez/Arcade-Galaxian_MiSTer.git
 
@@ -34,7 +52,7 @@ Arcade Sega System 1 (Multicore)
 https://github.com/neurorulez/MiSTer-Arcade-SEGASYS1.git
 
 Arcade Rygar
-https://github.com/neurorulez/rygar-fpga.git
+https://github.com/neurorulez/rygar-fpga
 
 Arcade Atari Tetris
 https://github.com/neurorulez/Arcade-ATetris_MiSTer.git
@@ -49,4 +67,4 @@ Arcade Rush and Atack / Green Beret
 https://github.com/neurorulez/Arcade-RushnAttack_MiSTer.git
 
 Arcade Scramble  (Multicore)
-https://github.com/neurorulez/Arcade-Scramble_MiSTer.git
+https://github.com/neurorulez/Arcade-Scramble_MiSTer
