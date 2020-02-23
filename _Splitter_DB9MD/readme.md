@@ -1,4 +1,7 @@
-Cores adaptados al Splitter DB9 de Mega Drive de Antonio Villena.
+Cores adaptados al splitter DB9 de Mega Drive de Antonio Villena.
+
+Hay que activar desde el OSD de cada core la opción: Serial SNAC DB9MD
+ya que por defecto está en off. 
 
 Para poder manejar tambien el menú principal y el de los cores con el DB9 es
 necesrio sustituir menu.rbf y MiSTer del raiz de la SD por los que hay aquí.
