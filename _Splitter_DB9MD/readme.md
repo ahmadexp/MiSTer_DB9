@@ -1,7 +1,7 @@
 Cores adaptados al Splitter DB9 de Mega Drive de Antonio Villena.
 
-Para manejar el menú principal y el de los cores con el DB9 es necesrio 
-sustituir Menu.rbf y MiSTer del raiz de la SD por los que hay aquí
+Para poder manejar tambien el menú principal y el de los cores con el DB9 es
+necesrio sustituir menu.rbf y MiSTer del raiz de la SD por los que hay aquí.
 
 Menu
 https://github.com/Miguel-T80c/Menu_MiSTer/tree/Joy_DB9MD
@@ -13,10 +13,10 @@ https://github.com/benitoss/MiSTer_project
 -ARCADES-
 ---------
 Ultratank
-https://github.com/neurorulez/Arcade-Ultratank_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Ultratank_MiSTer/tree/Joy_DB9MD
 
 Scramble (multiarcade)
-https://github.com/neurorulez/Arcade-Scramble_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Scramble_MiSTer/tree/Joy_DB9MD
 
 Bally Midway MCR1 (multiarcade)
 https://github.com/Miguel-T80c/Arcade-MCR1_MiSTer/tree/Joy_DB9MD
@@ -80,3 +80,6 @@ https://github.com/Miguel-T80c/Arcade-BombJack_MiSTer/tree/Joy_DB9MD
 
 Defender
 https://github.com/Miguel-T80c/Arcade-Defender_MiSTer/tree/Joy_DB9MD
+
+SEGASYS1(multiarcade)
+https://github.com/Miguel-T80c/MiSTer-Arcade-SEGASYS1/tree/Joy_DB9MD
