@@ -1,8 +1,12 @@
-Cores en fase de pruebas del Splitter DB9 de Megadrive de Antonio Villena
+Cores adaptados para DB9 de Mega Drive de Antonio Villena.
 
-FUENTES
--------
 
+Menu
+https://github.com/Miguel-T80c/Menu_MiSTer/tree/Joy_DB9MD
+
+---------
+-ARCADES-
+---------
 Ultratank
 https://github.com/neurorulez/Arcade-Ultratank_MiSTer/tree/Joy_DB9MD
 
