@@ -1,12 +1,14 @@
 Cores adaptados al Splitter DB9 de Mega Drive de Antonio Villena.
+
 Para manejar el menú principal y el de los cores con el DB9 es necesrio 
-sustituir Menu.rbf y MiSTer del raiz de la SD por los que hay aquí.
+sustituir Menu.rbf y MiSTer del raiz de la SD por los que hay aquí
 
 Menu
 https://github.com/Miguel-T80c/Menu_MiSTer/tree/Joy_DB9MD
 
 MiSTer
 https://github.com/benitoss/MiSTer_project
+
 ---------
 -ARCADES-
 ---------
