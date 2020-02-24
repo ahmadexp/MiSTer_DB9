@@ -86,3 +86,6 @@ https://github.com/Miguel-T80c/Arcade-Defender_MiSTer/tree/Joy_DB9MD
 
 SEGASYS1(multiarcade)
 https://github.com/Miguel-T80c/MiSTer-Arcade-SEGASYS1/tree/Joy_DB9MD
+
+AtariTetris
+https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris/tree/Joy_DB9MD
