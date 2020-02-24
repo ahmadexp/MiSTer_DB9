@@ -89,3 +89,19 @@ https://github.com/Miguel-T80c/MiSTer-Arcade-SEGASYS1/tree/Joy_DB9MD
 
 AtariTetris
 https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris/tree/Joy_DB9MD
+
+
+----------
+-CONSOLAS-
+----------
+Vectrex
+https://github.com/Miguel-T80c/Vectrex_MiSTer/tree/Joy_DB9MD
+
+NeoGeo
+https://github.com/Miguel-T80c/NeoGeo_MiSTer/tree/Joy_DB9MD
+
+Genesis
+https://github.com/Miguel-T80c/Genesis_MiSTer/tree/Joy_DB9MD
+
+TurboGrafx16
+https://github.com/Miguel-T80c/TurboGrafx16_MiSTer/tree/Joy_DB9MD
