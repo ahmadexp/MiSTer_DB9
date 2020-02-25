@@ -5,6 +5,7 @@ ya que por defecto está en off.
 
 Para poder manejar tambien el menú principal y el de los cores con el DB9 es
 necesrio sustituir menu.rbf y MiSTer del raiz de la SD por los que hay aquí.
+Para acceder al menú OSD de los cores con el mando MD presionar Start + C.
 
 Menu
 https://github.com/Miguel-T80c/Menu_MiSTer/tree/Joy_DB9MD
