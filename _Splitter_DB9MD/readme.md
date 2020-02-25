@@ -109,3 +109,18 @@ https://github.com/Miguel-T80c/TurboGrafx16_MiSTer/tree/Joy_DB9MD
 
 MegaCD
 https://github.com/Miguel-T80c/MegaCD_MiSTer/tree/Joy_DB9MD
+
+Atari 2600
+https://github.com/Miguel-T80c/Atari2600_MiSTer/tree/Joy_DB9MD
+
+Atari 5200
+https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
+
+Sega Master System
+https://github.com/Miguel-T80c/SMS_MiSTer/tree/Joy_DB9MD
+
+-------------
+-ORDENADORES-
+-------------
+Atari 800
+https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
