@@ -105,3 +105,6 @@ https://github.com/Miguel-T80c/Genesis_MiSTer/tree/Joy_DB9MD
 
 TurboGrafx16
 https://github.com/Miguel-T80c/TurboGrafx16_MiSTer/tree/Joy_DB9MD
+
+MegaCD
+https://github.com/Miguel-T80c/MegaCD_MiSTer/tree/Joy_DB9MD
