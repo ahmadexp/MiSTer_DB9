@@ -127,3 +127,15 @@ https://github.com/Miguel-T80c/GBA_MiSTer/tree/Joy_DB9MD
 -------------
 Atari 800
 https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
+
+ZX Spectrum
+https://github.com/Miguel-T80c/ZX-Spectrum_MISTer/tree/Joy_DB9MD
+
+Amstrad
+https://github.com/Miguel-T80c/Amstrad_MiSTer/tree/Joy_DB9MD
+
+Commodore 64
+https://github.com/Miguel-T80c/C64_MiSTer/tree/Joy_DB9MD
+
+MSX
+https://github.com/Miguel-T80c/MSX_MiSTer/tree/Joy_DB9MD
