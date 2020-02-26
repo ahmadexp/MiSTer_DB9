@@ -9,6 +9,9 @@ https://github.com/neurorulez/Menu_MiSTer
 ----------
 -CONSOLAS-
 ----------
+Gameboy Advance
+https://github.com/neurorulez/GBA_MiSTer.git
+
 Genesis
 https://github.com/neurorulez/Genesis_MiSTer
 
