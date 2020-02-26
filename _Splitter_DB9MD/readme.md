@@ -116,8 +116,11 @@ https://github.com/Miguel-T80c/Atari2600_MiSTer/tree/Joy_DB9MD
 Atari 5200
 https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
 
-Sega Master System
+Sega Master System and Game Gear
 https://github.com/Miguel-T80c/SMS_MiSTer/tree/Joy_DB9MD
+
+Nintendo Game Boy Advance
+https://github.com/Miguel-T80c/GBA_MiSTer/tree/Joy_DB9MD
 
 -------------
 -ORDENADORES-
