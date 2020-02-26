@@ -9,20 +9,26 @@ https://github.com/neurorulez/Menu_MiSTer
 ----------
 -CONSOLAS-
 ----------
+Genesis
+https://github.com/neurorulez/Genesis_MiSTer
+
 MegaCD
 https://github.com/neurorulez/MegaCD_MiSTer
 
-Genesis
-https://github.com/neurorulez/Genesis_MiSTer
+NES
+https://github.com/neurorulez/NES_MiSTer.git
 
 Neogeo
 https://github.com/neurorulez/NeoGeo_MiSTer
 
-Vectrex
-https://github.com/neurorulez/Vectrex_MiSTer
+SNES
+https://github.com/neurorulez/SNES_MiSTer
 
 Turbograph 16x
 https://github.com/neurorulez/TurboGrafx16_MiSTer
+
+Vectrex
+https://github.com/neurorulez/Vectrex_MiSTer
 
 ---------
 -ARCADES-
