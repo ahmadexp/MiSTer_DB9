@@ -36,44 +36,50 @@ https://github.com/neurorulez/Vectrex_MiSTer
 ---------
 -ARCADES-
 ---------
-Arcade Galaxian (Multicore)
-https://github.com/neurorulez/Arcade-Galaxian_MiSTer.git
-
-Arcade Pacman (Multicore)
-https://github.com/neurorulez/Arcade-Pacman_MiSTer.git
-
-Arcade MCR1 (Multicore)
-https://github.com/neurorulez/Arcade-MCR1_MiSTer.git
-
-Arcade MCR2 (Multicore)
-https://github.com/neurorulez/Arcade-MCR2_MiSTer.git
-
-Arcade MCR3 (Multicore)
-https://github.com/neurorulez/Arcade-MCR3_MiSTer.git
-
-Arcade MCR3 Mono (Multicore)
-https://github.com/neurorulez/Arcade-MCR3Mono_MiSTer.git
-
-Arcade MCR3 Scroll (Multicore)
-https://github.com/neurorulez/Arcade-MCR3Scroll_MiSTer.git
-
-Arcade Sega System 1 (Multicore)
-https://github.com/neurorulez/MiSTer-Arcade-SEGASYS1.git
-
-Arcade Rygar
-https://github.com/neurorulez/rygar-fpga
-
 Arcade Atari Tetris
 https://github.com/neurorulez/Arcade-ATetris_MiSTer.git
 
-Arcade Tower of Druaga (Multicore)
+Arcade Druaga (Multicore)
 https://github.com/neurorulez/Arcade-Druaga_MiSTer.git
 
 Arcade Food Fight
 https://github.com/neurorulez/Arcade-FoodFight_MiSTer.git
 
-Arcade Rush and Atack / Green Beret
-https://github.com/neurorulez/Arcade-RushnAttack_MiSTer.git
+Arcade Galaxian (Multicore)
+https://github.com/neurorulez/Arcade-Galaxian_MiSTer.git
 
-Arcade Scramble  (Multicore)
+Arcade-MCR1
+https://github.com/neurorulez/Arcade-MCR1_MiSTer
+
+Arcade-MCR2
+https://github.com/neurorulez/Arcade-MCR2_MiSTer
+
+Arcade-MCR3
+https://github.com/neurorulez/Arcade-MCR3_MiSTer
+
+Arcade-MCR3Mono
+https://github.com/neurorulez/Arcade-MCR3Mono_MiSTer
+
+Arcade-MCR3Scroll
+https://github.com/neurorulez/Arcade-MCR3Scroll_MiSTer
+
+Arcade Pacman (Multicore)
+https://github.com/neurorulez/Arcade-Pacman_MiSTer
+
+Arcade Rush and Atack / Green Beret
+https://github.com/neurorulez/Arcade-RushnAttack_MiSTer
+
+Arcade-Rygar
+https://github.com/neurorulez/rygar-fpga
+
+Arcade-Scramble
 https://github.com/neurorulez/Arcade-Scramble_MiSTer
+
+Arcade Sega System 1 (Multicore)
+https://github.com/neurorulez/MiSTer-Arcade-SEGASYS1.git
+
+Arcade Sprint1
+https://github.com/neurorulez/Arcade-Sprint1_MiSTer
+
+Arcade Sprint2
+https://github.com/neurorulez/Arcade-Sprint2_MiSTer
