@@ -77,8 +77,8 @@ https://github.com/Miguel-T80c/rygar-fpga/tree/Joy_DB9MD
 Scramble (multiarcade)
 https://github.com/Miguel-T80c/Arcade-Scramble_MiSTer/tree/Joy_DB9MD
 
-SEGA System 1 (multiarcade)
-https://github.com/Miguel-T80c/MiSTer-Arcade-SEGASYS1/tree/Joy_DB9MD
+Sega System 1 (multiarcade)
+https://github.com/Miguel-T80c/MiSTer-Arcade-SegaSYS1/tree/Joy_DB9MD
 
 Solomon's key
 https://github.com/Miguel-T80c/MiSTer-Arcade-SolomonsKey/tree/Joy_DB9MD
@@ -110,23 +110,29 @@ https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
 ColecoVision
 https://github.com/Miguel-T80c/ColecoVision_MiSTer/tree/Joy_DB9MD
 
-Genesis / Mega Drive
-https://github.com/Miguel-T80c/Genesis_MiSTer/tree/Joy_DB9MD
-
-MegaCD
-https://github.com/Miguel-T80c/MegaCD_MiSTer/tree/Joy_DB9MD
-
 NeoGeo
 https://github.com/Miguel-T80c/NeoGeo_MiSTer/tree/Joy_DB9MD
 
-Nintendo Game Boy
-https://github.com/Miguel-T80c/Gameboy_MiSTer.git/tree/Joy_DB9MD
+Nintendo Gameboy
+https://github.com/Miguel-T80c/Gameboy_MiSTer/tree/Joy_DB9MD
 
-Nintendo Game Boy Advance
+Nintendo Gameboy Advance
 https://github.com/Miguel-T80c/GBA_MiSTer/tree/Joy_DB9MD
+
+Nintendo NES
+https://github.com/Miguel-T80c/NES_MiSTer/tree/Joy_DB9MD
+
+Nintendo Super NES
+https://github.com/Miguel-T80c/SNES_MiSTer/tree/Joy_DB9MD
+
+Sega Genesis / Mega Drive
+https://github.com/Miguel-T80c/Genesis_MiSTer/tree/Joy_DB9MD
 
 Sega Master System and Game Gear
 https://github.com/Miguel-T80c/SMS_MiSTer/tree/Joy_DB9MD
+
+Sega MegaCD
+https://github.com/Miguel-T80c/MegaCD_MiSTer/tree/Joy_DB9MD
 
 TurboGrafx16
 https://github.com/Miguel-T80c/TurboGrafx16_MiSTer/tree/Joy_DB9MD
