@@ -39,6 +39,12 @@ https://github.com/neurorulez/Vectrex_MiSTer
 Arcade Atari Tetris
 https://github.com/neurorulez/Arcade-ATetris_MiSTer.git
 
+Arcade BlackWidow (Multicore)
+https://github.com/neurorulez/Arcade-BlackWidow_MiSTer
+
+Arcade Defender (Multicore)
+https://github.com/neurorulez/Arcade-Defender_MiSTer
+
 Arcade Druaga (Multicore)
 https://github.com/neurorulez/Arcade-Druaga_MiSTer.git
 
@@ -48,19 +54,19 @@ https://github.com/neurorulez/Arcade-FoodFight_MiSTer.git
 Arcade Galaxian (Multicore)
 https://github.com/neurorulez/Arcade-Galaxian_MiSTer.git
 
-Arcade-MCR1
+Arcade-MCR1 (Multicore)
 https://github.com/neurorulez/Arcade-MCR1_MiSTer
 
-Arcade-MCR2
+Arcade-MCR2 (Multicore)
 https://github.com/neurorulez/Arcade-MCR2_MiSTer
 
-Arcade-MCR3
+Arcade-MCR3 (Multicore)
 https://github.com/neurorulez/Arcade-MCR3_MiSTer
 
-Arcade-MCR3Mono
+Arcade-MCR3Mono (Multicore)
 https://github.com/neurorulez/Arcade-MCR3Mono_MiSTer
 
-Arcade-MCR3Scroll
+Arcade-MCR3Scroll (Multicore)
 https://github.com/neurorulez/Arcade-MCR3Scroll_MiSTer
 
 Arcade Pacman (Multicore)
@@ -72,14 +78,15 @@ https://github.com/neurorulez/Arcade-RushnAttack_MiSTer
 Arcade-Rygar
 https://github.com/neurorulez/rygar-fpga
 
-Arcade-Scramble
+Arcade-Scramble (Multicore)
 https://github.com/neurorulez/Arcade-Scramble_MiSTer
 
 Arcade Sega System 1 (Multicore)
-https://github.com/neurorulez/MiSTer-Arcade-SEGASYS1.git
+https://github.com/neurorulez/MiSTer-Arcade-SEGASYS1
 
 Arcade Sprint1
 https://github.com/neurorulez/Arcade-Sprint1_MiSTer
 
 Arcade Sprint2
 https://github.com/neurorulez/Arcade-Sprint2_MiSTer
+
