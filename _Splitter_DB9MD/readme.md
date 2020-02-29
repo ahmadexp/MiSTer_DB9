@@ -20,6 +20,9 @@ https://github.com/benitoss/MiSTer_project
 AtariTetris
 https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris/tree/Joy_DB9MD
 
+BlackWidow
+https://github.com/Miguel-T80c/Arcade-BlackWidow_MiSTer/tree/Joy_DB9MD
+
 Berzerk
 https://github.com/Miguel-T80c/Arcade-Berzerk_MiSTer/tree/Joy_DB9MD
 
