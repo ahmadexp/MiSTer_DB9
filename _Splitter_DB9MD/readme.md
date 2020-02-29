@@ -44,6 +44,9 @@ https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer/tree/Joy_DB9MD
 Gaplus
 https://github.com/Miguel-T80c/MiSTer-Arcade-Gaplus/tree/Joy_DB9MD
 
+Gyruss
+https://github.com/Miguel-T80c/MiSTer-Arcade-Gyruss/tree/Joy_DB9MD
+
 MCR1 (multiarcade)
 https://github.com/Miguel-T80c/Arcade-MCR1_MiSTer/tree/Joy_DB9MD
 
