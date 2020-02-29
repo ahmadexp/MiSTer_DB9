@@ -152,6 +152,9 @@ https://github.com/Miguel-T80c/Vectrex_MiSTer/tree/Joy_DB9MD
 Acorn Archimedes
 https://github.com/Miguel-T80c/Archie_MiSTer/tree/Joy_DB9MD
 
+Amiga Minimig-AGA
+https://github.com/Miguel-T80c/Minimig-AGA_MiSTer/tree/Joy_DB9MD
+
 Amstrad
 https://github.com/Miguel-T80c/Amstrad_MiSTer/tree/Joy_DB9MD
 
