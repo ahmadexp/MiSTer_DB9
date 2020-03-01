@@ -20,6 +20,9 @@ https://github.com/benitoss/MiSTer_project
 AtariTetris
 https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris/tree/Joy_DB9MD
 
+BlackWidow
+https://github.com/Miguel-T80c/Arcade-BlackWidow_MiSTer/tree/Joy_DB9MD
+
 Berzerk
 https://github.com/Miguel-T80c/Arcade-Berzerk_MiSTer/tree/Joy_DB9MD
 
@@ -43,6 +46,9 @@ https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer/tree/Joy_DB9MD
 
 Gaplus
 https://github.com/Miguel-T80c/MiSTer-Arcade-Gaplus/tree/Joy_DB9MD
+
+Gyruss
+https://github.com/Miguel-T80c/MiSTer-Arcade-Gyruss/tree/Joy_DB9MD
 
 MCR1 (multiarcade)
 https://github.com/Miguel-T80c/Arcade-MCR1_MiSTer/tree/Joy_DB9MD
@@ -143,6 +149,12 @@ https://github.com/Miguel-T80c/Vectrex_MiSTer/tree/Joy_DB9MD
 -------------
 -ORDENADORES-
 -------------
+Acorn Archimedes
+https://github.com/Miguel-T80c/Archie_MiSTer/tree/Joy_DB9MD
+
+Amiga Minimig-AGA
+https://github.com/Miguel-T80c/Minimig-AGA_MiSTer/tree/Joy_DB9MD
+
 Amstrad
 https://github.com/Miguel-T80c/Amstrad_MiSTer/tree/Joy_DB9MD
 
