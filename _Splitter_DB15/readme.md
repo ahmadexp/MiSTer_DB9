@@ -72,6 +72,9 @@ https://github.com/neurorulez/Arcade-MCR3Scroll_MiSTer
 Arcade Pacman (Multicore)
 https://github.com/neurorulez/Arcade-Pacman_MiSTer
 
+Arcade Robotron (Multicore)
+https://github.com/neurorulez/Arcade-Robotron_MiSTer.git
+
 Arcade Rush and Atack / Green Beret
 https://github.com/neurorulez/Arcade-RushnAttack_MiSTer
 
