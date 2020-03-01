@@ -74,6 +74,9 @@ https://github.com/Miguel-T80c/Arcade-Pacman_MiSTer/tree/Joy_DB9MD
 Rally X
 https://github.com/Miguel-T80c/MiSTer-Arcade-RallyX/tree/JOY_DB9MD
 
+Robotron (multiarcade)
+https://github.com/Miguel-T80c/Arcade-Robotron_MiSTer/tree/Joy_DB9MD
+
 RushnAttack / Green Beret
 https://github.com/Miguel-T80c/Arcade-RushnAttack_MiSTer/tree/Joy_DB9MD
 
