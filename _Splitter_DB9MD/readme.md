@@ -1,12 +1,10 @@
-Cores adaptados al splitter DB9 Mega Drive de Antonio Villena.
+Cores adaptados a joysticks DB9 Mega Drive y splitter de Antonio Villena.
 
-Hay que activar desde el menú de cada core la opción: Serial SNAC DB9MD
-ya que por defecto está en off. 
+Hay que activar desde el menú de cada core la opción: Serial SNAC DB9MD ya que por defecto está en off. 
 
-Para poder manejar tambien el menú principal y el de los cores con el DB9 es
-necesrio sustituir menu.rbf y MiSTer del raiz de la SD por los que hay aquí.
+Es posible manejar también con el mando Mega Drive el menú principal y el de los cores, para ello es necesario sustituir menu.rbf y MiSTer del raíz de la SD por los que hay aquí.
 
-Para acceder al menú OSD de los cores con el mando DB9 presionar Start + C.
+Para acceder al menú OSD con el mando DB9 presionar Start + C.
 
 Menu
 https://github.com/Miguel-T80c/Menu_MiSTer/tree/Joy_DB9MD
@@ -70,6 +68,9 @@ https://github.com/Miguel-T80c/MiSTer-Arcade-NinjaKun/tree/JOY_DB9MD
 
 Pacman (multiarcade)
 https://github.com/Miguel-T80c/Arcade-Pacman_MiSTer/tree/Joy_DB9MD
+
+Popeye
+https://github.com/Miguel-T80c/Arcade-Popeye_MiSTer/tree/Joy_DB9MD
 
 Rally X
 https://github.com/Miguel-T80c/MiSTer-Arcade-RallyX/tree/JOY_DB9MD
