@@ -1,16 +1,25 @@
-Cores adaptados a joysticks DB9 Mega Drive y splitter de Antonio Villena.
+Cores adaptados a joysticks DB9 Mega Drive/Genesis y splitter de Antonio Villena.
 
 Hay que activar desde el menú de cada core la opción: Serial SNAC DB9MD ya que por defecto está en off. 
 
-Es posible manejar también con el mando Mega Drive el menú principal y el de los cores, para ello es necesario sustituir menu.rbf y MiSTer del raíz de la SD por los que hay aquí.
+Es posible manejar también con el mando Genesis/Mega Drive el menú principal y el de los cores, para ello es necesario sustituir menu.rbf y MiSTer del raíz de la SD por los que hay aquí.
 
 Para acceder al menú OSD con el mando DB9 presionar Start + C.
 
-Menu
-https://github.com/Miguel-T80c/Menu_MiSTer/tree/Joy_DB9MD
+Adapted cores to DB9 Mega Drive/Genesis joysticks with splitter by Antonio Villena.
+
+You have to activate from the menu of each kernel the option: Serial SNAC DB9MD since by default it is off.
+
+It is also possible to manage the main menu and the kernel menu with the Genesis/Mega Drive command, for this it is necessary to change menu.rbf and MiSTer from the root of the SD for those found here.
+
+To access the OSD menu with the DB9 command press Start + C.
+
 
 MiSTer
-https://github.com/benitoss/MiSTer_project
+https://github.com/Miguel-T80c/Main_MiSTer/tree/SNAC_controller_funcionality_in_menu
+
+Menu
+https://github.com/Miguel-T80c/Menu_MiSTer/tree/Joy_DB9MD
 
 ---------
 -ARCADES-
