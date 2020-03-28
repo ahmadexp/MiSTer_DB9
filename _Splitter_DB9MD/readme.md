@@ -1,19 +1,12 @@
-Cores adaptados a joysticks DB9 Mega Drive/Genesis y splitter de Antonio Villena.
-
-Hay que activar desde el menú de cada core la opción: Serial SNAC DB9MD ya que por defecto está en off. 
-
-Es posible manejar también con el mando Genesis/Mega Drive el menú principal y el de los cores, para ello es necesario sustituir menu.rbf y MiSTer del raíz de la SD por los que hay aquí.
-
-Para acceder al menú OSD con el mando DB9 presionar Start + C.
-
-Adapted cores to DB9 Mega Drive/Genesis joysticks with splitter by Antonio Villena.
+Adapted MiSTer FPGA cores to the DB9 original Mega Drive/Genesis joysticks.
 
 You have to activate from the menu of each kernel the option: Serial SNAC DB9MD since by default it is off.
 
-It is also possible to manage the main menu and the kernel menu with the Genesis/Mega Drive command, for this it is necessary to change menu.rbf and MiSTer from the root of the SD for those found here.
+It is also possible to control the main menu and the kernel menu with the Genesis/Mega Drive joystick, for this it is necessary to change menu.rbf and MiSTer from the root of the SD for those found here.
 
-To access the OSD menu with the DB9 command press Start + C.
+To access the OSD menu with the DB9 joystick press buttons Start + C.
 
+SOURCES:
 
 MiSTer
 https://github.com/Miguel-T80c/Main_MiSTer/tree/SNAC_controller_funcionality_in_menu
@@ -21,9 +14,9 @@ https://github.com/Miguel-T80c/Main_MiSTer/tree/SNAC_controller_funcionality_in_
 Menu
 https://github.com/Miguel-T80c/Menu_MiSTer/tree/Joy_DB9MD
 
----------
--ARCADES-
----------
+------
+ARCADE
+------
 AtariTetris
 https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris/tree/Joy_DB9MD
 
@@ -117,9 +110,9 @@ https://github.com/Miguel-T80c/Arcade-Ultratank_MiSTer/tree/Joy_DB9MD
 Xevious
 https://github.com/Miguel-T80c/Arcade-Xevious_MiSTer/tree/JOY_DB9MD
 
-----------
--CONSOLAS-
-----------
+-------
+CONSOLE
+-------
 Atari 2600
 https://github.com/Miguel-T80c/Atari2600_MiSTer/tree/Joy_DB9MD
 
@@ -159,9 +152,9 @@ https://github.com/Miguel-T80c/TurboGrafx16_MiSTer/tree/Joy_DB9MD
 Vectrex
 https://github.com/Miguel-T80c/Vectrex_MiSTer/tree/Joy_DB9MD
 
--------------
--ORDENADORES-
--------------
+--------
+COMPUTER
+--------
 Acorn Archimedes
 https://github.com/Miguel-T80c/Archie_MiSTer/tree/Joy_DB9MD
 
