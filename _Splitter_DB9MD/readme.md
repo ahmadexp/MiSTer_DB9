@@ -2,7 +2,7 @@ Adapted MiSTer FPGA cores to the DB9 original Mega Drive/Genesis joysticks.
 
 You have to activate from the menu of each core the option: Serial SNAC DB9MD to 1 or 2 players, because by default it is off.
 
-It is also possible to control the main menu and the kernel menu with the Genesis/Mega Drive joystick, for this it is necessary to change menu.rbf and MiSTer from the root of the SD for those found here.
+It is also possible to control the main menu and the core menu with the Genesis/Mega Drive joystick, for this it is necessary to change menu.rbf and MiSTer from the root of the SD for those found here.
 
 To access the OSD menu with the DB9 joystick press buttons Start + C.
 
