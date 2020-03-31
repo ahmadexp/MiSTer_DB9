@@ -110,6 +110,33 @@ https://github.com/Miguel-T80c/Arcade-Ultratank_MiSTer/tree/Joy_DB9MD
 Xevious
 https://github.com/Miguel-T80c/Arcade-Xevious_MiSTer/tree/JOY_DB9MD
 
+--------
+COMPUTER
+--------
+Acorn Archimedes
+https://github.com/Miguel-T80c/Archie_MiSTer/tree/Joy_DB9MD
+
+Amiga Minimig-AGA
+https://github.com/Miguel-T80c/Minimig-AGA_MiSTer/tree/Joy_DB9MD
+
+Amstrad
+https://github.com/Miguel-T80c/Amstrad_MiSTer/tree/Joy_DB9MD
+
+Atari 800
+https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
+
+Commodore 64
+https://github.com/Miguel-T80c/C64_MiSTer/tree/Joy_DB9MD
+
+MSX
+https://github.com/Miguel-T80c/MSX_MiSTer/tree/Joy_DB9MD
+
+Oric
+https://github.com/Miguel-T80c/Oric_MiSTer/tree/Joy_DB9MD
+
+ZX Spectrum
+https://github.com/Miguel-T80c/ZX-Spectrum_MISTer/tree/Joy_DB9MD
+
 -------
 CONSOLE
 -------
@@ -151,27 +178,3 @@ https://github.com/Miguel-T80c/TurboGrafx16_MiSTer/tree/Joy_DB9MD
 
 Vectrex
 https://github.com/Miguel-T80c/Vectrex_MiSTer/tree/Joy_DB9MD
-
---------
-COMPUTER
---------
-Acorn Archimedes
-https://github.com/Miguel-T80c/Archie_MiSTer/tree/Joy_DB9MD
-
-Amiga Minimig-AGA
-https://github.com/Miguel-T80c/Minimig-AGA_MiSTer/tree/Joy_DB9MD
-
-Amstrad
-https://github.com/Miguel-T80c/Amstrad_MiSTer/tree/Joy_DB9MD
-
-Atari 800
-https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
-
-Commodore 64
-https://github.com/Miguel-T80c/C64_MiSTer/tree/Joy_DB9MD
-
-MSX
-https://github.com/Miguel-T80c/MSX_MiSTer/tree/Joy_DB9MD
-
-ZX Spectrum
-https://github.com/Miguel-T80c/ZX-Spectrum_MISTer/tree/Joy_DB9MD
