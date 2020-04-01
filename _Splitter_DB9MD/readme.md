@@ -17,6 +17,9 @@ https://github.com/Miguel-T80c/Menu_MiSTer/tree/Joy_DB9MD
 ------
 ARCADE
 ------
+Arkanoid
+https://github.com/Miguel-T80c/Arcade-Arkanoid_MISTer/tree/Joy_DB9MD
+
 AtariTetris
 https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris/tree/Joy_DB9MD
 
