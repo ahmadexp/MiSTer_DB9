@@ -144,7 +144,7 @@ https://github.com/Miguel-T80c/ZX-Spectrum_MISTer/tree/Joy_DB9MD
 CONSOLE
 -------
 Atari 2600
-https://github.com/Miguel-T80c/Atari2600_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Atari2600_MiSTer
 
 Atari 5200
 https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
@@ -168,7 +168,7 @@ Nintendo Super NES
 https://github.com/Miguel-T80c/SNES_MiSTer/tree/Joy_DB9MD
 
 Sega Genesis / Mega Drive
-https://github.com/Miguel-T80c/Genesis_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Genesis_MiSTer
 
 Sega Master System and Game Gear
 https://github.com/Miguel-T80c/SMS_MiSTer/tree/Joy_DB9MD
