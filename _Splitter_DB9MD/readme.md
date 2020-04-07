@@ -20,6 +20,9 @@ ARCADE
 Arkanoid
 https://github.com/Miguel-T80c/Arcade-Arkanoid_MISTer/tree/Joy_DB9MD
 
+Astrocade (Multiarcade)
+https://github.com/Miguel-T80c/Arcade-Astrocade_MiSTer.git
+
 AtariTetris
 https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris/tree/Joy_DB9MD
 
@@ -129,7 +132,7 @@ Atari 800
 https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
 
 Commodore 64
-https://github.com/Miguel-T80c/C64_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/C64_MiSTer.git
 
 MSX
 https://github.com/Miguel-T80c/MSX_MiSTer/tree/Joy_DB9MD
@@ -144,7 +147,7 @@ https://github.com/Miguel-T80c/ZX-Spectrum_MISTer/tree/Joy_DB9MD
 CONSOLE
 -------
 Atari 2600
-https://github.com/Miguel-T80c/Atari2600_MiSTer
+https://github.com/Miguel-T80c/Atari2600_MiSTer.git
 
 Atari 5200
 https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
@@ -168,7 +171,7 @@ Nintendo Super NES
 https://github.com/Miguel-T80c/SNES_MiSTer/tree/Joy_DB9MD
 
 Sega Genesis / Mega Drive
-https://github.com/Miguel-T80c/Genesis_MiSTer
+https://github.com/Miguel-T80c/Genesis_MiSTer.git
 
 Sega Master System and Game Gear
 https://github.com/Miguel-T80c/SMS_MiSTer/tree/Joy_DB9MD
