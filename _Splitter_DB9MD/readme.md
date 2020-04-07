@@ -12,136 +12,136 @@ MiSTer
 https://github.com/Miguel-T80c/Main_MiSTer/tree/SNAC_controller_funcionality_in_menu
 
 Menu
-https://github.com/Miguel-T80c/Menu_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Menu_MiSTer.git
 
 ------
 ARCADE
 ------
 Arkanoid
-https://github.com/Miguel-T80c/Arcade-Arkanoid_MISTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Arkanoid_MISTer.git
 
 Astrocade (Multiarcade)
 https://github.com/Miguel-T80c/Arcade-Astrocade_MiSTer.git
 
 AtariTetris
-https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris.git
 
 BlackWidow
-https://github.com/Miguel-T80c/Arcade-BlackWidow_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-BlackWidow_MiSTer.git
 
 Berzerk
-https://github.com/Miguel-T80c/Arcade-Berzerk_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Berzerk_MiSTer.git
 
 Bomb Jack
-https://github.com/Miguel-T80c/Arcade-BombJack_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-BombJack_MiSTer.git
 
 Centipede
-https://github.com/Miguel-T80c/Arcade-Centipede_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Centipede_MiSTer.git
 
 Defender
-https://github.com/Miguel-T80c/Arcade-Defender_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Defender_MiSTer.git
 
 DonkeyKong
-https://github.com/Miguel-T80c/Arcade-DonkeyKong_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-DonkeyKong_MiSTer.git
 
 Galaga
-https://github.com/Miguel-T80c/Arcade-Galaga_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Galaga_MiSTer.git
 
 Galaxian (multiarcade)
-https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer.git
 
 Gaplus
-https://github.com/Miguel-T80c/MiSTer-Arcade-Gaplus/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/MiSTer-Arcade-Gaplus.git
 
 Gyruss
-https://github.com/Miguel-T80c/MiSTer-Arcade-Gyruss/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/MiSTer-Arcade-Gyruss.git
 
 MCR1 (multiarcade)
-https://github.com/Miguel-T80c/Arcade-MCR1_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-MCR1_MiSTer.git
 
 MCR2 (multiarcade)
-https://github.com/Miguel-T80c/Arcade-MCR2_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-MCR2_MiSTer.git
 
 MCR3 (multiarcade)
-https://github.com/Miguel-T80c/Arcade-MCR3_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-MCR3_MiSTer.git
 
 MCR3Mono (multiarcade)
-https://github.com/Miguel-T80c/Arcade-MCR3Mono_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-MCR3Mono_MiSTer.git
 
 MCR3Scroll (multiarcade)
-https://github.com/Miguel-T80c/Arcade-MCR3Scroll_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-MCR3Scroll_MiSTer.git
 
 Ninja Kun
-https://github.com/Miguel-T80c/MiSTer-Arcade-NinjaKun/tree/JOY_DB9MD
+https://github.com/Miguel-T80c/MiSTer-Arcade-NinjaKun.git
 
 Pacman (multiarcade)
-https://github.com/Miguel-T80c/Arcade-Pacman_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Pacman_MiSTer.git
 
 Popeye
-https://github.com/Miguel-T80c/Arcade-Popeye_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Popeye_MiSTer.git
 
 Rally X
-https://github.com/Miguel-T80c/MiSTer-Arcade-RallyX/tree/JOY_DB9MD
+https://github.com/Miguel-T80c/MiSTer-Arcade-RallyX.git
 
 Robotron (multiarcade)
-https://github.com/Miguel-T80c/Arcade-Robotron_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Robotron_MiSTer.git
 
 RushnAttack / Green Beret
-https://github.com/Miguel-T80c/Arcade-RushnAttack_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-RushnAttack_MiSTer.git
 
 Rygar
-https://github.com/Miguel-T80c/rygar-fpga/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/rygar-fpga.git
 
 Scramble (multiarcade)
-https://github.com/Miguel-T80c/Arcade-Scramble_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Scramble_MiSTer.git
 
 Sega System 1 (multiarcade)
-https://github.com/Miguel-T80c/MiSTer-Arcade-SegaSYS1/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/MiSTer-Arcade-SegaSYS1.git
 
 Solomon's key
-https://github.com/Miguel-T80c/MiSTer-Arcade-SolomonsKey/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/MiSTer-Arcade-SolomonsKey.git
 
 Sprint1
-https://github.com/Miguel-T80c/Arcade-Sprint1_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Sprint1_MiSTer.git
 
 Sprint2
-https://github.com/Miguel-T80c/Arcade-Sprint2_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Sprint2_MiSTer.git
 
 The Tower of Druaga (multiarcade)
-https://github.com/Miguel-T80c/Arcade-Druaga_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Druaga_MiSTer.git
 
 Ultratank
-https://github.com/Miguel-T80c/Arcade-Ultratank_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Arcade-Ultratank_MiSTer.git
 
 Xevious
-https://github.com/Miguel-T80c/Arcade-Xevious_MiSTer/tree/JOY_DB9MD
+https://github.com/Miguel-T80c/Arcade-Xevious_MiSTer.git
 
 --------
 COMPUTER
 --------
 Acorn Archimedes
-https://github.com/Miguel-T80c/Archie_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Archie_MiSTer.git
 
 Amiga Minimig-AGA
-https://github.com/Miguel-T80c/Minimig-AGA_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Minimig-AGA_MiSTer.git
 
 Amstrad
-https://github.com/Miguel-T80c/Amstrad_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Amstrad_MiSTer.git
 
 Atari 800
-https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Atari800_MiSTer.git
 
 Commodore 64
 https://github.com/Miguel-T80c/C64_MiSTer.git
 
 MSX
-https://github.com/Miguel-T80c/MSX_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/MSX_MiSTer.git
 
 Oric
-https://github.com/Miguel-T80c/Oric_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Oric_MiSTer.git
 
 ZX Spectrum
-https://github.com/Miguel-T80c/ZX-Spectrum_MISTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/ZX-Spectrum_MISTer.git
 
 -------
 CONSOLE
@@ -150,37 +150,37 @@ Atari 2600
 https://github.com/Miguel-T80c/Atari2600_MiSTer.git
 
 Atari 5200
-https://github.com/Miguel-T80c/Atari800_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Atari800_MiSTer.git
 
 ColecoVision
-https://github.com/Miguel-T80c/ColecoVision_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/ColecoVision_MiSTer.git
 
 NeoGeo
-https://github.com/Miguel-T80c/NeoGeo_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/NeoGeo_MiSTer.git
 
 Nintendo Gameboy
-https://github.com/Miguel-T80c/Gameboy_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Gameboy_MiSTer.git
 
 Nintendo Gameboy Advance
-https://github.com/Miguel-T80c/GBA_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/GBA_MiSTer.git
 
 Nintendo NES
-https://github.com/Miguel-T80c/NES_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/NES_MiSTer.git
 
 Nintendo Super NES
-https://github.com/Miguel-T80c/SNES_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/SNES_MiSTer.git
 
 Sega Genesis / Mega Drive
 https://github.com/Miguel-T80c/Genesis_MiSTer.git
 
 Sega Master System and Game Gear
-https://github.com/Miguel-T80c/SMS_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/SMS_MiSTer.git
 
 Sega MegaCD
-https://github.com/Miguel-T80c/MegaCD_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/MegaCD_MiSTer.git
 
 TurboGrafx16
-https://github.com/Miguel-T80c/TurboGrafx16_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/TurboGrafx16_MiSTer.git
 
 Vectrex
-https://github.com/Miguel-T80c/Vectrex_MiSTer/tree/Joy_DB9MD
+https://github.com/Miguel-T80c/Vectrex_MiSTer.git
