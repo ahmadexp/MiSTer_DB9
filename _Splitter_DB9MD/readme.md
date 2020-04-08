@@ -140,6 +140,9 @@ https://github.com/Miguel-T80c/MSX_MiSTer.git
 Oric
 https://github.com/Miguel-T80c/Oric_MiSTer.git
 
+TSConf
+https://github.com/Miguel-T80c/TSConf_MiSTer.git
+
 ZX Spectrum
 https://github.com/Miguel-T80c/ZX-Spectrum_MISTer.git
 
