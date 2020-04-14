@@ -17,7 +17,6 @@ Menu
 https://github.com/Miguel-T80c/Menu_MiSTer.git
 
 Updater script
-------------
 https://github.com/theypsilon/Updater_script_MiSTer_DB9.git
 
 ------
