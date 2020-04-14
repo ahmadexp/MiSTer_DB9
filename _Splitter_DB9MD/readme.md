@@ -6,6 +6,8 @@ It is also possible to control the main menu and the core menu with the Genesis/
 
 To access the OSD menu with the DB9 joystick press buttons Start + C.
 
+The updater script must replace the current one in /scripts/ Update and will download the official versions of all cores in the same way except when there is a newer DB9 version, in this case it will download the DB9 version. The first time this script is launched it will be slower because it will do a general update.
+
 SOURCES:
 
 MiSTer
@@ -13,6 +15,10 @@ https://github.com/Miguel-T80c/Main_MiSTer/tree/SNAC_controller_funcionality_in_
 
 Menu
 https://github.com/Miguel-T80c/Menu_MiSTer.git
+
+Updater script
+------------
+https://github.com/theypsilon/Updater_script_MiSTer_DB9.git
 
 ------
 ARCADE
