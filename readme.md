@@ -13,9 +13,7 @@
 
 9 TX+ is AF17 on SNAC+, with regular SNAC is 3.3V
 
-![SNES](photos/snes.jpg?raw=true "SNES")
-![NeoGeo](photos/neogeo.jpg?raw=true "NeoGeo")
-![Genesis](photos/genesis.jpg?raw=true "Genesis")
+![splitters](photos/splitters.jpg?raw=true "splitters")
 
 | Genesis | SNES Option 1
 | ------- | ------------
