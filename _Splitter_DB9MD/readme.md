@@ -6,7 +6,7 @@ It is also possible to control the main menu and the core menu with the Genesis/
 
 To access the OSD menu with the DB9 joystick press buttons Start + C.
 
-The updater script must replace the current one in /scripts/ Update and will download the official versions of all cores in the same way except when there is a newer DB9 version, in this case it will download the DB9 version. The first time this script is launched it will be slower because it will do a general update.
+The updater script must replace the current one in /scripts/ Update and will download the official versions of all cores in the same way except when there is a newer DB9 version, in this case it will download the DB9 version. The first time this script is launched it will be slower because it will do a general update. The arcade cores: Rygar, Sega System 1, Gyruss and all of Jotego must still be manually updated from this repository.
 
 SOURCES:
 
