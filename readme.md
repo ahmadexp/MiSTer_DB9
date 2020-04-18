@@ -126,8 +126,7 @@
 | X       | Button 4
 | Y       | Button 5
 | Z       | Button 6
-| START+A | 
-| START+B | COIN1
-| START+C | OSD
 | START   | START
-| MODE    | COIN2
+| MODE    | COIN
+| START+B | 
+| START+C | OSD
