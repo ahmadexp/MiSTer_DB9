@@ -126,5 +126,5 @@
 | Z       | Button 6
 | START   | START
 | MODE    | COIN
-| START+B | 
+| START+B | COIN
 | START+C | OSD
