@@ -1,12 +1,17 @@
-Adapted MiSTer FPGA cores to the DB9 original Mega Drive/Genesis joysticks.
+Adapted MiSTer FPGA cores to the DB9 and DB15 joysticks.
 
-You have to activate from the menu of each core the option: Serial SNAC DB9MD to 1 or 2 players, because by default it is off.
+A new option has been added in the main menu of this core called "UserIO Joystick" to activate joysticks 
+Mega Drive/Genesis (DB9MD) or Neo-Geo/Supergun (DB15). This feature is disabled by default, therefore you
+must enter the menu for the first time to activate it and save.
 
-It is also possible to control the main menu and the core menu with the Genesis/Mega Drive joystick, for this it is necessary to change menu.rbf and MiSTer from the root of the SD for those found here.
+For total control from the UserIO Joysticks (also the OSD menu) is necessary to update the files 
+MiSTer and menu.rbf from the root of the SD card. You can get this files also right here. 
 
-To access the OSD menu with the DB9 joystick press buttons Start + C.
+Menu controls buttons:  Start+C-> Show OSD menu  |  A-> Enter  |  B-> Esc
 
-The updater script must replace the current one in /scripts/ Update and will download the official versions of all cores in the same way except when there is a newer DB9 version, in this case it will download the DB9 version. The first time this script is launched it will be slower because it will do a general update. It is advised to install this script to download the always the latest cores.The arcade cores: Rygar, Sega System 1, Gyruss and all of Jotego must still be manually updated from this repository.
+The cores of this fork are updated at the same rate as the official ones, adding this new feature, therefore, they are fully compatible with these.
+
+The updater script file update.sh must replace the current one in /scripts/ Update and will download the official versions of all cores in the same way except when there is a DB9 version, in this case it will download the DB9 version. The first time this script is launched it will be slower because it will do a general update. It is advised to install this script to download the always the latest cores.The arcade cores: Rygar, Sega System 1, Gyruss and all of Jotego must still be manually updated from this repository.
 
 SOURCES:
 
