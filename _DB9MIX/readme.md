@@ -41,7 +41,7 @@ Astrocade (Multiarcade)
 https://github.com/Miguel-T80c/Arcade-Astrocade_MiSTer.git
 
 AtariTetris
-https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris.git
+https://github.com/Miguel-T80c/Arcade-ATetris_MiSTer.git
 
 BlackWidow
 https://github.com/Miguel-T80c/Arcade-BlackWidow_MiSTer.git
