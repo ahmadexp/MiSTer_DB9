@@ -1,32 +1,32 @@
 Cores adaptados para los Splitters DB9/DB15 de mandos Mega Drive/NeoGeo de Antonio Villena por Aitor Pelaez (NeuroRulez).
 
-Se ha agregado una nueva opción en el menú principal de cada núcleo llamada "UserIO Joystick" para activar los joysticks
+Se ha agregado una nueva opción en el menú principal de cada core llamada "UserIO Joystick" para activar los joysticks
 Mega Drive / Genesis (DB9MD) o Neo-Geo / Supergun (DB15). Esta opción está deshabilitada de forma predeterminada, 
-por lo tanto, se debe acceder al menú por primera vez para activarla y guardar los cambios.
+por lo tanto, se debe acceder al menú osd (F12) por primera vez para activarla y guardar los cambios.
 
-Para controlar también el menú OSD del core y el general, es necesario actualizar los archivos MiSTer y menu.rbf del raíz 
+Para controlar tanto el menú OSD del core como y el general, es necesario actualizar los archivos MiSTer y menu.rbf del raíz 
 de la tarjeta SD. Puedes obtener estos archivos también aquí.
 
 Control de los menús: Start + C-> Mostrar menú OSD  |  A-> Entrar  |  B-> Esc
 
-El script de actualización update.sh debe reemplazar el actual en /scripts/Update y descargará las versiones oficiales de todos
-los núcleos de la misma manera que el original, excepto cuando haya una versión DB9, en este caso descargará la versión DB9.
-Los núcleos arcade: Rygar, Sega System 1 y Gyruss aun deben actualizarse manualmente desde este repositorio.
+El script de actualización update.sh debe ser reempladp por el actual en /scripts/Update y descargará las versiones oficiales de
+todos los cores de la misma manera que el original, excepto cuando haya una versión DB9, en este caso descargará la versión DB9.
+Los arcades: Rygar, Sega System 1 y Gyruss aún deben actualizarse manualmente.
 
 Los cores de este Fork se actualizan al mismo ritmo que los oficiales, agregando esta nueva característica, por lo tanto, 
 son totalmente compatibles con estos.
 
 Gracias a Miguel-T80c por aplicar las modificaciones y adaptaciones en los cores, así como el mantenimiento del Fork,
 a Fernando Mosquera por adaptar el Main del Mister para manejar el OSD desde los mando DB9MD/DB15 y tambien a
-José Manuel Barroso por el desarrollo de la integración y entrega continua CI/CD y el de script de actrualización.
+José Manuel Barroso por el desarrollo de la integración y entrega continua CI/CD y el del script de actrualización.
 
-Los fuentes del Fork estan en los siguientes repositorios:
+Los fuentes del Fork se pueden encontrar en los siguientes repositorios:
 
 MiSTer
 https://github.com/Miguel-T80c/Main_MiSTer.git
 
 Menu
-https://github.com/Miguel-T80c/Menu_MiSTer.git
+https://github.com/neurorulez/Menu_MiSTer/tree/Joy_DB9MIX
 
 Updater script
 https://github.com/theypsilon/Updater_script_MiSTer_DB9.git
