@@ -1,5 +1,9 @@
 Cores adaptados para los Splitters DB9/DB15 de mandos Mega Drive/NeoGeo de Antonio Villena por Aitor Pelaez (NeuroRulez).
 
+Se ha agregado una nueva opción en el menú principal de cada núcleo llamada "UserIO Joystick" para activar los joysticks
+Mega Drive / Genesis (DB9MD) o Neo-Geo / Supergun (DB15). Esta opción está deshabilitada de forma predeterminada, 
+por lo tanto, se debe acceder al menú por primera vez para activarla y guardar los cambios.
+
 Para controlar también el menú OSD del core y el general, es necesario actualizar los archivos MiSTer y menu.rbf del raíz 
 de la tarjeta SD. Puedes obtener estos archivos también aquí.
 
