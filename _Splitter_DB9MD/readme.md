@@ -16,7 +16,7 @@ The updater script file update.sh must replace the current one in /scripts/ Upda
 SOURCES:
 
 MiSTer
-https://github.com/Miguel-T80c/Main_MiSTer/tree/SNAC_controller_funcionality_in_menu
+https://github.com/Miguel-T80c/Main_MiSTer.git
 
 Menu
 https://github.com/Miguel-T80c/Menu_MiSTer.git

@@ -1,19 +1,202 @@
-Cores adaptados para el Splitter DB15 y DB9 de Megadrive de Antonio Villena por Aitor Pelaez (NeuroRulez)
-Los fuentes estan en los siguientes Forks (Siempre en la rama "Joy_DB9MIX"):
+Cores adaptados para los Splitters DB9/DB15 de mandos Mega Drive/NeoGeo de Antonio Villena por Aitor Pelaez (NeuroRulez).
 
-Gracias en especial a Miguel T80c por aplicar las modificaciones de DB9MD a los cores.
-Gracias a Fernando Mosquera por adaptar el Main del Mister para manejar el OSD desde el mando DB15 o DB9 Megadrive
+Para controlar también el menú OSD del core y el general, es necesario actualizar los archivos MiSTer y menu.rbf del raíz 
+de la tarjeta SD. Puedes obtener estos archivos también aquí.
 
-Main (rama: USERIO_OSD)
-https://github.com/neurorulez/Main_MiSTer.git 
+Control de los menús: Start + C-> Mostrar menú OSD  |  A-> Entrar  |  B-> Esc
+
+El script de actualización update.sh debe reemplazar el actual en /scripts/Update y descargará las versiones oficiales de todos
+los núcleos de la misma manera que el original, excepto cuando haya una versión DB9, en este caso descargará la versión DB9.
+Los núcleos arcade: Rygar, Sega System 1 y Gyruss aun deben actualizarse manualmente desde este repositorio.
+
+Los cores de este Fork se actualizan al mismo ritmo que los oficiales, agregando esta nueva característica, por lo tanto, 
+son totalmente compatibles con estos.
+
+Gracias a Miguel-T80c por aplicar las modificaciones y adaptaciones en los cores, así como el mantenimiento del Fork,
+a Fernando Mosquera por adaptar el Main del Mister para manejar el OSD desde los mando DB9MD/DB15 y tambien a
+José Manuel Barroso por el desarrollo de la integración y entrega continua CI/CD y el de script de actrualización.
+
+Los fuentes del Fork estan en los siguientes repositorios:
+
+MiSTer
+https://github.com/Miguel-T80c/Main_MiSTer.git
 
 Menu
-https://github.com/neurorulez/Menu_MiSTer
+https://github.com/Miguel-T80c/Menu_MiSTer.git
 
-----------
--CONSOLAS-
-----------
+Updater script
+https://github.com/theypsilon/Updater_script_MiSTer_DB9.git
 
----------
--ARCADES-
----------
+------
+ARCADE
+------
+Arkanoid
+https://github.com/Miguel-T80c/Arcade-Arkanoid_MISTer.git
+
+Astrocade (Multiarcade)
+https://github.com/Miguel-T80c/Arcade-Astrocade_MiSTer.git
+
+AtariTetris
+https://github.com/Miguel-T80c/MiSTer-Arcade-AtariTetris.git
+
+BlackWidow
+https://github.com/Miguel-T80c/Arcade-BlackWidow_MiSTer.git
+
+Berzerk
+https://github.com/Miguel-T80c/Arcade-Berzerk_MiSTer.git
+
+Bomb Jack
+https://github.com/Miguel-T80c/Arcade-BombJack_MiSTer.git
+
+Centipede
+https://github.com/Miguel-T80c/Arcade-Centipede_MiSTer.git
+
+Defender
+https://github.com/Miguel-T80c/Arcade-Defender_MiSTer.git
+
+DonkeyKong
+https://github.com/Miguel-T80c/Arcade-DonkeyKong_MiSTer.git
+
+Galaga
+https://github.com/Miguel-T80c/Arcade-Galaga_MiSTer.git
+
+Galaxian (multiarcade)
+https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer.git
+
+Gaplus
+https://github.com/Miguel-T80c/MiSTer-Arcade-Gaplus.git
+
+Gyruss
+https://github.com/Miguel-T80c/MiSTer-Arcade-Gyruss.git
+
+MCR1 (multiarcade)
+https://github.com/Miguel-T80c/Arcade-MCR1_MiSTer.git
+
+MCR2 (multiarcade)
+https://github.com/Miguel-T80c/Arcade-MCR2_MiSTer.git
+
+MCR3 (multiarcade)
+https://github.com/Miguel-T80c/Arcade-MCR3_MiSTer.git
+
+MCR3Mono (multiarcade)
+https://github.com/Miguel-T80c/Arcade-MCR3Mono_MiSTer.git
+
+MCR3Scroll (multiarcade)
+https://github.com/Miguel-T80c/Arcade-MCR3Scroll_MiSTer.git
+
+Ninja Kun
+https://github.com/Miguel-T80c/MiSTer-Arcade-NinjaKun.git
+
+Pacman (multiarcade)
+https://github.com/Miguel-T80c/Arcade-Pacman_MiSTer.git
+
+Popeye
+https://github.com/Miguel-T80c/Arcade-Popeye_MiSTer.git
+
+Rally X
+https://github.com/Miguel-T80c/MiSTer-Arcade-RallyX.git
+
+Robotron (multiarcade)
+https://github.com/Miguel-T80c/Arcade-Robotron_MiSTer.git
+
+RushnAttack / Green Beret
+https://github.com/Miguel-T80c/Arcade-RushnAttack_MiSTer.git
+
+Rygar
+https://github.com/Miguel-T80c/rygar-fpga.git
+
+Scramble (multiarcade)
+https://github.com/Miguel-T80c/Arcade-Scramble_MiSTer.git
+
+Sega System 1 (multiarcade)
+https://github.com/Miguel-T80c/MiSTer-Arcade-SegaSYS1.git
+
+Solomon's key
+https://github.com/Miguel-T80c/MiSTer-Arcade-SolomonsKey.git
+
+Sprint1
+https://github.com/Miguel-T80c/Arcade-Sprint1_MiSTer.git
+
+Sprint2
+https://github.com/Miguel-T80c/Arcade-Sprint2_MiSTer.git
+
+The Tower of Druaga (multiarcade)
+https://github.com/Miguel-T80c/Arcade-Druaga_MiSTer.git
+
+Ultratank
+https://github.com/neurorulez/Arcade-Ultratank_MiSTer/tree/Joy_DB9MIX
+
+Xevious
+https://github.com/Miguel-T80c/Arcade-Xevious_MiSTer.git
+
+--------
+COMPUTER
+--------
+Acorn Archimedes
+https://github.com/Miguel-T80c/Archie_MiSTer.git
+
+Amiga Minimig-AGA
+https://github.com/Miguel-T80c/Minimig-AGA_MiSTer.git
+
+Amstrad
+https://github.com/Miguel-T80c/Amstrad_MiSTer.git
+
+Atari 800
+https://github.com/Miguel-T80c/Atari800_MiSTer.git
+
+Commodore 64
+https://github.com/Miguel-T80c/C64_MiSTer.git
+
+MSX
+https://github.com/Miguel-T80c/MSX_MiSTer.git
+
+Oric
+https://github.com/Miguel-T80c/Oric_MiSTer.git
+
+TSConf
+https://github.com/Miguel-T80c/TSConf_MiSTer.git
+
+ZX Spectrum
+https://github.com/Miguel-T80c/ZX-Spectrum_MISTer.git
+
+-------
+CONSOLE
+-------
+Atari 2600
+https://github.com/Miguel-T80c/Atari2600_MiSTer.git
+
+Atari 5200
+https://github.com/Miguel-T80c/Atari800_MiSTer.git
+
+ColecoVision
+https://github.com/Miguel-T80c/ColecoVision_MiSTer.git
+
+NeoGeo
+https://github.com/Miguel-T80c/NeoGeo_MiSTer.git
+
+Nintendo Gameboy
+https://github.com/Miguel-T80c/Gameboy_MiSTer.git
+
+Nintendo Gameboy Advance
+https://github.com/Miguel-T80c/GBA_MiSTer.git
+
+Nintendo NES
+https://github.com/neurorulez/NES_MiSTer/tree/Joy_DB9MIX
+
+Nintendo Super NES
+https://github.com/neurorulez/SNES_MiSTer/tree/Joy_DB9MIX
+
+Sega Genesis / Mega Drive
+https://github.com/Miguel-T80c/Genesis_MiSTer.git
+
+Sega Master System and Game Gear
+https://github.com/Miguel-T80c/SMS_MiSTer.git
+
+Sega MegaCD
+https://github.com/Miguel-T80c/MegaCD_MiSTer.git
+
+TurboGrafx16
+https://github.com/Miguel-T80c/TurboGrafx16_MiSTer.git
+
+Vectrex
+https://github.com/Miguel-T80c/Vectrex_MiSTer.git
