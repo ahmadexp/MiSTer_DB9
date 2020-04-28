@@ -68,7 +68,7 @@ Galaxian (multiarcade)
 https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer.git
 
 Gaplus
-https://github.com/Miguel-T80c/MiSTer-Arcade-Gaplus.git
+https://github.com/Miguel-T80c/Arcade-Gaplus_MiSTer.git
 
 Gyruss
 https://github.com/Miguel-T80c/MiSTer-Arcade-Gyruss.git
@@ -89,7 +89,7 @@ MCR3Scroll (multiarcade)
 https://github.com/Miguel-T80c/Arcade-MCR3Scroll_MiSTer.git
 
 Ninja Kun
-https://github.com/Miguel-T80c/MiSTer-Arcade-NinjaKun.git
+https://github.com/Miguel-T80c/Arcade-NinjaKun_MiSTer.git
 
 Pacman (multiarcade)
 https://github.com/Miguel-T80c/Arcade-Pacman_MiSTer.git
@@ -98,7 +98,7 @@ Popeye
 https://github.com/Miguel-T80c/Arcade-Popeye_MiSTer.git
 
 Rally X
-https://github.com/Miguel-T80c/MiSTer-Arcade-RallyX.git
+https://github.com/Miguel-T80c/Arcade-RallyX_MiSTer.git
 
 Robotron (multiarcade)
 https://github.com/Miguel-T80c/Arcade-Robotron_MiSTer.git
@@ -116,7 +116,7 @@ Sega System 1 (multiarcade)
 https://github.com/Miguel-T80c/MiSTer-Arcade-SegaSYS1.git
 
 Solomon's key
-https://github.com/Miguel-T80c/MiSTer-Arcade-SolomonsKey.git
+https://github.com/Miguel-T80c/Arcade-SolomonsKey_MiSTer.git
 
 Sprint1
 https://github.com/Miguel-T80c/Arcade-Sprint1_MiSTer.git
@@ -147,6 +147,9 @@ https://github.com/Miguel-T80c/Amstrad_MiSTer.git
 
 Atari 800
 https://github.com/Miguel-T80c/Atari800_MiSTer.git
+
+Atari ST
+https://github.com/Miguel-T80c/AtariST_MiSTer.git
 
 Commodore 64
 https://github.com/Miguel-T80c/C64_MiSTer.git
