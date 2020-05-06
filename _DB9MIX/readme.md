@@ -37,6 +37,12 @@ ARCADE
 Arkanoid
 https://github.com/Miguel-T80c/Arcade-Arkanoid_MISTer.git
 
+Asteroids
+https://github.com/Miguel-T80c/Arcade-Asteroids_MiSTer.git
+
+AsteroidsDeluxe
+https://github.com/Miguel-T80c/Arcade-AsteroidsDeluxe_Mister.git
+
 Astrocade (Multiarcade)
 https://github.com/Miguel-T80c/Arcade-Astrocade_MiSTer.git
 
@@ -57,6 +63,9 @@ https://github.com/Miguel-T80c/Arcade-Centipede_MiSTer.git
 
 Defender
 https://github.com/Miguel-T80c/Arcade-Defender_MiSTer.git
+
+DigDug
+https://github.com/Miguel-T80c/Arcade-DigDug_MiSTer.git
 
 DonkeyKong
 https://github.com/Miguel-T80c/Arcade-DonkeyKong_MiSTer.git
@@ -89,7 +98,7 @@ MCR3Scroll (multiarcade)
 https://github.com/Miguel-T80c/Arcade-MCR3Scroll_MiSTer.git
 
 Ninja Kun
-https://github.com/Miguel-T80c/Arcade-NinjaKun_MiSTer.git
+https://github.com/MiSTer-devel/Arcade-NinjaKun_MiSTer.git
 
 Pacman (multiarcade)
 https://github.com/Miguel-T80c/Arcade-Pacman_MiSTer.git
@@ -128,10 +137,13 @@ The Tower of Druaga (multiarcade)
 https://github.com/Miguel-T80c/Arcade-Druaga_MiSTer.git
 
 Ultratank
-https://github.com/neurorulez/Arcade-Ultratank_MiSTer/tree/Joy_DB9MIX
+https://github.com/Miguel-T80c/Arcade-Ultratank_MiSTer.git
 
 Xevious
 https://github.com/Miguel-T80c/Arcade-Xevious_MiSTer.git
+
+Zaxxon
+https://github.com/Miguel-T80c/Arcade-Zaxxon_MiSTer.git
 
 --------
 COMPUTER
