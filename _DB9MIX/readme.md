@@ -26,7 +26,7 @@ MiSTer
 https://github.com/Miguel-T80c/Main_MiSTer.git
 
 Menu
-https://github.com/neurorulez/Menu_MiSTer/tree/Joy_DB9MIX
+https://github.com/Miguel-T80c/Menu_MiSTer.git
 
 Updater script
 https://github.com/theypsilon/Updater_script_MiSTer_DB9.git
@@ -34,137 +34,227 @@ https://github.com/theypsilon/Updater_script_MiSTer_DB9.git
 ------
 ARCADE
 ------
-Arkanoid
+Arcade-Arkanoid
 https://github.com/Miguel-T80c/Arcade-Arkanoid_MISTer.git
 
-Asteroids
+Arcade-Asteroids
 https://github.com/Miguel-T80c/Arcade-Asteroids_MiSTer.git
 
-AsteroidsDeluxe
+Arcade-AsteroidsDeluxe
 https://github.com/Miguel-T80c/Arcade-AsteroidsDeluxe_Mister.git
 
-Astrocade (Multiarcade)
+Arcade-Astrocade
 https://github.com/Miguel-T80c/Arcade-Astrocade_MiSTer.git
 
-AtariTetris
+Arcade-AtariTetris
 https://github.com/Miguel-T80c/Arcade-ATetris_MiSTer.git
 
-BlackWidow
-https://github.com/Miguel-T80c/Arcade-BlackWidow_MiSTer.git
+Arcade-Bagman
+https://github.com/Miguel-T80c/Arcade-Bagman_MiSTer.git
 
-Berzerk
+Arcade-Berzerk
 https://github.com/Miguel-T80c/Arcade-Berzerk_MiSTer.git
 
-Bomb Jack
+Arcade-BlackWidow
+https://github.com/Miguel-T80c/Arcade-BlackWidow_MiSTer.git
+
+Arcade-BombJack
 https://github.com/Miguel-T80c/Arcade-BombJack_MiSTer.git
 
-Centipede
+Arcade-BurgerTime
+https://github.com/Miguel-T80c/Arcade-BurgerTime_MiSTer.git
+
+Arcade-BurningRubber
+https://github.com/Miguel-T80c/Arcade-BurningRubber_MiSTer.git
+
+Arcade-CanyonBomber
+https://github.com/Miguel-T80c/Arcade-CanyonBomber_MiSTer.git
+
+Arcade-Centipede
 https://github.com/Miguel-T80c/Arcade-Centipede_MiSTer.git
 
-Defender
+Arcade-ComputerSpace
+https://github.com/Miguel-T80c/Arcade-ComputerSpace_MiSTer.git
+
+Arcade-CosmicAvenger
+https://github.com/Miguel-T80c/Arcade-CosmicAvenger_Mister.git
+
+Arcade-CrazyClimber
+https://github.com/Miguel-T80c/Arcade-CrazyClimber_Mister.git
+
+Arcade-CrazyKong
+https://github.com/Miguel-T80c/Arcade-CrazyKong_Mister.git
+
+Arcade-Defender
 https://github.com/Miguel-T80c/Arcade-Defender_MiSTer.git
 
-DigDug
+Arcade-DigDug
 https://github.com/Miguel-T80c/Arcade-DigDug_MiSTer.git
 
-DonkeyKong
+Arcade-Dominos
+https://github.com/Miguel-T80c/Arcade-Dominos_Mister.git
+
+Arcade-DonkeyKong
 https://github.com/Miguel-T80c/Arcade-DonkeyKong_MiSTer.git
 
-Galaga
-https://github.com/Miguel-T80c/Arcade-Galaga_MiSTer.git
+Arcade-Dorodon
+https://github.com/Miguel-T80c/Arcade-Dorodon_Mister.git
 
-Galaxian (multiarcade)
-https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer.git
-
-Gaplus
-https://github.com/Miguel-T80c/Arcade-Gaplus_MiSTer.git
-
-Gyruss
-https://github.com/Miguel-T80c/MiSTer-Arcade-Gyruss.git
-
-MCR1 (multiarcade)
-https://github.com/Miguel-T80c/Arcade-MCR1_MiSTer.git
-
-MCR2 (multiarcade)
-https://github.com/Miguel-T80c/Arcade-MCR2_MiSTer.git
-
-MCR3 (multiarcade)
-https://github.com/Miguel-T80c/Arcade-MCR3_MiSTer.git
-
-MCR3Mono (multiarcade)
-https://github.com/Miguel-T80c/Arcade-MCR3Mono_MiSTer.git
-
-MCR3Scroll (multiarcade)
-https://github.com/Miguel-T80c/Arcade-MCR3Scroll_MiSTer.git
-
-Ninja Kun
-https://github.com/MiSTer-devel/Arcade-NinjaKun_MiSTer.git
-
-Pacman (multiarcade)
-https://github.com/Miguel-T80c/Arcade-Pacman_MiSTer.git
-
-Popeye
-https://github.com/Miguel-T80c/Arcade-Popeye_MiSTer.git
-
-Rally X
-https://github.com/Miguel-T80c/Arcade-RallyX_MiSTer.git
-
-Robotron (multiarcade)
-https://github.com/Miguel-T80c/Arcade-Robotron_MiSTer.git
-
-RushnAttack / Green Beret
-https://github.com/Miguel-T80c/Arcade-RushnAttack_MiSTer.git
-
-Rygar
-https://github.com/Miguel-T80c/rygar-fpga.git
-
-Scramble (multiarcade)
-https://github.com/Miguel-T80c/Arcade-Scramble_MiSTer.git
-
-Sega System 1 (multiarcade)
-https://github.com/Miguel-T80c/MiSTer-Arcade-SegaSYS1.git
-
-Solomon's key
-https://github.com/Miguel-T80c/Arcade-SolomonsKey_MiSTer.git
-
-Sprint1
-https://github.com/Miguel-T80c/Arcade-Sprint1_MiSTer.git
-
-Sprint2
-https://github.com/Miguel-T80c/Arcade-Sprint2_MiSTer.git
-
-The Tower of Druaga (multiarcade)
+Arcade-Druaga
 https://github.com/Miguel-T80c/Arcade-Druaga_MiSTer.git
 
-Ultratank
+Arcade-FoodFight
+https://github.com/Miguel-T80c/Arcade-FoodFight_Mister.git
+
+Arcade-Frenzy
+https://github.com/Miguel-T80c/Arcade-Frenzy_Mister.git
+
+Arcade-Galaga
+https://github.com/Miguel-T80c/Arcade-Galaga_MiSTer.git
+
+Arcade-Galaxian
+https://github.com/Miguel-T80c/Arcade-Galaxian_MiSTer.git
+
+Arcade-Gaplus
+https://github.com/Miguel-T80c/Arcade-Gaplus_MiSTer.git
+
+Arcade-GnG
+https://github.com/Miguel-T80c/Arcade-GnG_Mister.git
+
+Arcade-Gyruss
+https://github.com/Miguel-T80c/MiSTer-Arcade-Gyruss.git
+
+Arcade-LadyBug
+https://github.com/Miguel-T80c/Arcade-LadyBug_Mister.git
+
+Arcade-LunarLander
+https://github.com/Miguel-T80c/Arcade-LunarLander_Mister.git
+
+Arcade-MCR1
+https://github.com/Miguel-T80c/Arcade-MCR1_MiSTer.git
+
+Arcade-MCR2
+https://github.com/Miguel-T80c/Arcade-MCR2_MiSTer.git
+
+Arcade-MCR3
+https://github.com/Miguel-T80c/Arcade-MCR3_MiSTer.git
+
+Arcade-MCR3Mono
+https://github.com/Miguel-T80c/Arcade-MCR3Mono_MiSTer.git
+
+Arcade-MCR3Scroll
+https://github.com/Miguel-T80c/Arcade-MCR3Scroll_MiSTer.git
+
+Arcade-MoonPatrol
+https://github.com/Miguel-T80c/Arcade-MoonPatrol_Mister.git
+
+Arcade-NinjaKun
+https://github.com/Miguel-T80c/Arcade-NinjaKun_MiSTer.git
+
+Arcade-Pacman
+https://github.com/Miguel-T80c/Arcade-Pacman_MiSTer.git
+
+Arcade-Pengo
+https://github.com/Miguel-T80c/Arcade-Pengo_Mister.git
+
+Arcade-Phoenix
+https://github.com/Miguel-T80c/Arcade-Phoenix_Mister.git
+
+Arcade-Pleiads
+https://github.com/Miguel-T80c/Arcade-Pleiads_Mister.git
+
+Arcade-Pong
+https://github.com/Miguel-T80c/Arcade-Pong_Mister.git
+
+Arcade-Pooyan
+https://github.com/Miguel-T80c/Arcade-Pooyan_Mister.git
+
+Arcade-Popeye
+https://github.com/Miguel-T80c/Arcade-Popeye_MiSTer.git
+
+Arcade-RallyX
+https://github.com/Miguel-T80c/Arcade-RallyX_MiSTer.git
+
+Arcade-RiverPatrol
+https://github.com/Miguel-T80c/Arcade-RiverPatrol_Mister.git
+
+Arcade-Robotron
+https://github.com/Miguel-T80c/Arcade-Robotron_MiSTer.git
+
+Arcade-RshnAtk
+https://github.com/Miguel-T80c/Arcade-RushnAttack_MiSTer.git
+
+Arcade-Scramble
+https://github.com/Miguel-T80c/Arcade-Scramble_MiSTer.git
+
+Arcade-SegaSYS1
+https://github.com/Miguel-T80c/MiSTer-Arcade-SegaSYS1.git
+
+Arcade-SilverLand
+https://github.com/Miguel-T80c/Arcade-SilverLand_Mister.git
+
+Arcade-SnapJack
+https://github.com/Miguel-T80c/Arcade-SnapJack_Mister.git
+
+Arcade-SolomonsKey
+https://github.com/Miguel-T80c/Arcade-SolomonsKey_MiSTer.git
+
+Arcade-Sprint1
+https://github.com/Miguel-T80c/Arcade-Sprint1_MiSTer.git
+
+Arcade-Sprint2
+https://github.com/Miguel-T80c/Arcade-Sprint2_MiSTer.git
+
+Arcade-SuperBreakout
+https://github.com/Miguel-T80c/Arcade-SuperBreakout_Mister.git
+
+Arcade-TimePilot
+https://github.com/Miguel-T80c/Arcade-TimePilot_Mister.git
+
+Arcade-TraverseUSA
+https://github.com/Miguel-T80c/Arcade-TraverseUSA_Mister.git
+
+Arcade-Ultratank
 https://github.com/Miguel-T80c/Arcade-Ultratank_MiSTer.git
 
-Xevious
+Arcade-Xevious
 https://github.com/Miguel-T80c/Arcade-Xevious_MiSTer.git
 
-Zaxxon
+Arcade-Zaxxon
 https://github.com/Miguel-T80c/Arcade-Zaxxon_MiSTer.git
+
+Arcade-ZigZag
+https://github.com/Miguel-T80c/Arcade-ZigZag_Mister.git
+
+rygar
+https://github.com/Miguel-T80c/rygar-fpga.git
 
 --------
 COMPUTER
 --------
-Acorn Archimedes
-https://github.com/Miguel-T80c/Archie_MiSTer.git
-
-Amiga Minimig-AGA
-https://github.com/Miguel-T80c/Minimig-AGA_MiSTer.git
-
 Amstrad
 https://github.com/Miguel-T80c/Amstrad_MiSTer.git
 
-Atari 800
+Archie
+https://github.com/Miguel-T80c/Archie_MiSTer.git
+
+Atari800
 https://github.com/Miguel-T80c/Atari800_MiSTer.git
 
-Atari ST
+AtariST
 https://github.com/Miguel-T80c/AtariST_MiSTer.git
 
-Commodore 64
+C16
+https://github.com/Miguel-T80c/C16_Mister.git
+
+C64
 https://github.com/Miguel-T80c/C64_MiSTer.git
+
+Jupiter
+https://github.com/Miguel-T80c/Jupiter_Mister.git
+
+Minimig
+https://github.com/Miguel-T80c/Minimig-AGA_MiSTer.git
 
 MSX
 https://github.com/Miguel-T80c/MSX_MiSTer.git
@@ -172,47 +262,65 @@ https://github.com/Miguel-T80c/MSX_MiSTer.git
 Oric
 https://github.com/Miguel-T80c/Oric_MiSTer.git
 
+QL
+https://github.com/Miguel-T80c/QL_Mister.git
+
+SAMCoupe
+https://github.com/Miguel-T80c/SAM-Coupe_Mister.git
+
 TSConf
 https://github.com/Miguel-T80c/TSConf_MiSTer.git
 
-ZX Spectrum
+VIC20
+https://github.com/Miguel-T80c/VIC20_Mister.git
+
+ZX-Spectrum
 https://github.com/Miguel-T80c/ZX-Spectrum_MISTer.git
+
+ZX81
+https://github.com/Miguel-T80c/ZX81_Mister.git
 
 -------
 CONSOLE
 -------
-Atari 2600
+Astrocade
+https://github.com/Miguel-T80c/Astrocade_Mister.git
+
+Atari2600
 https://github.com/Miguel-T80c/Atari2600_MiSTer.git
 
-Atari 5200
+Atari5200
 https://github.com/Miguel-T80c/Atari800_MiSTer.git
+
+AY-3-8500
+https://github.com/Miguel-T80c/AY-3-8500-MiSTer.git
 
 ColecoVision
 https://github.com/Miguel-T80c/ColecoVision_MiSTer.git
 
+Gameboy
+https://github.com/Miguel-T80c/Gameboy_MiSTer.git
+
+GBA
+https://github.com/Miguel-T80c/GBA_MiSTer.git
+
+Genesis
+https://github.com/Miguel-T80c/Genesis_MiSTer.git
+
+MegaCD
+https://github.com/Miguel-T80c/MegaCD_MiSTer.git
+
 NeoGeo
 https://github.com/Miguel-T80c/NeoGeo_MiSTer.git
 
-Nintendo Gameboy
-https://github.com/Miguel-T80c/Gameboy_MiSTer.git
+NES
+https://github.com/Miguel-T80c/NES_MiSTer.git
 
-Nintendo Gameboy Advance
-https://github.com/Miguel-T80c/GBA_MiSTer.git
-
-Nintendo NES
-https://github.com/neurorulez/NES_MiSTer/tree/Joy_DB9MIX
-
-Nintendo Super NES
-https://github.com/neurorulez/SNES_MiSTer/tree/Joy_DB9MIX
-
-Sega Genesis / Mega Drive
-https://github.com/Miguel-T80c/Genesis_MiSTer.git
-
-Sega Master System and Game Gear
+SMS
 https://github.com/Miguel-T80c/SMS_MiSTer.git
 
-Sega MegaCD
-https://github.com/Miguel-T80c/MegaCD_MiSTer.git
+SNES
+https://github.com/Miguel-T80c/SNES_MiSTer.git
 
 TurboGrafx16
 https://github.com/Miguel-T80c/TurboGrafx16_MiSTer.git
