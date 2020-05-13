@@ -11,7 +11,7 @@ Control de los menús: Start + C-> Mostrar menú OSD  |  A-> Entrar  |  B-> Esc
 
 El script de actualización update.sh debe ser reempladp por el actual en /scripts/Update y descargará las versiones oficiales de
 todos los cores de la misma manera que el original, excepto cuando haya una versión DB9, en este caso descargará la versión DB9.
-Los arcades: Rygar, Sega System 1 y Gyruss aún deben actualizarse manualmente.
+Los arcades: Sega System 1 y Gyruss aún deben actualizarse manualmente.
 
 Los cores de este Fork se actualizan al mismo ritmo que los oficiales, agregando esta nueva característica, por lo tanto, 
 son totalmente compatibles con estos.
@@ -20,7 +20,7 @@ Gracias a Miguel-T80c por aplicar las modificaciones y adaptaciones en los cores
 a Fernando Mosquera por adaptar el Main del Mister para manejar el OSD desde los mando DB9MD/DB15 y tambien a
 José Manuel Barroso por el desarrollo de la integración y entrega continua CI/CD y el del script de actrualización.
 
-Los fuentes del Fork se pueden encontrar en los siguientes repositorios:
+Los fuentes del Fork actualizadas se pueden encontrar en los siguientes repositorios:
 
 MiSTer
 https://github.com/Miguel-T80c/Main_MiSTer.git
@@ -184,6 +184,9 @@ https://github.com/Miguel-T80c/Arcade-Robotron_MiSTer.git
 Arcade-RshnAtk
 https://github.com/Miguel-T80c/Arcade-RushnAttack_MiSTer.git
 
+Arcade-Rygar
+https://github.com/Miguel-T80c/Arcade-Rygar_MiSTer.git
+
 Arcade-Scramble
 https://github.com/Miguel-T80c/Arcade-Scramble_MiSTer.git
 
@@ -226,14 +229,17 @@ https://github.com/Miguel-T80c/Arcade-Zaxxon_MiSTer.git
 Arcade-ZigZag
 https://github.com/Miguel-T80c/Arcade-ZigZag_Mister.git
 
-rygar
-https://github.com/Miguel-T80c/rygar-fpga.git
-
 --------
 COMPUTER
 --------
 Amstrad
 https://github.com/Miguel-T80c/Amstrad_MiSTer.git
+
+Apple-II
+https://github.com/Miguel-T80c/Apple-II_Mister.git
+
+Aquarius
+https://github.com/Miguel-T80c/Aquarius_Mister.git
 
 Archie
 https://github.com/Miguel-T80c/Archie_MiSTer.git
@@ -244,11 +250,17 @@ https://github.com/Miguel-T80c/Atari800_MiSTer.git
 AtariST
 https://github.com/Miguel-T80c/AtariST_MiSTer.git
 
+BBCMicro
+https://github.com/Miguel-T80c/BBCMicro_Mister.git
+
 C16
 https://github.com/Miguel-T80c/C16_Mister.git
 
 C64
 https://github.com/Miguel-T80c/C64_MiSTer.git
+
+HT1080Z
+https://github.com/Miguel-T80c/HT1080Z_Mister.git
 
 Jupiter
 https://github.com/Miguel-T80c/Jupiter_Mister.git
@@ -268,8 +280,14 @@ https://github.com/Miguel-T80c/QL_Mister.git
 SAMCoupe
 https://github.com/Miguel-T80c/SAM-Coupe_Mister.git
 
+Ti994a
+https://github.com/Miguel-T80c/TI-99_4A_Mister.git
+
 TSConf
 https://github.com/Miguel-T80c/TSConf_MiSTer.git
+
+Vector-06C
+https://github.com/Miguel-T80c/Vector-06C_Mister.git
 
 VIC20
 https://github.com/Miguel-T80c/VIC20_Mister.git
@@ -327,3 +345,12 @@ https://github.com/Miguel-T80c/TurboGrafx16_MiSTer.git
 
 Vectrex
 https://github.com/Miguel-T80c/Vectrex_MiSTer.git
+
+-----
+OTHER
+-----
+Arduboy
+https://github.com/Miguel-T80c/Arduboy_Mister.git
+
+FlappyBird
+https://github.com/Miguel-T80c/FlappyBird_Mister.git
