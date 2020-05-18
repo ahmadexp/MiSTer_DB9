@@ -9,7 +9,7 @@ de la tarjeta SD. Puedes obtener estos archivos también aquí.
 
 Control de los menús: Start + C-> Mostrar menú OSD  |  A-> Entrar  |  B-> Esc
 
-El script de actualización update.sh debe ser reempladp por el actual en /scripts/Update y descargará las versiones oficiales de
+El script de actualización update.sh debe ser reemplazado por el actual en /scripts/Update y descargará las versiones oficiales de
 todos los cores de la misma manera que el original, excepto cuando haya una versión DB9, en este caso descargará la versión DB9.
 Los arcades: Sega System 1 y Gyruss aún deben actualizarse manualmente.
 
@@ -20,7 +20,7 @@ Gracias a Miguel-T80c por aplicar las modificaciones y adaptaciones en los cores
 a Fernando Mosquera por adaptar el Main del Mister para manejar el OSD desde los mando DB9MD/DB15 y tambien a
 José Manuel Barroso por el desarrollo de la integración y entrega continua CI/CD y el del script de actrualización.
 
-Los fuentes del Fork actualizadas se pueden encontrar en los siguientes repositorios:
+Los fuentes actualizados del Fork se encuentran en los siguientes repositorios:
 
 MiSTer
 https://github.com/Miguel-T80c/Main_MiSTer.git
