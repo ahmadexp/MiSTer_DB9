@@ -252,9 +252,6 @@ https://github.com/Miguel-T80c/C16_Mister.git
 C64
 https://github.com/Miguel-T80c/C64_MiSTer.git
 
-HT1080Z
-https://github.com/Miguel-T80c/HT1080Z_Mister.git
-
 Jupiter
 https://github.com/Miguel-T80c/Jupiter_Mister.git
 
@@ -275,6 +272,9 @@ https://github.com/Miguel-T80c/SAM-Coupe_Mister.git
 
 Ti994a
 https://github.com/Miguel-T80c/TI-99_4A_Mister.git
+
+TRS-80
+https://github.com/Miguel-T80c/TRS-80_MiSTer.git
 
 TSConf
 https://github.com/Miguel-T80c/TSConf_MiSTer.git
