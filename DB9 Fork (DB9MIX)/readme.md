@@ -124,6 +124,9 @@ https://github.com/Miguel-T80c/Arcade-GnG_Mister.git
 Arcade-Gyruss
 https://github.com/Miguel-T80c/MiSTer-Arcade-Gyruss.git
 
+Arcade-IremM62
+https://github.com/Miguel-T80c/Arcade-IremM62_MiSTer.git
+
 Arcade-LadyBug
 https://github.com/Miguel-T80c/Arcade-LadyBug_Mister.git
 
