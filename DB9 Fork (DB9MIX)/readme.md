@@ -16,9 +16,9 @@ Los arcades: Sega System 1 y Gyruss aún deben actualizarse manualmente.
 Los cores de este Fork se actualizan al mismo ritmo que los oficiales, agregando esta nueva característica, por lo tanto, 
 son totalmente compatibles con estos.
 
-Gracias a Miguel-T80c por aplicar las modificaciones y adaptaciones en los cores, así como el mantenimiento del Fork,
+Gracias a Miguel-T80c por aplicar las modificaciones y adaptaciones en los cores, así como del mantenimiento del Fork,
 a Fernando Mosquera por adaptar el Main del Mister para manejar el OSD desde los mando DB9MD/DB15 y tambien a
-José Manuel Barroso por el desarrollo de la integración y entrega continua CI/CD y el del script de actrualización.
+José Manuel Barroso por el desarrollo de la integración y entrega continua CI/CD y los scripts de actrualización.
 
 Los fuentes actualizados del Fork se encuentran en los siguientes repositorios:
 
@@ -78,6 +78,9 @@ https://github.com/Miguel-T80c/Arcade-ComputerSpace_MiSTer.git
 
 Arcade-CosmicAvenger
 https://github.com/Miguel-T80c/Arcade-CosmicAvenger_Mister.git
+
+Arcade-CrazyBalloon
+https://github.com/Miguel-T80c/Arcade-CrazyBalloon_MiSTer.git
 
 Arcade-CrazyClimber
 https://github.com/Miguel-T80c/Arcade-CrazyClimber_Mister.git
@@ -187,9 +190,6 @@ https://github.com/Miguel-T80c/Arcade-Robotron_MiSTer.git
 Arcade-RshnAtk
 https://github.com/Miguel-T80c/Arcade-RushnAttack_MiSTer.git
 
-Arcade-Rygar
-https://github.com/Miguel-T80c/Arcade-Rygar_MiSTer.git
-
 Arcade-Scramble
 https://github.com/Miguel-T80c/Arcade-Scramble_MiSTer.git
 
@@ -213,6 +213,9 @@ https://github.com/Miguel-T80c/Arcade-Sprint2_MiSTer.git
 
 Arcade-SuperBreakout
 https://github.com/Miguel-T80c/Arcade-SuperBreakout_Mister.git
+
+Arcade-Tecmo
+https://github.com/Miguel-T80c/Arcade-Tecmo_MiSTer.git
 
 Arcade-TimePilot
 https://github.com/Miguel-T80c/Arcade-TimePilot_Mister.git
