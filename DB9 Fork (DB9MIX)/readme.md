@@ -18,7 +18,8 @@ son totalmente compatibles con estos.
 
 Gracias a Miguel-T80c por aplicar las modificaciones y adaptaciones en los cores, así como del mantenimiento del Fork,
 a Fernando Mosquera por adaptar el Main del Mister para manejar el OSD desde los mando DB9MD/DB15 y tambien a
-José Manuel Barroso por el desarrollo de la integración y entrega continua CI/CD y los scripts de actrualización.
+José Manuel Barroso por el desarrollo de la integración y entrega continuas (CI/CD=, por el de los scripts de actualización así
+como por la integración en el Main de las opciones de menús DB9 de algunos cores.
 
 Los cores que contiene este repositorio no se actualizan periódicamente, utilice el script de actualización update.sh o descargue 
 directamente desde la carpeta release de cada repositorio la última actualización de cada uno.
