@@ -73,7 +73,14 @@
 | MODE    | COIN
 
 
-| Genesis | NES
+| Genesis | NES Option 1
+| ------- | ------------
+| B       | B
+| C       | A
+| START   | START
+| MODE    | SELECT
+
+| Genesis | NES Option 2
 | ------- | ------------
 | B       | A
 | C       | B
