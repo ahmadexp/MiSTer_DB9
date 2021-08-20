@@ -37,6 +37,9 @@ uint16_t buttonsPrev2 = 0;
 void setup() 
 {
 
+  MCUCR |= (1<<JTD);
+  MCUCR |= (1<<JTD);
+
   // Buttons
   DDRB  = B00000001; // Set PB1-PB7 as inputs
   PORTB = B11111110; // Enable internal pull-up resistors
