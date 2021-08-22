@@ -2,7 +2,7 @@
 https://github.com/MiSTer-DB9?tab=repositories
 
   Script for download:
-https://github.com/theypsilon/Update_All_MiSTer/blob/master/setups/update_all_db9_snac8.zip
+https://github.com/theypsilon/Update_All_MiSTer/releases/latest/download/update_all_db9_snac8.zip
 
 | USER_IO | DE10         | DB9 | FPGA  | USB3
 | ------- | ------------ | --- | ----- | --------
