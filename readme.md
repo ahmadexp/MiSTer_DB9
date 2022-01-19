@@ -19,6 +19,10 @@ https://github.com/theypsilon/Update_All_MiSTer/releases/latest/download/update_
 
 9 TX+ is AF17 on SNAC+, with regular SNAC is 3.3V
 
+The second user IO is from Arduino_IO0 to Arduino_IO7 like this diagram.
+
+![Second USER IO](photos/SecondUserIO.png?raw=true "splitters")
+
 ![splitters](photos/splitters.jpg?raw=true "splitters")
 
 | Genesis | SNES Option 1
