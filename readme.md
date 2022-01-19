@@ -21,7 +21,7 @@ https://github.com/theypsilon/Update_All_MiSTer/releases/latest/download/update_
 
 The second user IO is from Arduino_IO0 to Arduino_IO7 like this diagram.
 
-![Second USER IO](photos/SecondUserIO.png?raw=true "splitters")
+![Second USER IO](photos/SecondUserIO.png?raw=true "Second USER IO")
 
 ![splitters](photos/splitters.jpg?raw=true "splitters")
 
