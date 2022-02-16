@@ -8,8 +8,8 @@
 
 ## Kits
 
-[IOUSB PLUS 128MB](https://www.antoniovillena.es/store/product/iousb-plus/)
-[Complete MiSTer PLUS](https://www.antoniovillena.es/store/product/complete-mister-plus/)
+* [IOUSB PLUS 128MB](https://www.antoniovillena.es/store/product/iousb-plus/)
+* [Complete MiSTer PLUS](https://www.antoniovillena.es/store/product/complete-mister-plus/)
 
 ## Build
 
