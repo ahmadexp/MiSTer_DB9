@@ -36,6 +36,7 @@ Stick the rubber feet on the bottom side of the bottom panel.
 1. Take the four longer screws and slide them up through the bottom side of the bottom panel.
 2. Take the four nuts and spin them most of the way down each screw.
 3. Place the DE10-Nano on the bottom panel through the screws and see if it sits flat against it. If it doesn't, you may need to use flush cutters to trim the leads under the power input port (circled in red below).
+4. Remove the DE10-Nano from the bottom panel once you've confirmed it's sitting correctly.
 
 ![A screw poking out of the bottom of the bottom panel with a nut screwed into the other side](mister-plus/step-3-a.jpg)
 ![The top side of the bottom panel with four screws poking out with a nut on each](mister-plus/step-3-b.jpg)
