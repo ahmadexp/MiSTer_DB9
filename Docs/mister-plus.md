@@ -2,11 +2,11 @@
 
 ## Table of Contents
 
-* [Kits](#kits)
+* [Products](#products)
 * [Build](#build)
 * [Setup](#setup)
 
-## Kits
+## Products
 
 * [IOUSB PLUS 128MB](https://www.antoniovillena.es/store/product/iousb-plus/)
 * [Complete MiSTer PLUS](https://www.antoniovillena.es/store/product/complete-mister-plus/)
@@ -58,7 +58,7 @@ If one isn't already present, install the heat sink onto the largest chip in the
 
 ### Step 6: RAM Module
 
-**Note:** If an existing RAM module is installed, remove it and use the included one as the typical style won't fit with the MiSTer Plus I/O board.
+**Note:** If an existing RAM module is installed, remove it and use the included one as the typical style won't fit with the MiSTer Plus IO board.
 
 1. Ensure the DE10-Nano is still oriented so the network port is on the left side of the bottom.
 2. Install the included RAM module on the header pins on the right side, ensuring the "side facing outwards" is facing away from the DE10-Nano.
@@ -80,26 +80,26 @@ If one isn't already present, install the heat sink onto the largest chip in the
 ![The USB port on the top of the right side of the DE10-Nano when oriented as expected, and the USB bridge next to it](mister-plus/step-8-a.jpg)
 ![The USB bridge plugged into the USB port on the DE10-Nano](mister-plus/step-8-b.jpg)
 
-### Step 9: Connect the I/O Board
+### Step 9: Connect the IO Board
 
-1. Orient the I/O board above the DE10-Nano with the hole in the I/O board positioned over the RAM module on the DE10-Nano, then ensure that:
-    * The single row of pins next to the hole in the I/O board line up with the port next to the RAM module on the DE10-Nano.
-    * The double row of pins on the side of the DE10-Nano opposite to the ones the RAM module is plugged into are lined up with the port on the I/O board.
-    * The pins on the USB bridge connected to the DE10-Nano line up with the port on the I/O board.
-    * The jumper plugged into the DE10-Nano line up with the equivalent pins on the I/O board.
-2. Once everything is lined up, slowly push the I/O board down onto the DE10-Nano, ensuring all the sides go down evenly and that everything continues to connect correctly.
+1. Orient the IO board above the DE10-Nano with the hole in the IO board positioned over the RAM module on the DE10-Nano, then ensure that:
+    * The single row of pins next to the hole in the IO board line up with the port next to the RAM module on the DE10-Nano.
+    * The double row of pins on the side of the DE10-Nano opposite to the ones the RAM module is plugged into are lined up with the port on the IO board.
+    * The pins on the USB bridge connected to the DE10-Nano line up with the port on the IO board.
+    * The jumper plugged into the DE10-Nano line up with the equivalent pins on the IO board.
+2. Once everything is lined up, slowly push the IO board down onto the DE10-Nano, ensuring all the sides go down evenly and that everything continues to connect correctly.
 
-![The single row of pins on the I/O board connecting to the port next to the RAM on the DE10-Nano](mister-plus/step-9-a.jpg)
-![The double row of pins on DE10-Nano connecting to the port on the I/O board](mister-plus/step-9-b.jpg)
-![The pins on the USB bridge and the jumper connecting to the associated ports on the I/O board](mister-plus/step-9-c.jpg)
+![The single row of pins on the IO board connecting to the port next to the RAM on the DE10-Nano](mister-plus/step-9-a.jpg)
+![The double row of pins on DE10-Nano connecting to the port on the IO board](mister-plus/step-9-b.jpg)
+![The pins on the USB bridge and the jumper connecting to the associated ports on the IO board](mister-plus/step-9-c.jpg)
 
 ### Step 10: Connect the Bottom Panel
 
 1. Line the SD card slot on the DE10-Nano up with the half circle cutout on the bottom panel and slide the four posts down onto the screws and nuts you installed earlier.
-2. Use the hex 2mm or Torx T8 screwdriver to screw the bottom panel most of the way into the DE10-Nano and I/O board, leaving a bit of wiggle-room to make the sides easier to connect.
+2. Use the hex 2mm or Torx T8 screwdriver to screw the bottom panel most of the way into the DE10-Nano and IO board, leaving a bit of wiggle-room to make the sides easier to connect.
 3. Ensure the four posts are secure by twisting the top ones clockwise.
 
-![The bottom panel loosely connected to the DE10-Nano and I/O board](mister-plus/step-10.jpg)
+![The bottom panel loosely connected to the DE10-Nano and IO board](mister-plus/step-10.jpg)
 
 ### Step 11: Connect the Sides
 
@@ -129,10 +129,10 @@ For each of the four side panels:
 
 ### Step 13: (Optional) Connect Internal USB
 
-1. Locate the USB port on the top of the MiSTer Plus I/O board, next to the fan.
+1. Locate the USB port on the top of the MiSTer Plus IO board, next to the fan.
 2. Connect a small USB module such as a WiFi or Bluetooth adapter.
 
-![The USB port on the top of the MiSTer Plus I/O board with a bluetooth adapter connected it](mister-plus/step-13.jpg)
+![The USB port on the top of the MiSTer Plus IO board with a bluetooth adapter connected it](mister-plus/step-13.jpg)
 
 ### Step 14: Install the Top Panel
 
@@ -161,7 +161,7 @@ For each of the four side panels:
 1. If you haven't already installed MiSTer on your micro SD card, follow the [official setup guide](https://github.com/MiSTer-devel/Main_MiSTer/wiki/Setup-Guide).
 2. Insert your micro SD card into the slot above the half circle cutout on the bottom panel.
 3. Either connect an HDMI cable to a compatible monitor, or use the VGA port and green audio port next to it to connect an analogue display.
-    * **Note**: If you're using YPbPr on VGA output (VGA->component), in addition to setting `ypbpr=1` in your `MiSTer.ini`, you also need to set `composite_sync=1` (this isn't necessarily the case with other I/O boards).
+    * **Note**: If you're using YPbPr on VGA output (VGA->component), in addition to setting `ypbpr=1` in your `MiSTer.ini`, you also need to set `composite_sync=1` (this isn't necessarily the case with other IO boards).
 4. Connect an input device to USB.
 5. Plug the power cable into the power port.
 
@@ -184,25 +184,9 @@ Following these steps will enable the OLED screen on your MiSTer Plus. The offic
 7. Run the `EXIT and RUN UPDATE ALL` option to update your mister and grab the i2c2oled script.
 8. Once `update_all` has finished, run the new `update_i2c2oled` script.
 
-### DB9 Cores
+### DB9 User IO and SNAC8
 
-Following these steps will enable DB9 and SNAC8 functionality, which allows you to:
-
-* Connect a genesis controller to the DB9 port on the MiSTer Plus and use it to control the menus and compatible cores.
-* Connect SNAC8 adapters to use up to two native controllers at the same time for a given core.
-
-1. Run the `update_all` script.
-2. When the countdown appears, press `UP` to enter the settings menu.
-3. Enter the `Main Distribution` submenu.
-4. Toggle `Cores versions` to `DB9 / SNAC8 forks with ENCC`.
-5. Select `BACK` to return to the main menu.
-6. Run the `SAVE` option to save your changes.
-7. Run the `EXIT and RUN UPDATE ALL` option to update your mister and grab the DB9 cores.
-8. Once `update_all` has finished, you should have a `UserIO Joystick` option in compatible cores.
-
-To view the controller mappings for compatible cores, visit the [MiSTer_DB9 Repository](https://github.com/antoniovillena/MiSTer_DB9) (note that the MinimigDB9 core is also DB9-compatible).
-
-For more information, read the [Update_All_MiSTer SNAC8 Wiki Entry](https://github.com/theypsilon/Update_All_MiSTer/wiki#snac8).
+The DB9 user IO port on the MiSTer Plus can be used directly or with an adapter. To learn how to setup and use this port, read the guide on [DB9 User IO and SNAC8](db9-user-io-and-snac8.md).
 
 ### Real Time Clock
 
@@ -210,5 +194,5 @@ Following these steps will enable and test the real time clock, which is used by
 
 1. Run the `rtc` script (ensure the internet is connected).
 2. Once `rtc` has finished, remove the wifi adapter and power down the MiSTer.
-3. Power the MiSTer back up and ensure the time is correct. (if it isn't you may need to disassemble the MiSTer Plus and ensure the battery is connected to the I/O board correctly and has a charge).
+3. Power the MiSTer back up and ensure the time is correct. (if it isn't you may need to disassemble the MiSTer Plus and ensure the battery is connected to the IO board correctly and has a charge).
 4. You can now re-connect the internet.
