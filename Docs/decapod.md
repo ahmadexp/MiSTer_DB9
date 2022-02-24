@@ -95,7 +95,7 @@ To update the firmware you need a computer with a USB port and the [Arduino IDE]
 1. Clone or download the [DECAPOD-DaemonBite repo](https://github.com/GAsinPrieto/DECAPOD-DaemonBite).
 2. Open the `.ino` file for the latest firmware (which as of 2022-02-24 is `DECAPOD-USB-proto2_v1.0/DECAPOD-USB-proto2_v1.0.ino`) in the Arduino IDE.
 3. In the Arduino IDE, select `Tools` -> `Board` -> `Arduino Leonardo`
-    * If `Arduino Leonardo` isn't available, select `Board Manager`, find `Arduino AVR Boards` in the window that appears, press the `Install` button for that entry, and then return to step 3.
+    * If `Arduino Leonardo` isn't available, select `Tools` -> `Board` -> `Boards Manager`, find `Arduino AVR Boards` in the window that appears, press the `Install` button for that entry, and then return to step 3.
 4. In the Arduino IDE, select `Tools` -> `Port` and make note of the ports in the list.
 5. Connect the provided USB cable from the Decapod to your computer.
 6. In the Arduino IDE, select `Tools` -> `Port` again and there should be a new entry in the list, select that.
