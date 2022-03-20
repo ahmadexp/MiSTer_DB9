@@ -35,7 +35,7 @@ uint8_t  pin;               // Used in for loops
 uint16_t buttonsDire1 = 0;
 uint16_t buttonsDire2 = 0;
 uint32_t millisNow = 0;     // Used for Diddly-squat-Delay-Debouncing™
-uint32_t buttonsMillis[24];
+uint32_t buttonsMillis[28];
 #endif
 
 void setup(){
@@ -64,15 +64,15 @@ void loop(){
 #ifdef DEBOUNCE
     buttonsDire1 = 0x3fff ^ ( ((PINF & B11110000)>>4) | ((PIND & B00001111)<<4) | ((PINE & B01000000) << 2) | ((PINB & B00000010) << 8) | ((PINB & B11110000) << 6));
     PORTB |=  B00000001;
-    for(pin=0; pin<12; pin++)
+    for(pin=0; pin<14; pin++)
       if( (((buttonsDire1^buttons1)>>pin)&1) && (millisNow - buttonsMillis[pin]) > DEBOUNCE_TIME )
         buttons1 ^= 1<<pin,
         buttonsMillis[pin] = millisNow;
     buttonsDire2 = 0x3fff ^ ( (PINF & B00000011) | ((PINC & B11000000)>>4) | (PIND & B11110000) | ((PINB & B11111100) << 6) );
-    for(pin=0; pin<12; pin++)
-      if( (((buttonsDire2^buttons2)>>pin)&1) && (millisNow - buttonsMillis[12+pin]) > DEBOUNCE_TIME )
+    for(pin=0; pin<14; pin++)
+      if( (((buttonsDire2^buttons2)>>pin)&1) && (millisNow - buttonsMillis[14+pin]) > DEBOUNCE_TIME )
         buttons2 ^= 1<<pin,
-        buttonsMillis[12+pin] = millisNow;
+        buttonsMillis[14+pin] = millisNow;
 #else
     buttons1 = 0x3fff ^ ( ((PINF & B11110000)>>4) | ((PIND & B00001111)<<4) | ((PINE & B01000000) << 2) | ((PINB & B00000010) << 8) | ((PINB & B11110000) << 6));
     PORTB |=  B00000001;
