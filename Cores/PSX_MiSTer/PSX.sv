@@ -1198,14 +1198,11 @@ sdram sdram
 (
    .SDRAM_DQ   (SDRAM_DQ),
    .SDRAM_A    (SDRAM_A),
-   .SDRAM_DQML (SDRAM_DQML),
-   .SDRAM_DQMH (SDRAM_DQMH),
    .SDRAM_BA   (SDRAM_BA),
    .SDRAM_nCS  (SDRAM_nCS),
    .SDRAM_nWE  (SDRAM_nWE),
    .SDRAM_nRAS (SDRAM_nRAS),
    .SDRAM_nCAS (SDRAM_nCAS),
-   .SDRAM_CKE  (SDRAM_CKE),
    .SDRAM_CLK  (SDRAM_CLK),
    
    .SDRAM_EN(1),
@@ -1390,8 +1387,6 @@ always_ff @(posedge CLK_VIDEO) if (CE_PIXEL) begin
 	video_aspect.green <= (vbl || hbl) ? 8'd0 : g;
 	video_aspect.blue <= (vbl || hbl) ? 8'd0 : b;
 	{aspect_x, aspect_y} <= video_isPal ? aspect_ratio_lut_pal[v_total] : aspect_ratio_lut_ntsc[v_total];
-
-	VGA_DISABLE <= fast_forward;
 
 	h_pos <= h_pos + 1'd1;
 	if (~old_vb && vbl)
